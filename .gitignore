@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+.DS_Store
+*.log
+*.tmp
+*.tsbuildinfo
+.env
+.env.local
+!.env.example
+
+# Chaque installation garde son journal privé.
+data/state.json
+data/state.json.*
+
+# Sources lourdes conservées localement ; l’application utilise les WebP.
+public/assets/exercise-*.png
