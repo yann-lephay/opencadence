@@ -243,10 +243,11 @@ const variants: Record<MovementPattern, Variant[]> = {
       baseValue: 12,
       restBand: "60–90 s",
       rirTarget: "2–3 RIR",
-      equipment: "Haltères 5 kg · 1 kg en tempo si nécessaire",
+      equipment: "Haltères 1, 5 ou 9 kg",
       loadOptions: [
         { label: "2 × 1 kg", totalKg: 2 },
         { label: "2 × 5 kg", totalKg: 10 },
+        { label: "2 × 9 kg", totalKg: 18 },
       ],
       purpose: "Priorité largeur d’épaules",
       cues: ["Bras légèrement fléchis", "Monte sans hausser les épaules", "Aucun élan du buste"],

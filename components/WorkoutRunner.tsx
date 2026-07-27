@@ -14,7 +14,7 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { ActiveSession, CadenceState, SetResult } from "@/lib/types";
+import type { ActiveSession, CadenceState, SetResult, WorkoutItem } from "@/lib/types";
 import { ExerciseFigure, ExerciseLoop } from "./ExerciseFigure";
 
 type RunnerProps = {
@@ -49,6 +49,27 @@ function exerciseName(value: string) {
   if (value === "Split squat") return "Fentes sur place";
   if (value === "Gainage latéral") return "Gainage latéral sur coude";
   return value;
+}
+
+function timerRange(item: WorkoutItem, setIndex: number) {
+  const minuteRange = item.target.match(/(\d+)\s*[–-]\s*(\d+)\s*min/i);
+  if (minuteRange) {
+    return {
+      min: Number(minuteRange[1]) * 60,
+      max: Number(minuteRange[2]) * 60,
+    };
+  }
+
+  const secondRange = item.target.match(/(\d+)\s*[–-]\s*(\d+)\s*s\b/i);
+  if (secondRange) {
+    return {
+      min: Number(secondRange[1]),
+      max: Number(secondRange[2]),
+    };
+  }
+
+  const target = item.targetValues?.[setIndex] ?? item.targetValue;
+  return { min: target, max: target };
 }
 
 function buildSequence(workout: ActiveSession["workout"]) {
@@ -112,6 +133,9 @@ export function WorkoutRunner({ session, onState, onClose }: RunnerProps) {
   const sequenceIndex = sequence.findIndex(
     (step) => step.itemIndex === itemIndex && step.setIndex === setIndex
   );
+  const countUpTimer = item?.mode === "time";
+  const currentTimerRange = item ? timerRange(item, setIndex) : { min: 0, max: 0 };
+  const timerGoalReached = countUpTimer && workTimer >= currentTimerRange.min;
 
   const completedSets = useMemo(
     () => Object.values(progress).reduce((sum, sets) => sum + sets.length, 0),
@@ -125,13 +149,8 @@ export function WorkoutRunner({ session, onState, onClose }: RunnerProps) {
 
   useEffect(() => {
     const nextTarget = item?.targetValues?.[setIndex] ?? item?.targetValue ?? 0;
-    const timerTarget =
-      item?.mode === "time"
-        ? nextTarget
-        : item?.variantId === "row-benchmark-4"
-          ? 240
-          : 0;
-    setActualValue(item?.variantId === "row-benchmark-4" ? 0 : nextTarget);
+    const timerTarget = item?.variantId === "row-benchmark-4" ? 240 : 0;
+    setActualValue(item?.mode === "time" || item?.variantId === "row-benchmark-4" ? 0 : nextTarget);
     setWorkTimer(timerTarget);
     setWorkTimerOn(false);
     setWorkTimerFinished(false);
@@ -155,9 +174,14 @@ export function WorkoutRunner({ session, onState, onClose }: RunnerProps) {
   }, [restSeconds, restPaused]);
 
   useEffect(() => {
-    if (!workTimerOn || workTimer <= 0) return;
+    if (!workTimerOn) return;
     const interval = window.setInterval(() => {
       setWorkTimer((seconds) => {
+        if (item?.mode === "time") {
+          const elapsed = seconds + 1;
+          setActualValue(elapsed);
+          return elapsed;
+        }
         if (seconds <= 1) {
           setWorkTimerOn(false);
           setWorkTimerFinished(true);
@@ -167,7 +191,7 @@ export function WorkoutRunner({ session, onState, onClose }: RunnerProps) {
       });
     }, 1000);
     return () => window.clearInterval(interval);
-  }, [workTimerOn, workTimer]);
+  }, [workTimerOn, item?.mode]);
 
   useEffect(() => {
     if (restSeconds === 0 && autoStartAfterRest) {
@@ -199,6 +223,7 @@ export function WorkoutRunner({ session, onState, onClose }: RunnerProps) {
 
   function completeSet() {
     if (!item) return;
+    setWorkTimerOn(false);
     const isLastSet = setIndex + 1 >= item.sets;
     const nextProgress = {
       ...progress,
@@ -427,14 +452,12 @@ export function WorkoutRunner({ session, onState, onClose }: RunnerProps) {
 
           {hasWorkTimer && (
             <button
-              className={`work-timer ${workTimerOn ? "active" : ""} ${workTimerFinished ? "finished" : ""}`}
+              className={`work-timer ${workTimerOn ? "active" : ""} ${workTimerFinished || timerGoalReached ? "finished" : ""}`}
               onClick={() => {
-                if (workTimerFinished) {
-                  const resetValue =
-                    item.mode === "time"
-                      ? item.targetValues?.[setIndex] ?? item.targetValue
-                      : 240;
-                  setWorkTimer(resetValue);
+                if (item.mode === "time") {
+                  setWorkTimerOn((running) => !running);
+                } else if (workTimerFinished) {
+                  setWorkTimer(240);
                   setWorkTimerFinished(false);
                   setWorkTimerOn(true);
                 } else {
@@ -445,19 +468,36 @@ export function WorkoutRunner({ session, onState, onClose }: RunnerProps) {
               {workTimerOn ? <CirclePause size={21} /> : <CirclePlay size={21} />}
               <span>{formatSeconds(workTimer)}</span>
               <small>
-                {workTimerFinished
-                  ? "terminé · relancer"
-                  : workTimerOn
-                    ? side ? `côté ${side}` : "en cours"
-                    : side ? `lancer côté ${side}` : "lancer les 4 minutes"}
+                {item.mode === "time"
+                  ? workTimerOn
+                    ? side ? `côté ${side} · toucher pour arrêter` : "en cours · toucher pour arrêter"
+                    : workTimer > 0
+                      ? "en pause · toucher pour reprendre"
+                      : side ? `lancer côté ${side} depuis 0` : "lancer depuis 0"
+                  : workTimerFinished
+                    ? "terminé · relancer"
+                    : workTimerOn
+                      ? "en cours"
+                      : "lancer les 4 minutes"}
               </small>
             </button>
           )}
 
-          {workTimerFinished && side && (
+          {timerGoalReached && side && (
             <div className="timer-finished-note">
               <Check size={17} />
-              {`30 secondes côté ${side} terminées.`}
+              {workTimer <= currentTimerRange.max
+                ? `Minimum atteint côté ${side}. Tu peux terminer quand ta position commence à se dégrader.`
+                : `Fourchette cible dépassée côté ${side}. Termine sans attendre la perte d’alignement.`}
+            </div>
+          )}
+
+          {timerGoalReached && !side && item.mode === "time" && (
+            <div className="timer-finished-note">
+              <Check size={17} />
+              {workTimer <= currentTimerRange.max
+                ? `Minimum atteint. Tu peux continuer jusqu’à ${formatSeconds(currentTimerRange.max)}.`
+                : "Fourchette cible atteinte. Tu peux arrêter le chronomètre."}
             </div>
           )}
 
