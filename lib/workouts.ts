@@ -88,9 +88,9 @@ const variants: Record<MovementPattern, Variant[]> = {
       baseValue: 10,
       restBand: "2 min localement",
       rirTarget: "2–3 RIR",
-      equipment: "Haltère 9 kg ou haltère déjà chargé",
+      equipment: "Haltère 6 kg ou haltère déjà chargé",
       loadOptions: [
-        { label: "1 × 9 kg", totalKg: 9 },
+        { label: "1 × 6 kg", totalKg: 6 },
         { label: "1 × 15–16 kg", totalKg: 15.5 },
       ],
       purpose: "Ancrage de tirage horizontal",
@@ -134,7 +134,7 @@ const variants: Record<MovementPattern, Variant[]> = {
       rirTarget: "2–3 RIR",
       equipment: "Haltères déjà chargés",
       loadOptions: [
-        { label: "2 × 9 kg", totalKg: 18 },
+        { label: "2 × 6 kg", totalKg: 12 },
         { label: "2 × 15–16 kg", totalKg: 31 },
       ],
       purpose: "Poussée stable et facile à doser",
@@ -178,7 +178,7 @@ const variants: Record<MovementPattern, Variant[]> = {
       rirTarget: "2–3 RIR",
       equipment: "Un haltère tenu contre la poitrine",
       loadOptions: [
-        { label: "1 × 9 kg", totalKg: 9 },
+        { label: "1 × 6 kg", totalKg: 6 },
         { label: "1 × 15–16 kg", totalKg: 15.5 },
       ],
       purpose: "Ancrage de flexion de genou",
@@ -201,7 +201,7 @@ const variants: Record<MovementPattern, Variant[]> = {
       rirTarget: "2–3 RIR",
       equipment: "Haltères déjà chargés",
       loadOptions: [
-        { label: "2 × 9 kg", totalKg: 18 },
+        { label: "2 × 6 kg", totalKg: 12 },
         { label: "2 × 15–16 kg", totalKg: 31 },
       ],
       purpose: "Ancrage de chaîne postérieure",
@@ -243,11 +243,11 @@ const variants: Record<MovementPattern, Variant[]> = {
       baseValue: 12,
       restBand: "60–90 s",
       rirTarget: "2–3 RIR",
-      equipment: "Haltères 1, 5 ou 9 kg",
+      equipment: "Haltères 1, 5 ou 6 kg",
       loadOptions: [
         { label: "2 × 1 kg", totalKg: 2 },
         { label: "2 × 5 kg", totalKg: 10 },
-        { label: "2 × 9 kg", totalKg: 18 },
+        { label: "2 × 6 kg", totalKg: 12 },
       ],
       purpose: "Priorité largeur d’épaules",
       cues: ["Bras légèrement fléchis", "Monte sans hausser les épaules", "Aucun élan du buste"],

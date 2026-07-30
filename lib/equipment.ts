@@ -4,7 +4,7 @@ export const originalEquipmentChoices = [
   "Rameur",
   "Gilet lesté 10 kg",
   "Haltères réglables 10–16 kg",
-  "Haltères 9 kg",
+  "Haltères 6 kg",
   "Haltères 5 kg",
   "Poids 1 kg",
 ] as const;
