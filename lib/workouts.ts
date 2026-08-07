@@ -601,6 +601,12 @@ function previousComparable(state: CadenceState, variantId: string) {
     .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry?.results.length));
 }
 
+function nearFailureMarkers(session: CompletedSession) {
+  return Object.values(session.progress)
+    .flat()
+    .filter((result) => result.rir !== undefined && result.rir <= 1).length;
+}
+
 function loadRecommendation(state: CadenceState, variant: Variant, readiness: Readiness) {
   const options = variant.loadOptions;
   if (!options?.length) return {};
@@ -634,8 +640,19 @@ function loadRecommendation(state: CadenceState, variant: Variant, readiness: Re
     }).length;
 
     if ((belowRange || lastRir === 0 || latest.session.pain >= 3) && currentIndex > 0) {
-      recommendedIndex -= 1;
-      reason = "Marge ou confort insuffisant : retour temporaire au palier précédent.";
+      const previousOption = options[currentIndex - 1];
+      const currentOption = options[currentIndex];
+      const shoulderStepIsTooLarge =
+        variant.pattern === "shoulders" &&
+        previousOption.totalKg < currentOption.totalKg * 0.6;
+
+      if (shoulderStepIsTooLarge) {
+        reason =
+          "Marge insuffisante, mais le palier inférieur est trop éloigné : charge conservée avec moins de répétitions et davantage de repos.";
+      } else {
+        recommendedIndex -= 1;
+        reason = "Marge ou confort insuffisant : retour temporaire au palier précédent.";
+      }
     } else if (
       readiness.factor === 1 &&
       hitCeiling &&
@@ -747,6 +764,41 @@ function stableVariant(state: CadenceState, pattern: MovementPattern) {
   return supported[0] ?? null;
 }
 
+function plannedVariant(state: CadenceState, pattern: MovementPattern) {
+  const supported = variants[pattern].filter((variant) => variantSupported(state.profile, variant));
+  const stable = stableVariant(state, pattern);
+  if (!stable || supported.length < 2 || !["pull", "shoulders"].includes(pattern)) {
+    return stable;
+  }
+
+  let latestVariantId: string | null = null;
+  let consecutiveExposures = 0;
+  for (const session of state.history) {
+    const item = session.workout.items.find(
+      (entry) => entry.pattern === pattern && completedSets(session, entry) > 0,
+    );
+    if (!item) continue;
+    if (!latestVariantId) latestVariantId = item.variantId;
+    if (item.variantId !== latestVariantId) break;
+    consecutiveExposures += 1;
+  }
+
+  if (!latestVariantId || consecutiveExposures < 4) return stable;
+  const currentIndex = supported.findIndex((variant) => variant.variantId === latestVariantId);
+  if (currentIndex < 0) return stable;
+  return supported[(currentIndex + 1) % supported.length];
+}
+
+function latestCompletedVariantId(state: CadenceState, pattern: MovementPattern) {
+  for (const session of state.history) {
+    const item = session.workout.items.find(
+      (entry) => entry.pattern === pattern && completedSets(session, entry) > 0,
+    );
+    if (item) return item.variantId;
+  }
+  return null;
+}
+
 function workoutItem(
   state: CadenceState,
   variant: Variant,
@@ -803,10 +855,14 @@ export function getNextSessionRecommendation(
     };
   }
 
+  const nearFailureCount = nearFailureMarkers(last);
   const recoveryDays =
     last.pain >= 5
       ? 3
-      : last.pain >= 3 || last.effort >= 9 || (last.hardRowingFinisher && last.effort >= 8)
+      : last.pain >= 3 ||
+          last.effort >= 9 ||
+          nearFailureCount >= 3 ||
+          (last.hardRowingFinisher && last.effort >= 8)
         ? 2
         : 1;
   const target = new Date(last.completedAt);
@@ -821,7 +877,9 @@ export function getNextSessionRecommendation(
     recoveryDays === 3
       ? "Trois jours conseillés après la gêne signalée ; reprends seulement si elle s’est calmée."
       : recoveryDays === 2
-        ? "Deux jours conseillés après une séance exigeante ou une gêne notable."
+        ? nearFailureCount >= 3
+          ? "Deux jours conseillés : plusieurs mouvements ont fini avec très peu de répétitions en réserve."
+          : "Deux jours conseillés après une séance exigeante ou une gêne notable."
         : "Un jour suffit a priori ; la séance s’allégera encore si la récupération n’est pas bonne.";
 
   return {
@@ -887,11 +945,11 @@ export function buildNextWorkout(state: CadenceState, now = new Date()): Workout
   const credits7 = calculateRollingCredits(state.history, 7);
   const credits21 = calculateRollingCredits(state.history, 21);
   const selectedVariants: Partial<Record<MovementPattern, Variant>> = {
-    pull: stableVariant(state, "pull") ?? undefined,
+    pull: plannedVariant(state, "pull") ?? undefined,
     knee: stableVariant(state, "knee") ?? undefined,
     push: stableVariant(state, "push") ?? undefined,
     hinge: stableVariant(state, "hinge") ?? undefined,
-    shoulders: stableVariant(state, "shoulders") ?? undefined,
+    shoulders: plannedVariant(state, "shoulders") ?? undefined,
     warmup: stableVariant(state, "warmup") ?? undefined,
     conditioning: stableVariant(state, "conditioning") ?? undefined,
   };
@@ -916,6 +974,14 @@ export function buildNextWorkout(state: CadenceState, now = new Date()): Workout
   }
 
   const timestamp = now.getTime();
+  const plannedRotations = (["pull", "shoulders"] as const)
+    .filter(
+      (pattern) =>
+        selectedVariants[pattern] &&
+        latestCompletedVariantId(state, pattern) !== selectedVariants[pattern]?.variantId,
+    )
+    .map((pattern) => selectedVariants[pattern]?.exercise)
+    .filter((exercise): exercise is string => Boolean(exercise));
 
   const items: WorkoutItem[] = [];
   if (selectedVariants.warmup) {
@@ -936,7 +1002,7 @@ export function buildNextWorkout(state: CadenceState, now = new Date()): Workout
 
   if (usableShoulderSets > 0 && selectedVariants.shoulders) {
     items.push(
-      workoutItem(state, selectedVariants.shoulders, usableShoulderSets, "C", 25, readiness, `${timestamp}-shoulders`),
+      workoutItem(state, selectedVariants.shoulders, usableShoulderSets, null, 60, readiness, `${timestamp}-shoulders`),
     );
   }
   items.push(
@@ -944,7 +1010,7 @@ export function buildNextWorkout(state: CadenceState, now = new Date()): Workout
       state,
       variants.core[0],
       2,
-      usableShoulderSets > 0 ? "C" : null,
+      null,
       60,
       readiness,
       `${timestamp}-core`,
@@ -990,7 +1056,7 @@ export function buildNextWorkout(state: CadenceState, now = new Date()): Workout
       "Chaîne postérieure",
       ...(selectedVariants.shoulders ? ["Épaules"] : []),
     ],
-    coachNote: `${readiness.note} OpenCadence utilise seulement les variantes compatibles avec le matériel déclaré.${selectedVariants.pull ? " Les séries disponibles vont aux groupes les moins exposés récemment et aux priorités de ton profil." : " Aucun tirage illustré compatible n’est encore disponible : ajoute du matériel ou demande à Codex de proposer une nouvelle variante."}`,
+    coachNote: `${readiness.note} OpenCadence utilise seulement les variantes compatibles avec le matériel déclaré.${selectedVariants.pull ? " Les séries disponibles vont aux groupes les moins exposés récemment et aux priorités de ton profil." : " Aucun tirage illustré compatible n’est encore disponible : ajoute du matériel ou demande à Codex de proposer une nouvelle variante."}${plannedRotations.length ? ` Rotation planifiée aujourd’hui : ${plannedRotations.join(" et ")}, après quatre expositions au même mouvement.` : ""}`,
     items,
   };
 }
