@@ -670,7 +670,7 @@ struct EquipmentOnboardingView: View {
 
     private var familySelection: some View {
         let isLandscape = verticalSizeClass == .compact && !dynamicTypeSize.isAccessibilitySize
-        ScrollView {
+        return ScrollView {
             VStack(alignment: .leading, spacing: isLandscape ? 14 : 24) {
                 LBSWordmark()
                 Text("De quoi disposes-tu chez toi ?")
@@ -742,7 +742,7 @@ struct EquipmentOnboardingView: View {
 
     private func family(_ title: LocalizedStringKey, asset: String, selected: Binding<Bool>) -> some View {
         let isLandscape = verticalSizeClass == .compact && !dynamicTypeSize.isAccessibilitySize
-        Button {
+        return Button {
             selected.wrappedValue.toggle()
             if selected.wrappedValue { noEquipment = false }
         } label: {

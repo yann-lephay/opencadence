@@ -4,6 +4,8 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @EnvironmentObject private var subscriptions: SubscriptionStore
 
     @Query(sort: \CompletedWorkoutRecord.endedAt, order: .reverse)
@@ -390,6 +392,7 @@ struct HomeView: View {
 
     @ViewBuilder
     private func personalizedPreview(_ decision: EngineDecision, result: V2PersonalizedSessionResult) -> some View {
+        let isLandscape = verticalSizeClass == .compact && !dynamicTypeSize.isAccessibilitySize
         VStack(alignment: .leading, spacing: 18) {
             if let first = decision.movements?.first {
                 Text(completedWorkouts.isEmpty ? "TA PREMIÈRE SÉANCE" : "TA PROCHAINE SÉANCE")
@@ -406,33 +409,18 @@ struct HomeView: View {
                 }
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(LBSBrand.secondaryText)
-                MovementDemonstrationView(exerciseID: first.exerciseKey)
-                    .frame(height: 220)
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Pour commencer")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(LBSBrand.brandAccentText)
-                    Text(PresentationCopy.movementTitle(first.exerciseKey))
-                        .font(.title3.bold())
-                }
-                Button { start(decision) } label: {
-                    Label("Lancer la séance", systemImage: "play.fill")
-                        .frame(maxWidth: .infinity, minHeight: 50)
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(LBSBrand.orange)
-                .foregroundStyle(LBSBrand.ink)
-                Button("Adapter ce mouvement") { adjustmentID = first.exerciseKey }
-                    .frame(minHeight: 44)
-                DisclosureGroup("Voir la séance") {
-                    ForEach(decision.movements ?? [], id: \.exerciseKey) { movement in
-                        HStack {
-                            Text(PresentationCopy.movementTitle(movement.exerciseKey))
-                            Spacer()
-                            Text("\(movement.sets) séries")
-                            Button("Adapter") { adjustmentID = movement.exerciseKey }
-                        }.padding(.vertical, 6)
+                if isLandscape {
+                    HStack(alignment: .top, spacing: 24) {
+                        MovementDemonstrationView(exerciseID: first.exerciseKey)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 260)
+                        personalizedPreviewActions(first: first, decision: decision)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
+                } else {
+                    MovementDemonstrationView(exerciseID: first.exerciseKey)
+                        .frame(height: 220)
+                    personalizedPreviewActions(first: first, decision: decision)
                 }
             }
             ForEach(result.checks, id: \.exerciseId) { check in
@@ -452,6 +440,38 @@ struct HomeView: View {
         .overlay {
             LBSChamferedRectangle(cut: 18)
                 .stroke(LBSBrand.border, lineWidth: 1)
+        }
+    }
+
+    private func personalizedPreviewActions(first: PrescribedMovement, decision: EngineDecision) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Pour commencer")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(LBSBrand.brandAccentText)
+                Text(PresentationCopy.movementTitle(first.exerciseKey))
+                    .font(.title3.bold())
+            }
+            Button { start(decision) } label: {
+                Label("Lancer la séance", systemImage: "play.fill")
+                    .frame(maxWidth: .infinity, minHeight: 50)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(LBSBrand.orange)
+            .foregroundStyle(LBSBrand.ink)
+            Button("Adapter ce mouvement") { adjustmentID = first.exerciseKey }
+                .frame(minHeight: 44)
+            DisclosureGroup("Voir la séance") {
+                ForEach(decision.movements ?? [], id: \.exerciseKey) { movement in
+                    HStack {
+                        Text(PresentationCopy.movementTitle(movement.exerciseKey))
+                        Spacer()
+                        Text("\(movement.sets) séries")
+                        Button("Adapter") { adjustmentID = movement.exerciseKey }
+                    }
+                    .padding(.vertical, 6)
+                }
+            }
         }
     }
 

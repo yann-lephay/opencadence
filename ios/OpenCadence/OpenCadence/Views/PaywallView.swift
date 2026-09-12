@@ -3,7 +3,9 @@ import SwiftUI
 
 struct PaywallView: View {
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @EnvironmentObject private var subscriptions: SubscriptionStore
 
     let adaptationPreview: String?
@@ -13,16 +15,37 @@ struct PaywallView: View {
     private let orange = LBSBrand.orange
 
     var body: some View {
+        let isLandscape = verticalSizeClass == .compact && !dynamicTypeSize.isAccessibilitySize
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    hero
-                    valueProof
-                    offers
-                    purchaseStatus
-                    legal
+                Group {
+                    if isLandscape {
+                        HStack(alignment: .top, spacing: 24) {
+                            VStack(alignment: .leading, spacing: 20) {
+                                hero
+                                valueProof
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            VStack(alignment: .leading, spacing: 20) {
+                                offers
+                                purchaseStatus
+                                legal
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    } else {
+                        VStack(alignment: .leading, spacing: 24) {
+                            hero
+                            valueProof
+                            offers
+                            purchaseStatus
+                            legal
+                        }
+                    }
                 }
+                .frame(maxWidth: isLandscape ? 980 : 640)
                 .padding(20)
+                .frame(maxWidth: .infinity)
             }
             .background(LBSBrand.screenBackground.ignoresSafeArea())
         }
