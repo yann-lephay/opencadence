@@ -1,0 +1,75 @@
+{
+  "movementId": "dead_bug",
+  "status": "visual_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png"
+  ],
+  "boardCellIndices": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    7,
+    8
+  ],
+  "boardCellCrops": [
+    "408x408+5+5",
+    "408x408+423+5",
+    "408x408+841+5",
+    "408x408+5+423",
+    "408x408+841+423",
+    "408x408+5+841",
+    "408x408+423+841"
+  ],
+  "uniqueSourceFrames": 7,
+  "visiblyDistinctPoses": 7,
+  "displayedSteps": 13,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    1,
+    5,
+    6,
+    7,
+    6,
+    5,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "dead_bug_review_images25_bulk_v02.mp4",
+  "poster": "dead_bug_poster_review_images25_bulk_v02.webp",
+  "fallback": "dead_bug_fallback_review_images25_bulk_v02.webp",
+  "fallbackSourceIndices": [
+    1,
+    4,
+    7
+  ],
+  "notes": [
+    "Seven semantically distinct poses: one neutral checkpoint and three progressive poses for each contralateral side.",
+    "The exact same neutral frame is reused at the side transition and loop closure to prevent generated neutral-frame jitter.",
+    "This bilateral cycle intentionally differs from the simple outbound-and-reverse pattern used by unilateral movements.",
+    "Torso, pelvis and lumbar control still require explicit human review.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

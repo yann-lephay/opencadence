@@ -1,0 +1,174 @@
+{
+  "version": "0.1",
+  "objective": {
+    "requestedOutcome": "Transformer une séance terminée en historique factuel, compréhensible et réutilisable par le moteur sans inventer d’effort, de gêne, de charge ou de progression.",
+    "nonGoals": [
+      "Créer un score global de forme, de qualité ou de régularité.",
+      "Ajouter streak, classement, calories ou culpabilisation.",
+      "Diagnostiquer une gêne, une douleur ou une récupération.",
+      "Afficher une progression causale à partir d’une seule séance."
+    ],
+    "changeType": "journey"
+  },
+  "surface": {
+    "id": "ios:workout/summary-history",
+    "mode": "review",
+    "scope": {
+      "kind": "journey",
+      "parentId": "ios:workout"
+    },
+    "episode": {
+      "trigger": "La dernière série est enregistrée ou la personne choisit de terminer tôt.",
+      "userJob": "Vérifier ce que l’app a retenu, compléter uniquement les sensations que je souhaite déclarer puis valider une trace fidèle.",
+      "completionEvidence": "La séance validée contient les séries et charges réellement confirmées, distingue le non-réalisé, conserve les réponses facultatives comme telles et alimente la prochaine décision du moteur."
+    }
+  },
+  "truth": {
+    "mustBeTrue": [
+      "Chaque série historique provient d’une validation explicite avec répétitions, mouvement, charge éventuelle et horodatage.",
+      "Une charge pondérée appartient à l’inventaire déclaré et a été confirmée pendant la séance.",
+      "Effort global, gêne maximale et répétitions encore possibles ne reçoivent jamais de valeur par défaut silencieuse.",
+      "Une réponse ignorée reste nulle et ne déclenche ni adaptation ni progression.",
+      "Le non-réalisé reste distinct d’une série à zéro et ne crée aucune dette.",
+      "La prochaine séance utilise uniquement un bilan définitivement sauvegardé.",
+      "Une proposition de progression cite la donnée réelle qui la déclenche et reste refus-able."
+    ],
+    "canonicalTerms": [
+      {
+        "canonical": "Effort global",
+        "userFacing": "Difficulté globale de la séance",
+        "precisionMoment": "Dans le bilan, sur une échelle facultative de 1 à 10.",
+        "source": "docs/IOS-PRODUCT-BRIEF.md#contrat-cible-du-moteur-v1"
+      },
+      {
+        "canonical": "Pain score",
+        "userFacing": "Gêne ou douleur la plus forte",
+        "precisionMoment": "Dans le bilan, sur une échelle facultative de 0 à 10 sans interprétation diagnostique.",
+        "source": "docs/IOS-ENGINE-BEHAVIOR-CONTRACT.md#eng-safety-001--douleur-et-signaux-dalerte"
+      },
+      {
+        "canonical": "Répétitions en réserve (RIR)",
+        "userFacing": "Répétitions encore possibles sur la dernière série chargée",
+        "precisionMoment": "Dans le bilan lorsqu’une série avec charge réelle peut alimenter une progression.",
+        "source": "docs/IOS-ENGINE-BEHAVIOR-CONTRACT.md#eng-progress-001--progression-dabord-par-les-répétitions"
+      }
+    ]
+  },
+  "decision": {
+    "currentState": "Séries réalisées, exercices non réalisés, charge et répétitions confirmées, réponses facultatives encore manquantes et conséquence sur la prochaine séance.",
+    "dominantAction": {
+      "id": "save-workout-summary",
+      "label": "Enregistrer ce bilan",
+      "expectedResult": "Une seule séance historique est créée atomiquement, la séance active est retirée et l’accueil peut recalculer la suite.",
+      "reversibility": "reversible",
+      "guard": "review-before-save"
+    },
+    "constraints": [
+      {
+        "id": "no-silent-feedback-default",
+        "mustBeTrue": "Toute sensation non choisie reste absente.",
+        "detectability": "immediate",
+        "consequence": "Le moteur pourrait adapter une séance à partir d’une réponse fictive.",
+        "recovery": "Afficher Je préfère ne pas répondre et accepter un bilan partiel sans adaptation correspondante."
+      },
+      {
+        "id": "summary-is-atomic",
+        "mustBeTrue": "Création de l’historique et retrait de la séance active réussissent dans la même sauvegarde.",
+        "detectability": "immediate",
+        "consequence": "Une séance pourrait disparaître, être dupliquée ou compter deux fois.",
+        "recovery": "Annuler le contexte en cas d’échec et conserver la séance active pour réessayer."
+      },
+      {
+        "id": "recent-facts-correctable",
+        "mustBeTrue": "La dernière série peut être corrigée directement avant validation du bilan, sans rouvrir la séance.",
+        "detectability": "immediate",
+        "consequence": "Une erreur tactile deviendrait une fausse performance durable.",
+        "recovery": "Modifier ses répétitions et sa charge éventuelle en conservant l’état terminé et les autres résultats."
+      },
+      {
+        "id": "history-without-fake-trend",
+        "mustBeTrue": "L’historique expose des faits datés et non un pourcentage de progression non démontré.",
+        "detectability": "immediate",
+        "consequence": "La personne pourrait confondre variation de séance et amélioration réelle.",
+        "recovery": "Afficher date, durée, séries et mouvements ; réserver toute tendance à plusieurs observations comparables."
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "factual-session-recap",
+      "purpose": "evidence",
+      "visibility": "persistent",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Permet de vérifier réalisé, non réalisé, répétitions et charges avant validation."
+    },
+    {
+      "id": "optional-feedback",
+      "purpose": "decision",
+      "visibility": "persistent",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Rend explicites les seules réponses subjectives utilisées par le moteur et autorise l’absence de réponse."
+    },
+    {
+      "id": "correct-last-set",
+      "purpose": "recovery",
+      "visibility": "contextual",
+      "hierarchy": 2,
+      "verdict": "keep",
+      "reason": "Corrige l’erreur la plus probable sans construire un éditeur complet de séance."
+    },
+    {
+      "id": "recent-history",
+      "purpose": "evidence",
+      "visibility": "contextual",
+      "hierarchy": 2,
+      "verdict": "keep",
+      "reason": "Montre des traces datées utiles sans gamification ni conclusion prématurée."
+    }
+  ],
+  "states": [
+    {
+      "id": "summary-ready",
+      "kind": "review",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Vérifier, répondre si souhaité puis enregistrer.",
+      "recovery": "Corriger la dernière série avant validation."
+    },
+    {
+      "id": "summary-save-failed",
+      "kind": "error",
+      "blocking": true,
+      "preserveInput": true,
+      "nextStep": "Réessayer exactement le même bilan.",
+      "recovery": "Conserver la séance active et toutes les réponses à l’écran."
+    },
+    {
+      "id": "history-empty",
+      "kind": "empty",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Préparer une première séance.",
+      "recovery": "Aucun message de retard ou d’échec."
+    }
+  ],
+  "accessibility": {
+    "dynamicType": "Le récapitulatif, les choix et l’action dominante restent dans l’ordre de lecture sans colonnes rigides.",
+    "voiceOver": "Chaque valeur annonce son intitulé, son statut facultatif et sa conséquence avant le contrôle.",
+    "targetSize": "Tous les choix et actions mesurent au moins 44 par 44 points.",
+    "reducedMotion": "Aucune compréhension ne dépend d’une animation."
+  },
+  "verification": {
+    "required": [
+      "Test de conversion snapshot vers HistorySession avec valeurs facultatives absentes.",
+      "Test charge hors inventaire impossible pendant la séance.",
+      "Test sauvegarde atomique sans doublon de sessionID.",
+      "Test historique réinjecté dans readiness et progression.",
+      "Test correction de la dernière série avant bilan.",
+      "Parcours Simulator avec VoiceOver tree et Dynamic Type."
+    ],
+    "publicationGate": "Avant beta externe : relecture clinique des libellés gêne/douleur et test utilisateur du bilan."
+  }
+}

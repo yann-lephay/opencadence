@@ -1,0 +1,217 @@
+--- start/CadenceEngineV2.swift
++++ experiment/CadenceEngineV2.swift
+@@ -7,6 +7,14 @@
+     ) -> V2EngineResult {
+         CadenceEngineV2.evaluate(request, configuration: configuration)
+     }
++}
++
++// Internal bench switch only: the public dispatcher never supplies this value.
++// No persisted policy or application default is changed by the experiment.
++enum V2AutomaticSizingExperiment: String {
++    case catalogMaximum
++    case catalogMinimum
++    case capAtTwo
+ }
+ 
+ enum CadenceEngineV2 {
+@@ -27,10 +35,12 @@
+     static func decideNextSession(
+         input: V2SessionDecisionInput,
+         now: Date,
+-        configuration: V2EngineConfiguration
++        configuration: V2EngineConfiguration,
++        experimentalSizing: V2AutomaticSizingExperiment? = nil
+     ) -> V2SessionDecision {
+         let mode = input.request.mode ?? .normal
+-        guard let requestedBudget = configuration.policy.durationBudgetsSeconds[String(input.request.durationMinutes)] else {
++        let requestedBudget = configuration.policy.durationBudgetsSeconds[String(input.request.durationMinutes)]
++        guard experimentalSizing != nil || requestedBudget != nil else {
+             return sessionDecision(
+                 .requestValidInput,
+                 mode: mode,
+@@ -65,7 +75,7 @@
+             )
+         }
+ 
+-        let budget = input.request.remainingSeconds ?? requestedBudget
++        let budget: Int? = experimentalSizing == nil ? (input.request.remainingSeconds ?? requestedBudget) : nil
+         if let active = input.activeSession {
+             guard active.catalogVersion == configuration.catalogVersion,
+                   active.decisionPolicyVersion == configuration.decisionPolicyVersion else {
+@@ -90,7 +100,8 @@
+                 active: active,
+                 budget: budget,
+                 now: now,
+-                configuration: configuration
++                configuration: configuration,
++                experimentalSizing: experimentalSizing
+             )
+         }
+ 
+@@ -100,7 +111,8 @@
+             budget: budget,
+             now: now,
+             configuration: configuration,
+-            preferredExerciseIds: nil
++            preferredExerciseIds: nil,
++            experimentalSizing: experimentalSizing
+         )
+         guard mode == .light, normal.decision == .generateSession else { return normal }
+         return lighten(normal, input: input, configuration: configuration)
+@@ -210,7 +222,8 @@
+ 
+     static func reduceActiveSession(
+         input: V2ActiveTransitionInput,
+-        configuration: V2EngineConfiguration
++        configuration: V2EngineConfiguration,
++        preserveUnstartedAfterEstimate: Bool = false
+     ) -> V2ActiveTransitionDecision {
+         if input.action == .declareHealthSignal {
+             return V2ActiveTransitionDecision(
+@@ -238,7 +251,7 @@
+                 )]
+             )
+         }
+-        return finishOnTime(input: input, configuration: configuration)
++        return finishOnTime(input: input, configuration: configuration, preserveUnstartedAfterEstimate: preserveUnstartedAfterEstimate)
+     }
+ }
+ 
+@@ -262,14 +275,15 @@
+     static func buildSession(
+         input: V2SessionDecisionInput,
+         mode: V2SessionMode,
+-        budget: Int,
++        budget: Int?,
+         now: Date,
+         configuration: V2EngineConfiguration,
+         preferredExerciseIds: [String]?,
+         restrictToPreferred: Bool = false,
+         preservedWork: [String: V2UnstartedWork] = [:],
+         setCaps: [String: Int] = [:],
+-        forcedCandidates: [Candidate]? = nil
++        forcedCandidates: [Candidate]? = nil,
++        experimentalSizing: V2AutomaticSizingExperiment? = nil
+     ) -> V2SessionDecision {
+         let stableIds = preferredExerciseIds ?? stableExerciseIds(input.history, configuration: configuration)
+         var orderedAnchors = orderedAnchors(
+@@ -349,7 +363,7 @@
+             )
+             let row = MutableRow(
+                 candidate: effectiveCandidate,
+-                sets: exercise.sets.min,
++                sets: experimentalSizing == nil ? exercise.sets.min : min(exercise.sets.min, setCaps[candidate.exerciseId] ?? exercise.sets.min),
+                 targetReps: prescription.targetReps,
+                 restSeconds: preserved?.restSeconds ?? plannedRestSeconds(
+                     for: exercise,
+@@ -361,7 +375,7 @@
+                 progressionContext: preserved?.progressionContext ?? exercise.progressionContext
+             )
+             let minimumCost = cost(row: row, sets: row.sets, exercise: exercise)
+-            guard usedSeconds + minimumCost <= budget else {
++            guard budget.map({ usedSeconds + minimumCost <= $0 }) ?? true else {
+                 omitted.append(exercise.anchor)
+                 continue
+             }
+@@ -378,7 +392,7 @@
+             )
+         }
+ 
+-        let optionalLimit = budget >= 2_700 ? 2 : (budget >= 1_800 ? 1 : 0)
++        let optionalLimit = budget.map { $0 >= 2_700 ? 2 : ($0 >= 1_800 ? 1 : 0) } ?? 0
+         if optionalLimit > 0 {
+             let alreadySelectedMovements = Set(rows.compactMap {
+                 configuration.catalog[$0.candidate.exerciseId]?.resolvedMovementId
+@@ -444,7 +458,7 @@
+                     progressionContext: exercise.progressionContext
+                 )
+                 let minimumCost = cost(row: row, sets: row.sets, exercise: exercise)
+-                guard usedSeconds + minimumCost <= budget else { continue }
++                guard budget.map({ usedSeconds + minimumCost <= $0 }) ?? true else { continue }
+                 rows.append(row)
+                 usedSeconds += minimumCost
+             }
+@@ -462,7 +476,7 @@
+                     )
+             }
+             .sorted(by: { ($0.value.selectionRank, $0.key) < ($1.value.selectionRank, $1.key) })
+-        if budget >= 2_700, let (id, exercise) = conditioningCandidates.first {
++        if let budget, budget >= 2_700, let (id, exercise) = conditioningCandidates.first {
+             let candidate = Candidate(exerciseId: id, sourceExerciseId: nil, substitutionType: nil)
+             let row = MutableRow(
+                 candidate: candidate,
+@@ -486,12 +500,18 @@
+                 let exercise = configuration.catalog[rows[index].candidate.exerciseId]!
+                 let plannedCap = setCaps[rows[index].candidate.exerciseId]
+                     ?? preservedWork[rows[index].candidate.exerciseId].map { max(exercise.sets.min, $0.sets) }
+-                let maximum = min(exercise.sets.max, plannedCap ?? exercise.sets.max)
++                let experimentCap: Int
++                switch experimentalSizing {
++                case .catalogMinimum: experimentCap = exercise.sets.min
++                case .capAtTwo: experimentCap = max(exercise.sets.min, min(exercise.sets.max, 2))
++                default: experimentCap = exercise.sets.max
++                }
++                let maximum = min(exercise.sets.max, plannedCap ?? experimentCap)
+                 guard rows[index].sets < maximum else { continue }
+                 let oldCost = cost(row: rows[index], sets: rows[index].sets, exercise: exercise)
+                 let newCost = cost(row: rows[index], sets: rows[index].sets + 1, exercise: exercise)
+                 let marginal = newCost - oldCost
+-                if usedSeconds + marginal <= budget {
++                if budget.map({ usedSeconds + marginal <= $0 }) ?? true {
+                     rows[index].sets += 1
+                     usedSeconds += marginal
+                     addedInPass = true
+@@ -547,9 +567,10 @@
+     static func adaptActiveSession(
+         input: V2SessionDecisionInput,
+         active: V2ActiveSession,
+-        budget: Int,
++        budget: Int?,
+         now: Date,
+-        configuration: V2EngineConfiguration
++        configuration: V2EngineConfiguration,
++        experimentalSizing: V2AutomaticSizingExperiment? = nil
+     ) -> V2SessionDecision {
+         guard active.unstarted.allSatisfy({ plannedWorkIsCoherent($0, configuration: configuration) }) else {
+             return V2SessionDecision(
+@@ -612,7 +633,8 @@
+             restrictToPreferred: true,
+             preservedWork: preservedWork,
+             setCaps: setCaps,
+-            forcedCandidates: activeCandidates
++            forcedCandidates: activeCandidates,
++            experimentalSizing: experimentalSizing
+         )
+         guard rebuilt.decision == .generateSession else {
+             return V2SessionDecision(
+@@ -818,7 +840,8 @@
+ 
+     static func finishOnTime(
+         input: V2ActiveTransitionInput,
+-        configuration: V2EngineConfiguration
++        configuration: V2EngineConfiguration,
++        preserveUnstartedAfterEstimate: Bool = false
+     ) -> V2ActiveTransitionDecision {
+         guard input.remainingSeconds.map({ $0 >= 0 }) ?? false,
+               input.unstarted.allSatisfy({ plannedWorkIsCoherent($0, configuration: configuration) }) else {
+@@ -844,6 +867,19 @@
+                 load: work.load,
+                 referenceStatus: work.referenceStatus,
+                 progressionContext: work.progressionContext
++            )
++        }
++        // This path is reachable only by the internal experiment, after validation.
++        // It preserves the work supplied now; it cannot restore work removed earlier.
++        if preserveUnstartedAfterEstimate {
++            let plan = remaining.map { planItem($0, configuration: configuration) }
++            return V2ActiveTransitionDecision(
++                catalogVersion: configuration.catalogVersion,
++                decisionPolicyVersion: configuration.decisionPolicyVersion,
++                decision: .activeSessionTransition,
++                estimatedSeconds: estimate(plan, configuration: configuration),
++                plan: plan,
++                confirmed: input.confirmed
+             )
+         }
+         let originalSets = Dictionary(uniqueKeysWithValues: input.unstarted.map { ($0.exerciseId, $0.sets) })

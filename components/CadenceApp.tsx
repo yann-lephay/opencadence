@@ -17,6 +17,7 @@ import {
   Ruler,
   Scale,
   Settings2,
+  Shuffle,
   Sparkles,
   Target,
   Timer,
@@ -127,6 +128,7 @@ function Dashboard({
   const credits7 = calculateRollingCredits(state.history, 7);
   const sessionRecommendation = getNextSessionRecommendation(state.history);
   const loadRecommendations = next.items.filter((item) => item.recommendedLoadLabel);
+  const surprise = state.profile.surpriseWorkouts ?? false;
   const dedicatedLifeStage =
     state.profile.physiologicalContext === "pregnancy" ||
     state.profile.physiologicalContext === "postpartum";
@@ -168,10 +170,14 @@ function Dashboard({
             <span><Clock3 size={14} /> {next.estimatedMinutes} min</span>
             <span><Gauge size={14} /> {next.intensity}</span>
           </div>
-          <h2>{next.title}</h2>
-          <p>{next.subtitle}</p>
+          <h2>{surprise ? "Carte blanche" : next.title}</h2>
+          <p>
+            {surprise
+              ? "Le contenu et l’ordre se dévoilent seulement après avoir lancé la séance."
+              : next.subtitle}
+          </p>
           <div className="focus-pills">
-            {next.focus.map((focus) => <span key={focus}>{focus}</span>)}
+            {(surprise ? ["Corps entier", "Priorités personnelles"] : next.focus).map((focus) => <span key={focus}>{focus}</span>)}
           </div>
           <button className="primary-button hero-button" onClick={startSession} disabled={starting || dedicatedLifeStage}>
             {starting ? <LoaderCircle className="spin" size={19} /> : <Play size={18} fill="currentColor" />}
@@ -199,12 +205,16 @@ function Dashboard({
               <h3>Le cap du jour</h3>
             </div>
           </div>
-          <blockquote>{next.coachNote}</blockquote>
+          <blockquote>
+            {surprise
+              ? "La sélection reste adaptée à ta récupération, ton matériel et tes points faibles. Surprise ne veut pas dire hasard."
+              : next.coachNote}
+          </blockquote>
           <div className="coach-rule">
             <span>Règle simple</span>
             <p>La technique décide de la fin de la série, pas l’ego.</p>
           </div>
-          {loadRecommendations.length > 0 && (
+          {!surprise && loadRecommendations.length > 0 && (
             <div className="load-analysis">
               <button type="button" onClick={() => setShowLoadAnalysis((visible) => !visible)}>
                 <Target size={16} />
@@ -260,34 +270,56 @@ function Dashboard({
         </article>
       </section>
 
-      <section className="session-preview">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Déroulé</p>
-            <h2>{next.items.length} mouvements, guidés un par un</h2>
-          </div>
-          <span><Timer size={16} /> Repos automatique</span>
-        </div>
-        <div className="preview-list">
-          {next.items.map((item, index) => (
-            <div key={item.id} className="preview-row">
-              <span className="preview-index">{item.superset ?? String(index + 1).padStart(2, "0")}</span>
-              <div>
-                <strong>{exerciseName(item.exercise)}</strong>
-                <small>{item.purpose}{item.superset ? ` · paire ${item.superset}` : ""}</small>
-              </div>
-              <span className="preview-target">
-                {item.sets} × {explainRir(item.target)}
-                <small>{explainRir(item.rirTarget)}</small>
-              </span>
-              <span className="preview-equipment">
-                {item.recommendedLoadLabel ?? item.equipment}
-                {item.recommendedLoadLabel && <small>charge conseillée</small>}
-              </span>
+      {surprise ? (
+        <section className="session-preview surprise-preview">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Déroulé masqué</p>
+              <h2>Tu le découvriras une étape à la fois.</h2>
             </div>
-          ))}
-        </div>
-      </section>
+            <span><Shuffle size={16} /> Variation contrôlée</span>
+          </div>
+          <div className="surprise-sequence" aria-label="Structure générale de la séance surprise">
+            {["Mise en route", "Bloc principal", "Priorité personnelle", "Fin adaptée"].map((label, index) => (
+              <div key={label}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <strong>{label}</strong>
+                <small>Révélé pendant la séance</small>
+              </div>
+            ))}
+          </div>
+          <p>Les charges, les images et toutes les consignes apparaîtront normalement dès le lancement.</p>
+        </section>
+      ) : (
+        <section className="session-preview">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Déroulé</p>
+              <h2>{next.items.length} mouvements, guidés un par un</h2>
+            </div>
+            <span><Timer size={16} /> Repos automatique</span>
+          </div>
+          <div className="preview-list">
+            {next.items.map((item, index) => (
+              <div key={item.id} className="preview-row">
+                <span className="preview-index">{item.superset ?? String(index + 1).padStart(2, "0")}</span>
+                <div>
+                  <strong>{exerciseName(item.exercise)}</strong>
+                  <small>{item.purpose}{item.superset ? ` · paire ${item.superset}` : ""}</small>
+                </div>
+                <span className="preview-target">
+                  {item.sets} × {explainRir(item.target)}
+                  <small>{explainRir(item.rirTarget)}</small>
+                </span>
+                <span className="preview-equipment">
+                  {item.recommendedLoadLabel ?? item.equipment}
+                  {item.recommendedLoadLabel && <small>charge conseillée</small>}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
@@ -331,6 +363,7 @@ function HistoryPage({ state }: { state: CadenceState }) {
               <div className="history-results">
                 {session.workout.items.map((item) => {
                   const results = session.progress[item.id] ?? [];
+                  const wasSkipped = session.skippedItemIds?.includes(item.id) ?? false;
                   const values = results.map((set) => set.value);
                   const formattedValues = values.map((value) => {
                     if (item.mode !== "time") return String(value);
@@ -350,9 +383,10 @@ function HistoryPage({ state }: { state: CadenceState }) {
                     <div key={item.id}>
                       <span>{exerciseName(item.exercise)}</span>
                       <strong>
-                        {rowerResult ?? (formattedValues.length ? formattedValues.join(" · ") : "—")}
+                        {rowerResult ?? (formattedValues.length ? formattedValues.join(" · ") : wasSkipped ? "Non réalisé" : "—")}
                         {rir !== undefined ? ` · ${rir === 4 ? "4+" : rir} reps en réserve` : ""}
                         {load ? ` · ${load}` : ""}
+                        {wasSkipped && formattedValues.length ? " · incomplet" : ""}
                       </strong>
                     </div>
                   );
@@ -522,6 +556,18 @@ function ProfilePage({ state, onState }: { state: CadenceState; onState: (state:
               </span>
             </label>
           </div>
+          <label className="tracking-choice surprise-choice">
+            <input
+              type="checkbox"
+              checked={form.surpriseWorkouts ?? false}
+              onChange={(event) => setForm({ ...form, surpriseWorkouts: event.target.checked })}
+            />
+            <Shuffle size={19} />
+            <span>
+              <strong>Mode séance surprise</strong>
+              <small>Masque le détail avant le lancement, tout en gardant une progression structurée.</small>
+            </span>
+          </label>
           <label className="tracking-choice contribution-choice">
             <input
               type="checkbox"

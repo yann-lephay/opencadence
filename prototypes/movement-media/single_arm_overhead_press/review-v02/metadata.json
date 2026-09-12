@@ -1,0 +1,58 @@
+{
+  "movementId": "single_arm_overhead_press",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "sources": [
+    "stop-motion-v01-candidates/single_arm_overhead_press_contact_sheet_v02.png",
+    "stop-motion-v01-candidates/single_arm_overhead_press_contact_sheet_v02.png",
+    "intermediate-v03/intermediate.png",
+    "stop-motion-v01-candidates/single_arm_overhead_press_contact_sheet_v02.png"
+  ],
+  "boardCellIndices": [
+    1,
+    6,
+    null,
+    9
+  ],
+  "boardCellCrops": [
+    "299x303+10+10",
+    "300x303+321+323",
+    null,
+    "299x302+10+638"
+  ],
+  "uniqueSourceFrames": 4,
+  "visiblyDistinctPoses": 4,
+  "displayedSteps": 7,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "single_arm_overhead_press_review_v02.mp4",
+  "poster": "single_arm_overhead_press_poster_review_v02.webp",
+  "fallback": "single_arm_overhead_press_fallback_review_v02.webp",
+  "fallbackSourceIndices": [
+    1,
+    2,
+    4
+  ],
+  "notes": [
+    "Explicit independently reviewed mixed-source selection: board cells 1, 6, intermediate-v03, then cell 9.",
+    "Slight shoe-tip clipping exists in the sources and was accepted as non-blocking for this overhead-press prototype; not introduced as an intentional crop.",
+    "No generated intermediate beyond the separately reviewed intermediate-v03 source.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

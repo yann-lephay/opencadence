@@ -1,0 +1,56 @@
+{
+  "movementId": "suitcase_march",
+  "status": "needs_fix_pending_user_review",
+  "motionKind": "gait",
+  "playback": "loop_review",
+  "sources": [
+    "user-redo-2026-09-05/selected/cell_01.png",
+    "user-redo-2026-09-05/selected/cell_02.png",
+    "user-redo-2026-09-05/selected/cell_03.png",
+    "user-redo-2026-09-05/selected/cell_04.png",
+    "user-redo-2026-09-05/selected/cell_09.png",
+    "user-redo-2026-09-05/selected/left-low.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": null,
+  "uniqueSourceFrames": 6,
+  "visiblyDistinctPoses": 5,
+  "displayedSteps": 10,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    1,
+    6,
+    5,
+    6
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "suitcase_march_review_user_v01.mp4",
+  "poster": "suitcase_march_poster_review_user_v01.webp",
+  "fallback": "suitcase_march_fallback_review_user_v01.webp",
+  "fallbackSourceIndices": [
+    1,
+    4,
+    5
+  ],
+  "notes": [
+    "New small-lift direction after Yann rejected review-density-v02; no acceptance inherited from the previous agent review.",
+    "Six source images, five conservatively counted distinct states because the left levels are close; ten displayed steps on four seconds.",
+    "Explicit same-leg lowering reuses static poses; actual left-leg images keep the dumbbell in the same hand. No mirror or reversed full gait sequence.",
+    "Independent QC: support and hand consistent, modest bilateral lifts. Slight halo on generated left intermediate and small backdrop drift remain.",
+    "New diagnostic awaiting Yann, not professional validation or release approval.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

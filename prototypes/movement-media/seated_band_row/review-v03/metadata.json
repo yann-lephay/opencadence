@@ -1,0 +1,58 @@
+{
+  "movementId": "seated_band_row",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "rework-2026-09-05/key-poses-v02.png",
+    "rework-2026-09-05/key-poses-v02.png",
+    "rework-2026-09-05/key-poses-v02.png",
+    "rework-2026-09-05/key-poses-v02.png"
+  ],
+  "boardCellIndices": [
+    1,
+    3,
+    2,
+    4
+  ],
+  "boardCellCrops": [
+    "581x581+20+21",
+    "581x581+20+648",
+    "581x581+649+21",
+    "581x581+649+648"
+  ],
+  "uniqueSourceFrames": 4,
+  "visiblyDistinctPoses": 4,
+  "displayedSteps": 7,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "seated_band_row_review_v03.mp4",
+  "poster": "seated_band_row_poster_review_v03.webp",
+  "fallback": "seated_band_row_fallback_review_v03.webp",
+  "fallbackSourceIndices": [
+    1,
+    2,
+    4
+  ],
+  "notes": [
+    "Only four readable arm positions; seven displayed steps is a low-density exception, not twelve distinct poses.",
+    "Reordered cells 1,3,2,4. Orange band stays around feet; small shoe and torso framing drift remains.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

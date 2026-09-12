@@ -1,0 +1,69 @@
+{
+  "movementId": "single_arm_dumbbell_floor_press",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "rework-2026-09-05/single_arm_dumbbell_floor_press_phases_v04.png",
+    "rework-2026-09-05/single_arm_dumbbell_floor_press_phases_v04.png",
+    "rework-2026-09-05/single_arm_dumbbell_floor_press_phases_v04.png",
+    "rework-2026-09-05/single_arm_dumbbell_floor_press_phases_v04.png",
+    "rework-2026-09-05/single_arm_dumbbell_floor_press_phases_v04.png",
+    "rework-2026-09-05/single_arm_dumbbell_floor_press_phases_v04.png"
+  ],
+  "boardCellIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "boardCellCrops": [
+    "436x436+5+5",
+    "436x436+448+5",
+    "436x436+891+5",
+    "436x436+1334+5",
+    "436x436+5+448",
+    "436x436+448+448"
+  ],
+  "uniqueSourceFrames": 6,
+  "visiblyDistinctPoses": 6,
+  "displayedSteps": 11,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    5,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "single_arm_dumbbell_floor_press_review_v03.mp4",
+  "poster": "single_arm_dumbbell_floor_press_poster_review_v03.webp",
+  "fallback": "single_arm_dumbbell_floor_press_fallback_review_v03.webp",
+  "fallbackSourceIndices": [
+    1,
+    3,
+    6
+  ],
+  "notes": [
+    "Near working arm is preserved. Far free arm is occluded; do not infer its installation from these images alone.",
+    "Excluded source poses 7 and 8: forearm tilts toward torso and repeats the endpoint.",
+    "Six poses, eleven displayed steps. Not professional validation or release approval.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

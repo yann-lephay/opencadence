@@ -1,0 +1,8 @@
+.build/
+.derived-data/
+.swiftpm/
+**/xcuserdata/
+*.xcuserstate
+*.store
+*.store-shm
+*.store-wal

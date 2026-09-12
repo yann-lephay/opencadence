@@ -1,0 +1,1845 @@
+--- baseline/OpenCadence/Models/AppModels.swift
++++ current/OpenCadence/Models/AppModels.swift
+@@ -311,6 +311,7 @@
+     var feedback: WorkoutFeedback?
+     var safetyEventRecords: [SafetyEventRecord]?
+     var unresolvedSafetyEventID: String?
++    var setStartedAt: Date? = nil
+     var startedAt: Date? = nil
+     var v2Context: ActiveWorkoutV2Context? = nil
+ 
+--- baseline/OpenCadence/Services/ActiveSessionCoordinator.swift
++++ current/OpenCadence/Services/ActiveSessionCoordinator.swift
+@@ -103,6 +103,7 @@
+         )
+         guard transition.transition == "set_completed" else { return snapshot }
+ 
++        next.setStartedAt = nil
+         next.completedSetCount = transition.completedSetCount ?? snapshot.completedSetCount
+         next.completedSetsInMovement += 1
+         next.processedEventIDs.append(eventID)
+@@ -241,6 +242,7 @@
+         next.safetyEventRecords = events
+         if transition.transition == "stop_current_set"
+             || transition.transition == "stop_current_exercise" {
++            next.setStartedAt = nil
+             next.unresolvedSafetyEventID = eventID
+         }
+         return next
+@@ -411,7 +413,8 @@
+         }
+         if let movement = next.currentMovement,
+            next.completedSetsInMovement >= movement.sets {
+-            next.currentMovementIndex += 1
++            next.setStartedAt = nil
++        next.currentMovementIndex += 1
+             next.completedSetsInMovement = 0
+         }
+         next = applyV2TimeBudget(to: next, now: now)
+@@ -554,6 +557,7 @@
+         guard let movement = snapshot.currentMovement else { return snapshot }
+         var next = snapshot
+         next.skippedExerciseKeys.append(movement.exerciseKey)
++        next.setStartedAt = nil
+         next.currentMovementIndex += 1
+         next.completedSetsInMovement = 0
+         next.restDeadline = nil
+--- baseline/OpenCadence/Services/WorkoutLoadResolver.swift
++++ current/OpenCadence/Services/WorkoutLoadResolver.swift
+@@ -16,9 +16,8 @@
+         for movement: PrescribedMovement,
+         inventory: [EquipmentItem]
+     ) -> [Double] {
+-        let categories = Set(movement.equipment.map(\.category))
+         return Array(Set(inventory.flatMap { item -> [Double] in
+-            guard categories.contains(item.category) else { return [] }
++            guard movement.equipment.contains(where: { $0.category == item.category && item.supports($0.configuration) }) else { return [] }
+             switch item.category {
+             case "fixed_dumbbell":
+                 return item.weightKg.map { [$0] } ?? []
+@@ -35,9 +34,8 @@
+         for movement: PrescribedMovement,
+         inventory: [EquipmentItem]
+     ) -> [String] {
+-        let categories = Set(movement.equipment.map(\.category))
+         return inventory
+-            .filter { categories.contains($0.category) }
++            .filter { item in movement.equipment.contains { $0.category == item.category && item.supports($0.configuration) } }
+             .flatMap { $0.optionIDs ?? [] }
+             .reduce(into: [String]()) { result, option in
+                 if !result.contains(option) { result.append(option) }
+--- baseline/OpenCadence/Views/ActiveWorkoutView.swift
++++ current/OpenCadence/Views/ActiveWorkoutView.swift
+@@ -109,12 +109,12 @@
+     private func activeView(_ snapshot: ActiveWorkoutSnapshot) -> some View {
+         GeometryReader { proxy in
+             let isLandscape = proxy.size.width > proxy.size.height
+-            let requiresScrolling = dynamicTypeSize.isAccessibilitySize || hasActiveNotice(snapshot)
++            let requiresScrolling = dynamicTypeSize.isAccessibilitySize || hasActiveNotice(snapshot) || isResting(snapshot)
+ 
+             Group {
+                 if requiresScrolling {
+                     ScrollView {
+-                        activeWorkoutContent(snapshot, availableSize: proxy.size, isLandscape: false)
++                        activeWorkoutContent(snapshot, availableSize: proxy.size, isLandscape: isLandscape && !dynamicTypeSize.isAccessibilitySize)
+                     }
+                 } else {
+                     activeWorkoutContent(snapshot, availableSize: proxy.size, isLandscape: isLandscape)
+@@ -147,7 +147,7 @@
+             }
+ 
+             if isResting(snapshot) {
+-                restView(snapshot)
++                restView(snapshot, isLandscape: isLandscape)
+                     .disabled(pendingSnapshot != nil)
+                 sessionExitActions(includeSafety: false, skipTitle: "Passer l’exercice")
+                     .disabled(pendingSnapshot != nil)
+@@ -247,9 +247,21 @@
+             repetitionsControl(movement, compact: isLandscape)
+ 
+             Button {
+-                update { ActiveSessionCoordinator.recordSet($0, repetitions: repetitions) }
++                if snapshot.setStartedAt == nil {
++                    update { current in
++                        var next = current
++                        if next.confirmedLoads[movement.exerciseKey] == nil,
++                           let suggested = next.v2Context?.plan.first(where: { $0.exerciseId == movement.exerciseKey })?.load?.kg {
++                            next = ActiveSessionCoordinator.confirmLoad(next, exerciseKey: movement.exerciseKey, perUnitWeightKg: suggested, inventory: setups.first?.inventory ?? [])
++                        }
++                        next.setStartedAt = .now
++                        return next
++                    }
++                } else {
++                    update { ActiveSessionCoordinator.recordSet($0, repetitions: repetitions) }
++                }
+             } label: {
+-                Label("Valider la série", systemImage: "checkmark")
++                Label(snapshot.setStartedAt == nil ? "Commencer la série" : "Valider la série", systemImage: snapshot.setStartedAt == nil ? "play.fill" : "checkmark")
+                     .frame(maxWidth: .infinity)
+                     .frame(minHeight: isLandscape ? 44 : 46)
+             }
+@@ -259,6 +271,7 @@
+             .disabled(
+                 WorkoutLoadResolver.requiresLoad(movement)
+                     && snapshot.confirmedLoads[movement.exerciseKey] == nil
++                    && !(snapshot.v2Context?.plan.first(where: { $0.exerciseId == movement.exerciseKey })?.load?.kg.map { WorkoutLoadResolver.options(for: movement, inventory: setups.first?.inventory ?? []).contains($0) } ?? false)
+                     || WorkoutLoadResolver.requiresOption(movement)
+                     && snapshot.confirmedOptions[movement.exerciseKey] == nil
+             )
+@@ -314,21 +327,19 @@
+                     .font(.subheadline)
+                     .foregroundStyle(LBSBrand.destructiveText)
+             } else {
+-                adaptivePickerRow(
+-                    title: "Charge",
+-                    systemImage: "scalemass",
+-                    picker: Picker("Charge réellement utilisée", selection: loadBinding(for: movement)) {
+-                        Text("Choisir").tag(Double?.none)
+-                        ForEach(options, id: \.self) { weight in
+-                            Text("\(weight.formatted(.number)) \(WorkoutLoadResolver.loadLabel(for: movement))")
+-                                .tag(Double?.some(weight))
+-                        }
+-                    }
+-                    .pickerStyle(.menu)
+-                )
+-                .frame(minHeight: 44)
+-                .padding(.horizontal, 12)
+-                .background(LBSBrand.screenBackground, in: RoundedRectangle(cornerRadius: 14))
++                let suggested = snapshot?.v2Context?.plan.first { $0.exerciseId == movement.exerciseKey }?.load?.kg
++                let selected = snapshot?.confirmedLoads[movement.exerciseKey] ?? suggested.flatMap { options.contains($0) ? $0 : nil }
++                let center = options.firstIndex(of: selected ?? suggested ?? options[0]) ?? 0
++                let visible = Array(options[max(0, center - 1)...min(options.count - 1, center + 1)])
++                ViewThatFits(in: .horizontal) {
++                    HStack(spacing: 8) {
++                        ForEach(visible, id: \.self) { weight in loadChoice(weight, movement: movement, selected: selected, suggested: suggested) }
++                    }
++                    VStack(spacing: 8) {
++                        ForEach(visible, id: \.self) { weight in loadChoice(weight, movement: movement, selected: selected, suggested: suggested) }
++                    }
++                }
++
+             }
+         }
+ 
+@@ -354,6 +365,23 @@
+         }
+     }
+ 
++    private func loadChoice(_ weight: Double, movement: PrescribedMovement, selected: Double?, suggested: Double?) -> some View {
++        Button { loadBinding(for: movement).wrappedValue = weight } label: {
++            VStack(spacing: 4) {
++                Text("\(weight.formatted(.number)) \(WorkoutLoadResolver.loadLabel(for: movement))")
++                    .font(.headline)
++                if weight == suggested { Text("Suggestion").font(.caption) }
++            }
++            .frame(maxWidth: .infinity, minHeight: 52)
++            .padding(8)
++            .background(selected == weight ? LBSBrand.ink : LBSBrand.cardBackground, in: RoundedRectangle(cornerRadius: 12))
++            .foregroundStyle(selected == weight ? LBSBrand.cream : LBSBrand.brandText)
++            .overlay { RoundedRectangle(cornerRadius: 12).stroke(LBSBrand.border) }
++        }
++        .buttonStyle(.plain)
++        .accessibilityAddTraits(selected == weight ? .isSelected : [])
++    }
++
+     @ViewBuilder
+     private func adaptivePickerRow<PickerContent: View>(
+         title: LocalizedStringKey,
+@@ -471,15 +499,15 @@
+         .foregroundStyle(role == .destructive ? LBSBrand.destructiveText : LBSBrand.brandAccentText)
+     }
+ 
+-    private func restView(_ snapshot: ActiveWorkoutSnapshot) -> some View {
++    private func restView(_ snapshot: ActiveWorkoutSnapshot, isLandscape: Bool) -> some View {
+         let deadline = snapshot.restDeadline ?? .now
+         let tickStart = deadline.addingTimeInterval(-Double(remainingSeconds(until: deadline, at: .now)))
+         return TimelineView(.periodic(from: tickStart, by: 1)) { context in
+-            restContent(snapshot, now: context.date)
+-        }
+-    }
+-
+-    private func restContent(_ snapshot: ActiveWorkoutSnapshot, now: Date) -> some View {
++            restContent(snapshot, now: context.date, isLandscape: isLandscape)
++        }
++    }
++
++    private func restContent(_ snapshot: ActiveWorkoutSnapshot, now: Date, isLandscape: Bool) -> some View {
+         VStack(alignment: .leading, spacing: 18) {
+             HStack(alignment: .firstTextBaseline) {
+                 Text("Repos")
+@@ -504,11 +532,39 @@
+             }
+             sessionProgress(snapshot)
+ 
+-            Text("Récupère tranquillement")
+-                .font(.title2.bold())
+-            Text("Le repos fait partie de la séance. Il n’y a rien à rattraper.")
+-                .foregroundStyle(.secondary)
+-
++            if isLandscape {
++                HStack(alignment: .top, spacing: 24) {
++                    restMovementPreview(snapshot, compact: true)
++                        .frame(maxWidth: .infinity)
++                    restTimerControls(snapshot, now: now)
++                        .frame(maxWidth: .infinity)
++                }
++            } else {
++                restMovementPreview(snapshot, compact: false)
++                restTimerControls(snapshot, now: now)
++            }
++        }
++        .frame(maxWidth: .infinity, alignment: .leading)
++    }
++
++    @ViewBuilder
++    private func restMovementPreview(_ snapshot: ActiveWorkoutSnapshot, compact: Bool) -> some View {
++        if let next = restPreviewMovement(snapshot) {
++            VStack(alignment: .leading, spacing: 8) {
++                MovementDemonstrationView(exerciseID: next.exerciseKey, showsPlaybackControls: false)
++                    .frame(maxWidth: compact ? 170 : 280)
++                    .frame(maxWidth: .infinity)
++                Text(next.exerciseKey == snapshot.currentMovement?.exerciseKey ? "Encore ce mouvement" : "Prochain mouvement")
++                    .font(.caption.weight(.semibold))
++                Text(PresentationCopy.movementTitle(next.exerciseKey))
++                    .font(.archivoBlack(compact ? 18 : 24, relativeTo: .title2))
++                    .fixedSize(horizontal: false, vertical: true)
++            }
++        }
++    }
++
++    private func restTimerControls(_ snapshot: ActiveWorkoutSnapshot, now: Date) -> some View {
++        VStack(alignment: .leading, spacing: 12) {
+             if let paused = snapshot.pausedRemainingSeconds {
+                 timerText(paused)
+                 Text("En pause")
+@@ -531,10 +587,6 @@
+                     .buttonStyle(.bordered)
+                 }
+ 
+-                Button("Recommencer") {
+-                    update { ActiveSessionCoordinator.restartRest($0) }
+-                }
+-                .buttonStyle(.bordered)
+             }
+ 
+             Button {
+@@ -548,7 +600,14 @@
+             .tint(LBSBrand.orange)
+             .foregroundStyle(LBSBrand.ink)
+         }
+-        .frame(maxWidth: .infinity, alignment: .leading)
++    }
++
++    private func restPreviewMovement(_ snapshot: ActiveWorkoutSnapshot) -> PrescribedMovement? {
++        guard let current = snapshot.currentMovement else { return nil }
++        if snapshot.completedSetsInMovement < current.sets { return current }
++        let next = snapshot.currentMovementIndex + 1
++        guard let movements = snapshot.decision.movements, movements.indices.contains(next) else { return nil }
++        return movements[next]
+     }
+ 
+     private func sessionProgress(_ snapshot: ActiveWorkoutSnapshot) -> some View {
+@@ -691,40 +750,30 @@
+     }
+ 
+     private func completionHero(_ snapshot: ActiveWorkoutSnapshot) -> some View {
+-        VStack(alignment: .leading, spacing: 16) {
+-            LBSBrandPoster()
+-                .aspectRatio(3 / 2, contentMode: .fit)
+-
+-            HStack(alignment: .top, spacing: 14) {
+-                LBSMark(style: .onDark)
+-                    .frame(width: 42, height: 44)
+-                VStack(alignment: .leading, spacing: 8) {
++        VStack(alignment: .leading, spacing: 20) {
++            ZStack(alignment: .topLeading) {
++                Image("summary-hero")
++                    .resizable().scaledToFill()
++                    .frame(height: 330)
++                    .clipped()
++                    .accessibilityHidden(true)
++                VStack(alignment: .leading, spacing: 14) {
++                    Text("Ta séance").font(.subheadline.weight(.semibold))
+                     Text(snapshot.endedEarly ? "C’est suffisant." : "C’est fait.")
+                         .font(.archivoBlack(42, relativeTo: .largeTitle))
+-                        .foregroundStyle(LBSBrand.cream)
+-                        .lineSpacing(-6)
+                         .fixedSize(horizontal: false, vertical: true)
+                         .accessibilityAddTraits(.isHeader)
+-                    Text(
+-                        snapshot.endedEarly
+-                            ? "Une séance utile, sans dette pour demain. S’arrêter fait aussi partie d’une pratique durable."
+-                            : "Une séance utile, sans dette pour demain. La prochaine repartira de ce que tu as réellement accompli."
+-                    )
+-                    .font(.archivoRegular(16, relativeTo: .body))
+-                    .foregroundStyle(LBSBrand.cream.opacity(0.78))
+-                }
+-            }
+-
+-            Divider().overlay(LBSBrand.cream.opacity(0.28))
+-
++                }
++                .padding(16)
++            }
+             HStack(spacing: 24) {
+                 completionMetric("\(elapsedMinutes(snapshot)) min", label: "durée")
+                 completionMetric("\(completedMovementCount(snapshot))", label: "mouvements")
+                 completionMetric("\(snapshot.completedSetCount)", label: "séries")
+             }
+-        }
+-        .padding(18)
+-        .background(LBSBrand.ink, in: LBSChamferedRectangle(cut: 18))
++            .frame(maxWidth: .infinity)
++        }
++        .foregroundStyle(LBSBrand.brandText)
+     }
+ 
+     private func completionMetric(_ value: String, label: LocalizedStringKey) -> some View {
+@@ -735,7 +784,7 @@
+                 .monospacedDigit()
+             Text(label)
+                 .font(.caption)
+-                .foregroundStyle(LBSBrand.cream.opacity(0.75))
++                .foregroundStyle(LBSBrand.secondaryText)
+         }
+         .accessibilityElement(children: .combine)
+     }
+@@ -1013,35 +1062,44 @@
+                 .font(.title2.bold())
+             ForEach(snapshot.decision.movements ?? [], id: \.exerciseKey) { movement in
+                 let results = snapshot.recordedSets.filter { $0.exerciseKey == movement.exerciseKey }
+-                if let last = results.last {
+-                    VStack(alignment: .leading, spacing: 3) {
+-                        Text(PresentationCopy.movementTitle(movement.exerciseKey))
+-                            .fontWeight(.semibold)
+-                        Text(setSummary(results: results, last: last))
++                if !results.isEmpty {
++                    DisclosureGroup {
++                        ForEach(results, id: \.eventID) { result in
++                            HStack {
++                                Text(recordedDose(result.repetitions, movement: movement, snapshot: snapshot))
++                                Spacer()
++                                if let weight = result.perUnitWeightKg {
++                                    Text("\(weight.formatted(.number)) \(WorkoutLoadResolver.loadLabel(for: movement))")
++                                } else if let option = result.loadOptionID { Text(option) }
++                            }
+                             .font(.subheadline)
+-                            .foregroundStyle(.secondary)
+-                    }
+-                    .accessibilityElement(children: .combine)
+-                }
+-            }
+-        }
+-    }
+-
+-    private func setSummary(results: [CompletedSetRecord], last: CompletedSetRecord) -> String {
+-        let sets = results.count == 1
+-            ? String(localized: "1 série")
+-            : String.localizedStringWithFormat(String(localized: "%lld séries"), results.count)
+-        let load = last.perUnitWeightKg.map {
+-            String.localizedStringWithFormat(String(localized: " · %@ kg"), $0.formatted(.number))
+-        }
+-            ?? last.loadOptionID.map { " · \($0)" }
+-            ?? ""
+-        return String.localizedStringWithFormat(
+-            String(localized: "%@ · dernière à %lld répétitions%@"),
+-            sets,
+-            last.repetitions,
+-            load
+-        )
++                            .accessibilityElement(children: .combine)
++                        }
++                    } label: {
++                        VStack(alignment: .leading, spacing: 4) {
++                            Text(PresentationCopy.movementTitle(movement.exerciseKey)).fontWeight(.semibold)
++                            Text(recordedDose(results.reduce(0) { $0 + $1.repetitions }, movement: movement, snapshot: snapshot))
++                                .font(.subheadline).foregroundStyle(.secondary)
++                        }
++                    }
++
++                }
++            }
++        }
++    }
++
++    private func recordedDose(_ value: Int, movement: PrescribedMovement, snapshot: ActiveWorkoutSnapshot) -> String {
++        let item = snapshot.v2Context?.plan.first { $0.exerciseId == movement.exerciseKey }
++        let perSide = item != nil && (V2EngineConfiguration.productPreview.catalog[movement.exerciseKey]?.timingSeconds.secondSide ?? 0) > 0
++        let format: String
++        switch (item?.resolvedTargetUnit ?? .repetitions, perSide) {
++        case (.repetitions, false): format = String(localized: "%lld reps")
++        case (.repetitions, true): format = String(localized: "%lld reps par côté")
++        case (.seconds, false): format = String(localized: "%lld s")
++        case (.seconds, true): format = String(localized: "%lld s par côté")
++        case (.intervals, _): format = String(localized: "%lld intervalles")
++        }
++        return String.localizedStringWithFormat(format, value)
+     }
+ 
+     private func lastSetCorrection(
+--- baseline/OpenCadence/Views/AppRootView.swift
++++ current/OpenCadence/Views/AppRootView.swift
+@@ -11,9 +11,13 @@
+     @Query(sort: \ActiveWorkoutRecord.updatedAt, order: .reverse)
+     private var activeWorkouts: [ActiveWorkoutRecord]
+ 
++    @State private var started = false
++
+     var body: some View {
+         NavigationStack {
+-            if let activeWorkout = activeWorkouts.first {
++            if !started {
++                WelcomeView(setup: setups.first, hasActiveWorkout: !activeWorkouts.isEmpty) { started = true }
++            } else if let activeWorkout = activeWorkouts.first {
+                 ActiveWorkoutView(record: activeWorkout)
+             } else if let setup = setups.first {
+                 if setup.requiresSupportProfile {
+@@ -21,11 +25,14 @@
+                 } else if setup.requiresCalibration {
+                     CalibrationView(setup: setup)
+                 } else {
+-                    HomeView(setup: setup)
++                    HomeView(setup: setup, onBack: { started = false })
+                 }
+             } else {
+                 EquipmentOnboardingView()
+             }
++        }
++        .onChange(of: activeWorkouts.count) { oldCount, newCount in
++            if oldCount > 0 && newCount == 0 { started = false }
+         }
+         .tint(LBSBrand.controlTint)
+         .task {
+--- baseline/OpenCadence/Views/AppStoreScreenshotHarnessView.swift
++++ current/OpenCadence/Views/AppStoreScreenshotHarnessView.swift
+@@ -8,6 +8,14 @@
+     case exercise
+     case summary
+     case media
++    case welcome
++    case settings
++    case method
++    case equipment
++    case rest
++    case journey
++    case purchase
++    case purchaseSuccess
+ 
+     static var launchArgumentValue: AppStoreScreenshotState? {
+         let arguments = ProcessInfo.processInfo.arguments
+@@ -53,10 +61,10 @@
+             context.insert(setup)
+ 
+             let activeRecord: ActiveWorkoutRecord?
+-            if state == .today || state == .media {
++            if [.today, .media, .welcome, .settings, .method, .equipment, .purchase, .purchaseSuccess].contains(state) {
+                 activeRecord = nil
+             } else {
+-                let prepared = Self.samplePreparedWorkout
++                let prepared = [.journey, .rest, .summary].contains(state) ? Self.generatedWorkout : Self.samplePreparedWorkout
+                 var snapshot = ActiveSessionCoordinator.start(
+                     decision: prepared.decision,
+                     v2Context: prepared.v2Context,
+@@ -86,6 +94,18 @@
+             if let container, let setup {
+                 NavigationStack {
+                     switch state {
++                    case .purchase:
++                        PurchaseDesignPaywallView(product: nil, onPurchase: { _ in }, onRestore: {}, onClose: {})
++                    case .purchaseSuccess:
++                        PurchaseDesignSuccessView(onStart: {})
++                    case .welcome:
++                        WelcomeView(setup: setup, hasActiveWorkout: false) {}
++                    case .settings:
++                        SettingsView(setup: setup)
++                    case .method:
++                        MethodView()
++                    case .equipment:
++                        EquipmentOnboardingView()
+                     case .today:
+                         HomeView(setup: setup)
+                     case .media:
+@@ -100,7 +120,7 @@
+                         }
+                         .padding()
+                         .background(LBSBrand.cream)
+-                    case .exercise, .summary:
++                    case .exercise, .summary, .rest, .journey:
+                         if let activeRecord {
+                             ActiveWorkoutView(record: activeRecord)
+                         } else {
+@@ -156,6 +176,17 @@
+         stepUpApprovedSupport: false,
+         hipThrustBenchApproved: true
+     )
++
++    private static var generatedWorkout: PreparedWorkout {
++        WorkoutEngineBridge.prepareWorkout(
++            inventory: sampleInventory,
++            durationMinutes: 30,
++            engineVersion: .previewV2,
++            todaySupports: sampleSupportProfile.engineSupportKeys,
++            declaredScope: nil,
++            now: .now
++        )
++    }
+ 
+     private static var samplePreparedWorkout: PreparedWorkout {
+         let engineConfiguration = V2EngineConfiguration.productPreview
+@@ -272,40 +303,28 @@
+         inventory: [EquipmentItem]
+     ) -> ActiveWorkoutSnapshot {
+         guard state != .today else { return initial }
++        if state == .journey { return initial }
++        if state == .rest {
++            let loaded = confirmCurrentLoad(in: initial, inventory: inventory)
++            return ActiveSessionCoordinator.recordSet(loaded, repetitions: 8, now: .now)
++        }
+         if state == .exercise {
+             return confirmCurrentLoad(in: initial, inventory: inventory)
+         }
+ 
+         var completed = initial
+-        let movements = completed.decision.movements ?? []
+-        let planByExercise = Dictionary(
+-            uniqueKeysWithValues: (completed.v2Context?.plan ?? []).map { ($0.exerciseId, $0) }
+-        )
+-        completed.setResults = movements.flatMap { movement in
+-            (0..<movement.sets).map { setIndex in
+-                let item = planByExercise[movement.exerciseKey]
+-                return CompletedSetRecord(
+-                    eventID: "screenshot-\(movement.exerciseKey)-\(setIndex)",
+-                    exerciseKey: movement.exerciseKey,
+-                    repetitions: item?.targetReps ?? 8,
+-                    perUnitWeightKg: item?.load?.kg,
+-                    loadOptionID: item?.load?.optionID,
+-                    completedAt: referenceDate.addingTimeInterval(Double(120 + setIndex * 90)),
+-                    plannedRestSeconds: setIndex + 1 < movement.sets ? movement.restSeconds : nil,
+-                    restEndedAt: setIndex + 1 < movement.sets
+-                        ? referenceDate.addingTimeInterval(Double(120 + setIndex * 90 + movement.restSeconds))
+-                        : nil
+-                )
++        var now = referenceDate
++        for _ in 0..<100 {
++            if completed.isFinished { break }
++            completed = confirmCurrentLoad(in: completed, inventory: inventory)
++            let reps = completed.v2Context?.plan.first { $0.exerciseId == completed.currentMovement?.exerciseKey }?.targetReps ?? 8
++            now = now.addingTimeInterval(30)
++            completed = ActiveSessionCoordinator.recordSet(completed, repetitions: reps, now: now)
++            if !completed.isFinished {
++                now = now.addingTimeInterval(Double(completed.originalRestSeconds ?? 0))
++                completed = ActiveSessionCoordinator.completeRest(completed, now: now)
+             }
+         }
+-        completed.completedSetCount = completed.recordedSets.count
+-        completed.currentMovementIndex = movements.count
+-        completed.completedSetsInMovement = 0
+-        completed.isFinished = true
+-        completed.endedEarly = false
+-        completed.endedAt = referenceDate.addingTimeInterval(29 * 60)
+-        completed.restDeadline = nil
+-        completed.originalRestSeconds = nil
+         return completed
+     }
+ 
+--- baseline/OpenCadence/Views/BrandSystem.swift
++++ current/OpenCadence/Views/BrandSystem.swift
+@@ -8,7 +8,7 @@
+     static let orange = Color(red: 233 / 255, green: 138 / 255, blue: 21 / 255)
+     static let plum = Color(red: 89 / 255, green: 17 / 255, blue: 77 / 255)
+     static let cream = Color(red: 244 / 255, green: 238 / 255, blue: 228 / 255)
+-    static let paper = Color(red: 236 / 255, green: 229 / 255, blue: 240 / 255)
++    static let paper = Color(red: 244 / 255, green: 238 / 255, blue: 228 / 255)
+ 
+     // In dark mode, functional text and controls use native semantic colors.
+     // This preserves legibility without inventing a second brand palette.
+@@ -44,7 +44,7 @@
+     static let screenBackground = Color(uiColor: UIColor { traits in
+         traits.userInterfaceStyle == .dark
+             ? .systemGroupedBackground
+-            : UIColor(red: 236 / 255, green: 229 / 255, blue: 240 / 255, alpha: 1)
++            : UIColor(red: 244 / 255, green: 238 / 255, blue: 228 / 255, alpha: 1)
+     })
+     static let cardBackground = Color(uiColor: UIColor { traits in
+         traits.userInterfaceStyle == .dark
+--- baseline/OpenCadence/Views/EquipmentOnboardingView.swift
++++ current/OpenCadence/Views/EquipmentOnboardingView.swift
+@@ -10,12 +10,15 @@
+     private let onSaved: (() -> Void)?
+ 
+     @State private var fixedDumbbellsEnabled: Bool
+-    @State private var fixedWeight: Double
+-    @State private var fixedUnits: Int
++    @State private var fixedWeightsText: String
++    @State private var fixedPairWeightsText: String
++    @State private var adjustablePairWeightsText: String
++    @State private var showingDetails = false
++    @State private var noEquipment: Bool
++    @State private var editedCategories: Set<String> = []
+     @State private var adjustableDumbbellsEnabled: Bool
+     @State private var adjustableWeightsText: String
+-    @State private var adjustableUnits: Int
+-    @State private var kettlebellsEnabled: Bool
++        @State private var kettlebellsEnabled: Bool
+     @State private var kettlebellWeightsText: String
+     @State private var bandsEnabled: Bool
+     @State private var bandNamesText: String
+@@ -47,26 +50,29 @@
+         let fixed = inventory.first { $0.category == "fixed_dumbbell" }
+         let adjustable = inventory.first { $0.category == "adjustable_dumbbell" }
+         let kettlebell = inventory.first { $0.category == "kettlebell" }
+-        let bands = inventory.first { $0.category == "resistance_band" }
+-        let vest = inventory.first { $0.category == "weighted_vest" }
+         let supports = existing?.supportProfile ?? .conservativeDefault
+ 
+         _fixedDumbbellsEnabled = State(initialValue: fixed != nil)
+-        _fixedWeight = State(initialValue: fixed?.weightKg ?? 8)
+-        _fixedUnits = State(initialValue: fixed?.units ?? 2)
++        func weights(_ category: String, pair: Bool) -> String {
++            inventory.filter { $0.category == category && $0.supports(pair ? "pair" : "single") }
++                .flatMap { $0.weightKg.map { [$0] } ?? $0.perUnitWeightsKg ?? [] }
++                .reduce(into: [Double]()) { if !$0.contains($1) { $0.append($1) } }
++                .sorted().map { String($0) }.joined(separator: " ")
++        }
++        _fixedWeightsText = State(initialValue: weights("fixed_dumbbell", pair: false))
++        _fixedPairWeightsText = State(initialValue: weights("fixed_dumbbell", pair: true))
+         _adjustableDumbbellsEnabled = State(initialValue: adjustable != nil)
+-        _adjustableWeightsText = State(
+-            initialValue: adjustable?.perUnitWeightsKg?.map { $0.formatted(.number) }.joined(separator: " ") ?? "4 6 8 10"
++        _adjustableWeightsText = State(initialValue: weights("adjustable_dumbbell", pair: false))
++        _adjustablePairWeightsText = State(initialValue: weights("adjustable_dumbbell", pair: true))
++        _noEquipment = State(initialValue: existing != nil && inventory.allSatisfy { $0.category == "bodyweight" })
++        _kettlebellsEnabled = State(initialValue: kettlebell != nil)
++        _kettlebellWeightsText = State(initialValue: inventory.filter { $0.category == "kettlebell" }.flatMap { $0.perUnitWeightsKg ?? $0.weightKg.map { [$0] } ?? [] }.map { String($0) }.joined(separator: " "))
++        _bandsEnabled = State(initialValue: inventory.contains { $0.category == "resistance_band" })
++        _bandNamesText = State(
++            initialValue: inventory.filter { $0.category == "resistance_band" }.flatMap { $0.optionIDs ?? [] }.joined(separator: "; ")
+         )
+-        _adjustableUnits = State(initialValue: adjustable?.units ?? 2)
+-        _kettlebellsEnabled = State(initialValue: kettlebell != nil)
+-        _kettlebellWeightsText = State(initialValue: kettlebell?.perUnitWeightsKg?.map { $0.formatted(.number) }.joined(separator: " ") ?? "8 12 16")
+-        _bandsEnabled = State(initialValue: bands != nil)
+-        _bandNamesText = State(
+-            initialValue: bands?.optionIDs?.joined(separator: " ") ?? String(localized: "léger moyen fort")
+-        )
+-        _weightedVestEnabled = State(initialValue: vest != nil)
+-        _vestWeightsText = State(initialValue: vest?.perUnitWeightsKg?.map { $0.formatted(.number) }.joined(separator: " ") ?? "5 10")
++        _weightedVestEnabled = State(initialValue: inventory.contains { $0.category == "weighted_vest" })
++        _vestWeightsText = State(initialValue: inventory.filter { $0.category == "weighted_vest" }.flatMap { $0.perUnitWeightsKg ?? [] }.map { String($0) }.joined(separator: " "))
+         _pullupBarEnabled = State(initialValue: inventory.contains { $0.category == "pullup_bar" })
+         _dipBarsEnabled = State(initialValue: inventory.contains { $0.category == "dip_bars" })
+         _rowerEnabled = State(initialValue: inventory.contains { $0.category == "rower" })
+@@ -87,7 +93,43 @@
+     }
+ 
+     var body: some View {
++        Group {
++            if showingDetails { details }
++            else { familySelection }
++        }
++        .tint(LBSBrand.controlTint)
++
++    }
++
++    private func tracked(_ value: Binding<String>, category: String) -> Binding<String> {
++        Binding(
++            get: { value.wrappedValue },
++            set: { newValue in
++                value.wrappedValue = newValue
++                editedCategories.insert(category)
++            }
++        )
++    }
++
++    private var details: some View {
+         Form {
++            detailsIntroduction
++            loadDetails
++            supportDetails
++            scopeAndSave
++
++        }
++        .scrollContentBackground(.hidden)
++        .background(LBSBrand.screenBackground)
++        .navigationTitle(existing == nil ? "Bienvenue" : "Mon matériel")
++        .navigationBarTitleDisplayMode(.inline)
++    }
++
++    @ViewBuilder
++    private var detailsIntroduction: some View {
++            Section {
++                Button("Modifier la sélection", systemImage: "arrow.left") { showingDetails = false }
++            }
+             Section {
+                 VStack(alignment: .leading, spacing: 10) {
+                     LBSWordmark()
+@@ -111,50 +153,74 @@
+                     .foregroundStyle(.secondary)
+             }
+ 
+-            Section("Haltères fixes") {
+-                Toggle("J’en ai", isOn: $fixedDumbbellsEnabled)
+-                    .accessibilityLabel("Haltères fixes disponibles")
+-                if fixedDumbbellsEnabled {
+-                    LabeledContent("Poids par haltère") {
+-                        TextField("8", value: $fixedWeight, format: .number)
+-                            .keyboardType(.decimalPad)
+-                            .multilineTextAlignment(.trailing)
+-                            .frame(maxWidth: 90)
+-                        Text("kg").foregroundStyle(.secondary)
+-                    }
+-                    Stepper("Nombre : \(fixedUnits)", value: $fixedUnits, in: 1...4)
+-                }
+-            }
+-
+-            Section("Haltères réglables") {
+-                Toggle("J’en ai", isOn: $adjustableDumbbellsEnabled)
+-                    .accessibilityLabel("Haltères réglables disponibles")
+-                if adjustableDumbbellsEnabled {
+-                    Stepper("Nombre : \(adjustableUnits)", value: $adjustableUnits, in: 1...4)
+-                    TextField("4 6 8 10", text: $adjustableWeightsText)
+-                        .keyboardType(.numbersAndPunctuation)
+-                    Text("Indique les poids atteignables par haltère, séparés par des espaces. Exemple : 4 6 8 10.")
+-                        .font(.footnote)
+-                        .foregroundStyle(.secondary)
+-                }
+-            }
+-
+-            Section("Kettlebells") {
+-                Toggle("J’en ai", isOn: $kettlebellsEnabled)
+-                    .accessibilityLabel("Kettlebells disponibles")
+-                if kettlebellsEnabled {
+-                    TextField("8 12 16", text: $kettlebellWeightsText)
+-                        .keyboardType(.numbersAndPunctuation)
++
++    }
++
++    @ViewBuilder
++    private var loadDetails: some View {
++            if fixedDumbbellsEnabled {
++                Section("Haltères fixes") {
++                    VStack(alignment: .leading, spacing: 8) {
++                        Text("Poids utilisables avec un haltère (kg)")
++                            .font(.subheadline)
++                            .fixedSize(horizontal: false, vertical: true)
++                        TextField("kg", text: tracked($fixedWeightsText, category: "fixed_dumbbell"))
++                            .keyboardType(.numbersAndPunctuation)
++                            .accessibilityLabel("Poids utilisables avec un haltère (kg)")
++                    }
++                    VStack(alignment: .leading, spacing: 8) {
++                        Text("Poids disponibles en paire identique (kg par haltère)")
++                            .font(.subheadline)
++                            .fixedSize(horizontal: false, vertical: true)
++                        TextField("kg", text: tracked($fixedPairWeightsText, category: "fixed_dumbbell"))
++                            .keyboardType(.numbersAndPunctuation)
++                            .accessibilityLabel("Poids disponibles en paire identique (kg par haltère)")
++                    }
++                    Text("Sépare les poids par des espaces. Indique une paire seulement si tu disposes de deux haltères de ce poids.")
++                        .font(.footnote).foregroundStyle(.secondary)
++                }
++            }
++            if adjustableDumbbellsEnabled {
++                Section("Haltères réglables") {
++                    VStack(alignment: .leading, spacing: 8) {
++                        Text("Poids montables sur un haltère (kg)")
++                            .font(.subheadline)
++                            .fixedSize(horizontal: false, vertical: true)
++                        TextField("kg", text: tracked($adjustableWeightsText, category: "adjustable_dumbbell"))
++                            .keyboardType(.numbersAndPunctuation)
++                            .accessibilityLabel("Poids montables sur un haltère (kg)")
++                    }
++                    VStack(alignment: .leading, spacing: 8) {
++                        Text("Poids montables sur deux haltères à la fois (kg chacun)")
++                            .font(.subheadline)
++                            .fixedSize(horizontal: false, vertical: true)
++                        TextField("kg", text: tracked($adjustablePairWeightsText, category: "adjustable_dumbbell"))
++                            .keyboardType(.numbersAndPunctuation)
++                            .accessibilityLabel("Poids montables sur deux haltères à la fois (kg chacun)")
++                    }
++                    Text("Poignée comprise. Vérifie les disques et leur répartition : deux poignées ne garantissent pas une paire montable. Laisse la seconde ligne vide si tu ne sais pas.")
++                        .font(.footnote).foregroundStyle(.secondary)
++                }
++            }
++            if kettlebellsEnabled {
++                Section("Kettlebells") {
++                    VStack(alignment: .leading, spacing: 8) {
++                        Text("Poids disponibles en kg")
++                            .font(.subheadline)
++                            .fixedSize(horizontal: false, vertical: true)
++                        TextField("kg", text: tracked($kettlebellWeightsText, category: "kettlebell"))
++                            .keyboardType(.numbersAndPunctuation)
++                            .accessibilityLabel("Poids disponibles en kg")
++                    }
+                     Text("Indique les poids disponibles en kg, séparés par des espaces.")
+                         .font(.footnote)
+                         .foregroundStyle(.secondary)
+                 }
+             }
+ 
+-            Section("Élastiques longs") {
+-                Toggle("J’en ai", isOn: $bandsEnabled)
+-                if bandsEnabled {
+-                    TextField("léger moyen fort", text: $bandNamesText)
++            if bandsEnabled {
++                Section("Élastiques longs") {
++                    TextField("Couleurs ou noms, séparés par des points-virgules", text: tracked($bandNamesText, category: "resistance_band"))
+                     Text("Donne un nom stable à chaque résistance : couleur ou niveau. L’app ne convertit pas ces bandes en kilos.")
+                         .font(.footnote)
+                         .foregroundStyle(.secondary)
+@@ -162,23 +228,27 @@
+                 }
+             }
+ 
+-            Section("Gilet lesté") {
+-                Toggle("J’en ai un", isOn: $weightedVestEnabled)
+-                if weightedVestEnabled {
+-                    TextField("5 10", text: $vestWeightsText)
+-                        .keyboardType(.numbersAndPunctuation)
++            if weightedVestEnabled {
++                Section("Gilet lesté") {
++                    VStack(alignment: .leading, spacing: 8) {
++                        Text("Masses ajoutées possibles en kg")
++                            .font(.subheadline)
++                            .fixedSize(horizontal: false, vertical: true)
++                        TextField("kg", text: tracked($vestWeightsText, category: "weighted_vest"))
++                            .keyboardType(.numbersAndPunctuation)
++                            .accessibilityLabel("Masses ajoutées possibles en kg")
++                    }
+                     Text("Indique les masses ajoutées réellement possibles.")
+                         .font(.footnote)
+                         .foregroundStyle(.secondary)
+                 }
+             }
+ 
+-            Section("Autre matériel") {
+-                Toggle("Barre de traction", isOn: $pullupBarEnabled)
+-                Toggle("Barres de dips stables", isOn: $dipBarsEnabled)
+-                Toggle("Rameur", isOn: $rowerEnabled)
+-            }
+-
++
++    }
++
++    @ViewBuilder
++    private var supportDetails: some View {
+             Section("Ton espace") {
+                 Toggle("Je peux m’allonger au sol", isOn: $floorAllowed)
+                 Toggle("J’ai une chaise ou un banc stable pour m’asseoir et prendre appui", isOn: $stableSeatOrBench)
+@@ -212,6 +282,11 @@
+                     .foregroundStyle(.secondary)
+             }
+ 
++
++    }
++
++    @ViewBuilder
++    private var scopeAndSave: some View {
+             Section("Périmètre actuel") {
+                 Picker("Situation", selection: $scopeChoice) {
+                     ForEach(ScopeChoice.allCases) { choice in
+@@ -237,11 +312,6 @@
+                 .frame(maxWidth: .infinity)
+                 .fontWeight(.semibold)
+             }
+-        }
+-        .scrollContentBackground(.hidden)
+-        .background(LBSBrand.screenBackground)
+-        .navigationTitle(existing == nil ? "Bienvenue" : "Mon matériel")
+-        .navigationBarTitleDisplayMode(.inline)
+     }
+ 
+     private func save() {
+@@ -263,17 +333,30 @@
+                 hipThrustBenchApproved: hipThrustBenchApproved
+             )
+             if let existing {
++                let previous = (existing.inventoryData, existing.supportProfileData, existing.declaredScopeRaw, existing.updatedAt)
+                 existing.inventory = inventory
+                 existing.supportProfile = supportProfile
+                 existing.declaredScope = scopeChoice.declaredScope
+-                try modelContext.save()
++                do { try modelContext.save() }
++                catch {
++                    existing.inventoryData = previous.0
++                    existing.supportProfileData = previous.1
++                    existing.declaredScopeRaw = previous.2
++                    existing.updatedAt = previous.3
++                    throw error
++                }
+             } else {
+-                modelContext.insert(try UserSetupRecord(
++                let record = try UserSetupRecord(
+                     inventory: inventory,
+                     supportProfile: supportProfile,
+                     declaredScope: scopeChoice.declaredScope
+-                ))
+-                try modelContext.save()
++                )
++                modelContext.insert(record)
++                do { try modelContext.save() }
++                catch {
++                    modelContext.delete(record)
++                    throw error
++                }
+             }
+             errorMessage = nil
+             onSaved?()
+@@ -286,37 +369,28 @@
+     }
+ 
+     private func makeInventory() throws -> [EquipmentItem] {
++        let selection: [(String, Bool)] = [
++            ("bodyweight", true), ("fixed_dumbbell", fixedDumbbellsEnabled),
++            ("adjustable_dumbbell", adjustableDumbbellsEnabled), ("kettlebell", kettlebellsEnabled),
++            ("resistance_band", bandsEnabled), ("weighted_vest", weightedVestEnabled),
++            ("pullup_bar", pullupBarEnabled), ("dip_bars", dipBarsEnabled), ("rower", rowerEnabled)
++        ]
++        let selected = Set(selection.filter { $0.1 }.map { $0.0 })
++        let original = existing?.inventory ?? []
++        let preserved = Set(original.map(\.category)).intersection(selected).subtracting(editedCategories)
+         var inventory = [
+             EquipmentItem(category: "bodyweight", units: 1, supportedConfigurations: ["bodyweight"])
+         ]
+ 
+-        if fixedDumbbellsEnabled {
+-            guard fixedWeight > 0 else { throw InventoryInputError.invalidFixedWeight }
+-            inventory.append(
+-                EquipmentItem(
+-                    category: "fixed_dumbbell",
+-                    units: fixedUnits,
+-                    weightKg: fixedWeight,
+-                    supportedConfigurations: configurations(for: fixedUnits)
+-                )
+-            )
+-        }
+-
+-        if adjustableDumbbellsEnabled {
+-            let uniqueWeights = parsedWeights(adjustableWeightsText)
+-            guard !uniqueWeights.isEmpty else { throw InventoryInputError.missingAdjustableWeights }
+-            inventory.append(
+-                EquipmentItem(
+-                    category: "adjustable_dumbbell",
+-                    units: adjustableUnits,
+-                    perUnitWeightsKg: uniqueWeights,
+-                    supportedConfigurations: configurations(for: adjustableUnits)
+-                )
+-            )
+-        }
+-
+-        if kettlebellsEnabled {
+-            let weights = parsedWeights(kettlebellWeightsText)
++        if fixedDumbbellsEnabled && !preserved.contains("fixed_dumbbell") {
++            inventory += try EquipmentInventoryInput.dumbbells(category: "fixed_dumbbell", single: fixedWeightsText, pair: fixedPairWeightsText)
++        }
++        if adjustableDumbbellsEnabled && !preserved.contains("adjustable_dumbbell") {
++            inventory += try EquipmentInventoryInput.dumbbells(category: "adjustable_dumbbell", single: adjustableWeightsText, pair: adjustablePairWeightsText)
++        }
++
++        if kettlebellsEnabled && !preserved.contains("kettlebell") {
++            let weights = try EquipmentInventoryInput.weights(kettlebellWeightsText)
+             guard !weights.isEmpty else { throw InventoryInputError.missingKettlebellWeights }
+             inventory.append(
+                 EquipmentItem(
+@@ -328,10 +402,11 @@
+             )
+         }
+ 
+-        if bandsEnabled {
++        if bandsEnabled && !preserved.contains("resistance_band") {
+             let names = bandNamesText
+-                .split { $0.isWhitespace || $0 == ";" || $0 == "," }
+-                .map(String.init)
++                .split { $0 == ";" || $0.isNewline }
++                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
++                .filter { !$0.isEmpty }
+                 .reduce(into: [String]()) { result, name in
+                     if !result.contains(name) { result.append(name) }
+                 }
+@@ -346,8 +421,8 @@
+             )
+         }
+ 
+-        if weightedVestEnabled {
+-            let weights = parsedWeights(vestWeightsText)
++        if weightedVestEnabled && !preserved.contains("weighted_vest") {
++            let weights = try EquipmentInventoryInput.weights(vestWeightsText)
+             guard !weights.isEmpty else { throw InventoryInputError.missingVestWeights }
+             inventory.append(
+                 EquipmentItem(
+@@ -368,21 +443,110 @@
+         if rowerEnabled {
+             inventory.append(EquipmentItem(category: "rower", units: 1, supportedConfigurations: ["rower"]))
+         }
+-        return inventory
+-    }
+-
+-    private func parsedWeights(_ text: String) -> [Double] {
+-        let weights = text
+-            .split { $0.isWhitespace || $0 == ";" }
+-            .compactMap { Double($0.replacingOccurrences(of: ",", with: ".")) }
+-            .filter { $0 > 0 }
+-        return Array(Set(weights)).sorted()
+-    }
+-
+-    private func configurations(for units: Int) -> [String] {
+-        var values = ["single", "central", "unilateral"]
+-        if units >= 2 { values.insert("pair", at: 0) }
+-        return values
++        let known: Set<String> = ["bodyweight", "fixed_dumbbell", "adjustable_dumbbell", "kettlebell", "resistance_band", "weighted_vest", "pullup_bar", "dip_bars", "rower"]
++        return inventory.filter { !preserved.contains($0.category) }
++            + original.filter { preserved.contains($0.category) || (!noEquipment && !known.contains($0.category)) }
++    }
++
++    private var familySelection: some View {
++        ScrollView {
++            VStack(alignment: .leading, spacing: 24) {
++                LBSWordmark()
++                Text("De quoi disposes-tu chez toi ?")
++                    .font(.archivoBlack(32, relativeTo: .title))
++                    .fixedSize(horizontal: false, vertical: true)
++                Text("La Bonne Séance ne proposera que des mouvements faisables avec ce matériel. Tu pourras le modifier à tout moment.")
++                    .foregroundStyle(.secondary)
++                LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: 12)], spacing: 12) {
++                    family("Haltères fixes", asset: "gear-fixed-db-transparent", selected: $fixedDumbbellsEnabled)
++                    family("Haltères réglables", asset: "gear-db-transparent", selected: $adjustableDumbbellsEnabled)
++                    family("Kettlebells", asset: "gear-kb-transparent", selected: $kettlebellsEnabled)
++                    family("Élastiques longs", asset: "gear-bands-transparent", selected: $bandsEnabled)
++                    family("Gilet lesté", asset: "gear-vest-transparent", selected: $weightedVestEnabled)
++                    family("Barre de traction", asset: "gear-pullup-transparent", selected: $pullupBarEnabled)
++                    family("Barres de dips stables", asset: "gear-dips-transparent", selected: $dipBarsEnabled)
++                    family("Rameur", asset: "gear-rower-transparent", selected: $rowerEnabled)
++                }
++                Button {
++                    noEquipment.toggle()
++                    if noEquipment {
++                        fixedDumbbellsEnabled = false; adjustableDumbbellsEnabled = false
++                        kettlebellsEnabled = false; bandsEnabled = false; weightedVestEnabled = false
++                        pullupBarEnabled = false; dipBarsEnabled = false; rowerEnabled = false
++                    }
++                } label: {
++                    Label("Sans matériel", systemImage: noEquipment ? "checkmark.circle.fill" : "circle")
++                        .frame(maxWidth: .infinity, alignment: .leading).padding()
++                }
++                .accessibilityAddTraits(noEquipment ? [.isSelected] : [])
++                Button("Continuer") { showingDetails = true }
++                    .buttonStyle(.borderedProminent)
++                    .controlSize(.large)
++                    .frame(maxWidth: .infinity)
++                    .disabled(!hasSelection)
++            }
++            .padding(24)
++        }
++        .background(LBSBrand.screenBackground)
++        .navigationTitle(existing == nil ? "Bienvenue" : "Mon matériel")
++        .navigationBarTitleDisplayMode(.inline)
++    }
++
++    private var hasSelection: Bool {
++        noEquipment || fixedDumbbellsEnabled || adjustableDumbbellsEnabled || kettlebellsEnabled
++            || bandsEnabled || weightedVestEnabled || pullupBarEnabled || dipBarsEnabled || rowerEnabled
++    }
++
++    private func family(_ title: LocalizedStringKey, asset: String, selected: Binding<Bool>) -> some View {
++        Button {
++            selected.wrappedValue.toggle()
++            if selected.wrappedValue { noEquipment = false }
++        } label: {
++            VStack(alignment: .leading, spacing: 10) {
++                Image(asset).resizable().scaledToFit().frame(height: 100).accessibilityHidden(true)
++                HStack(alignment: .top) {
++                    Text(title).font(.headline).fixedSize(horizontal: false, vertical: true)
++                    Spacer(minLength: 0)
++                    Image(systemName: selected.wrappedValue ? "checkmark.circle.fill" : "circle")
++                        .foregroundStyle(selected.wrappedValue ? LBSBrand.orange : LBSBrand.secondaryText)
++                }
++            }
++            .padding(14)
++            .frame(maxWidth: .infinity, alignment: .leading)
++            .background(LBSBrand.cardBackground, in: RoundedRectangle(cornerRadius: 20))
++            .overlay(RoundedRectangle(cornerRadius: 20).stroke(selected.wrappedValue ? LBSBrand.ink : LBSBrand.border, lineWidth: selected.wrappedValue ? 2 : 1))
++        }
++        .buttonStyle(.plain)
++        .accessibilityLabel(Text(title))
++        .accessibilityAddTraits(selected.wrappedValue ? [.isSelected] : [])
++    }
++}
++
++enum EquipmentInventoryInput {
++    static func weights(_ text: String) throws -> [Double] {
++        let tokens = text.split { $0.isWhitespace || $0 == ";" }
++        let values = try tokens.map { token -> Double in
++            guard let value = Double(token.replacingOccurrences(of: ",", with: ".")), value.isFinite, value > 0 else {
++                throw InventoryInputError.invalidFixedWeight
++            }
++            return value
++        }
++        return Array(Set(values)).sorted()
++    }
++
++    static func dumbbells(category: String, single: String, pair: String) throws -> [EquipmentItem] {
++        let singles = try weights(single)
++        let pairs = try weights(pair)
++        guard !singles.isEmpty || !pairs.isEmpty else { throw InventoryInputError.missingAdjustableWeights }
++        return Array(Set(singles + pairs)).sorted().map { weight in
++            let isPair = pairs.contains(weight)
++            return EquipmentItem(
++                category: category, units: isPair ? 2 : 1,
++                weightKg: category == "fixed_dumbbell" ? weight : nil,
++                perUnitWeightsKg: category == "adjustable_dumbbell" ? [weight] : nil,
++                supportedConfigurations: ["single", "central", "unilateral"] + (isPair ? ["pair"] : [])
++            )
++        }
+     }
+ }
+ 
+@@ -395,8 +559,8 @@
+ 
+     var errorDescription: String? {
+         switch self {
+-        case .invalidFixedWeight: String(localized: "Indique un poids supérieur à zéro pour les haltères fixes.")
+-        case .missingAdjustableWeights: String(localized: "Indique au moins un poids atteignable pour les haltères réglables.")
++        case .invalidFixedWeight: String(localized: "Indique des poids valides, supérieurs à zéro.")
++        case .missingAdjustableWeights: String(localized: "Indique au moins un poids réellement utilisable pour tes haltères.")
+         case .missingKettlebellWeights: String(localized: "Indique au moins un poids de kettlebell disponible.")
+         case .missingBandNames: String(localized: "Donne au moins un nom ou une couleur à tes élastiques.")
+         case .missingVestWeights: String(localized: "Indique au moins une masse réellement disponible pour le gilet.")
+--- baseline/OpenCadence/Views/HomeView.swift
++++ current/OpenCadence/Views/HomeView.swift
+@@ -10,6 +10,7 @@
+     private var completedWorkouts: [CompletedWorkoutRecord]
+ 
+     let setup: UserSetupRecord
++    var onBack: (() -> Void)? = nil
+ 
+     @State private var decision: EngineDecision?
+     @State private var v2Context: ActiveWorkoutV2Context?
+@@ -30,29 +31,11 @@
+     var body: some View {
+         ScrollView {
+             VStack(alignment: .leading, spacing: 24) {
+-                VStack(alignment: .leading, spacing: 18) {
+-                    LBSWordmark()
+-
+-                    VStack(alignment: .leading, spacing: 8) {
+-                        Text("AUJOURD’HUI")
+-                            .font(.archivoBlack(13, relativeTo: .caption))
+-                            .tracking(1.5)
+-                            .foregroundStyle(LBSBrand.brandAccentText)
+-                        Text("\(setup.selectedDuration) minutes.\nC’est suffisant.")
+-                            .font(.archivoBlack(46, relativeTo: .largeTitle))
+-                            .foregroundStyle(LBSBrand.brandText)
+-                            .lineSpacing(-7)
+-                            .fixedSize(horizontal: false, vertical: true)
+-                            .accessibilityAddTraits(.isHeader)
+-                        Text("Choisis le temps dont tu disposes. La séance est construite avec ton matériel et ce que tu as réellement fait.")
+-                            .font(.archivoRegular(17, relativeTo: .body))
+-                            .foregroundStyle(LBSBrand.brandText.opacity(0.82))
+-                            .fixedSize(horizontal: false, vertical: true)
+-                    }
+-
+-                    LBSBrandPoster(label: String(localized: "Renforcement complet"))
+-                        .aspectRatio(3 / 2, contentMode: .fit)
+-                }
++                if let onBack {
++                    Button("Retour", action: onBack)
++                        .frame(minHeight: 44)
++                }
++                LBSWordmark()
+ 
+                 VStack(alignment: .leading, spacing: 12) {
+                     Text("Composer la séance")
+@@ -73,10 +56,10 @@
+ 
+                     DisclosureGroup("Adapter seulement aujourd’hui") {
+                         VStack(alignment: .leading, spacing: 12) {
+-                            ForEach(setup.inventory.filter { $0.category != "bodyweight" }, id: \.category) { item in
++                            ForEach(Array(Set(setup.inventory.map(\.category))).filter { $0 != "bodyweight" }.sorted(), id: \.self) { category in
+                                 Toggle(
+-                                    PresentationCopy.equipmentSummary([item]),
+-                                    isOn: todayAvailabilityBinding(forEquipment: item.category)
++                                    PresentationCopy.equipmentSummary(setup.inventory.filter { $0.category == category }),
++                                    isOn: todayAvailabilityBinding(forEquipment: category)
+                                 )
+                             }
+ 
+--- baseline/OpenCadence/Views/MethodView.swift
++++ current/OpenCadence/Views/MethodView.swift
+@@ -0,0 +1,104 @@
++import SwiftUI
++
++struct MethodView: View {
++    @Environment(\.dismiss) private var dismiss
++    var body: some View {
++        ScrollView {
++            VStack(alignment: .leading, spacing: 24) {
++                LBSWordmark()
++                Text("La recherche.\nDes choix concrets.")
++                    .font(.archivoBlack(42, relativeTo: .largeTitle))
++                            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
++                    .accessibilityAddTraits(.isHeader)
++                Text("Nos séances s’appuient sur les recherches en renforcement musculaire. Voici ce qu’elles changent dans notre façon de te faire bouger.")
++                Text("Trois questions. Nos raisons. Les sources.")
++                    .font(.subheadline.weight(.semibold))
++                DisclosureGroup {
++                    VStack(alignment: .leading, spacing: 16) {
++                        Text("Ce qu’on sait").font(.headline).accessibilityAddTraits(.isHeader)
++                        Text("Le renforcement musculaire est recommandé aux femmes comme aux hommes. Cela ne veut pas dire que leurs capacités, leurs besoins ou toutes leurs réponses à l’entraînement sont identiques.")
++                        Text("Notre choix dans l’app").font(.headline).accessibilityAddTraits(.isHeader)
++                        Text("Nous partons du matériel, puis du travail que tu confirmes et de tes retours, plutôt que de déduire ton niveau d’une catégorie femme ou homme. C’est notre choix de personnalisation, pas une conclusion imposée par une étude.")
++                        Text("À la première séance, ton niveau reste à découvrir. Tu peux modifier la charge ou t’arrêter.")
++                        Link("Source · Recommandations de l’OMS", destination: URL(string: "https://www.who.int/europe/news-room/fact-sheets/item/physical-activity")!)
++                    }
++                    .padding(.top, 16)
++                } label: {
++                    VStack(alignment: .leading, spacing: 6) {
++                        Text("Pourquoi pas femme ou homme ?").font(.archivoBlack(22, relativeTo: .title2))
++                        Text("Des principes communs, une difficulté individuelle.").font(.subheadline)
++                    }
++                    .padding(.vertical, 12)
++                }
++                Divider()
++                DisclosureGroup {
++                    VStack(alignment: .leading, spacing: 16) {
++                        Text("Ce qu’on sait").font(.headline).accessibilityAddTraits(.isHeader)
++                        Text("Dans une étude de 8 semaines auprès de 18 personnes entraînées, garder 1 à 2 répétitions en réserve a produit une croissance des quadriceps similaire à l’échec, avec moins de fatigue aiguë.")
++                        Text("Notre choix dans l’app").font(.headline).accessibilityAddTraits(.isHeader)
++                        Text("Nous privilégions une progression prudente. Une série n’a pas besoin de finir dans l’épuisement pour compter ; le travail confirmé reste enregistré.")
++                        Text("Un résultat sur ces exercices et cette population ne définit pas une intensité idéale pour tout le monde.")
++                        Link("Étude · Refalo et al., 2024", destination: URL(string: "https://pubmed.ncbi.nlm.nih.gov/38393985/")!)
++                    }
++                    .padding(.top, 16)
++                } label: {
++                    VStack(alignment: .leading, spacing: 6) {
++                        Text("Faut-il finir chaque série à bout ?").font(.archivoBlack(22, relativeTo: .title2))
++                        Text("L’échec n’est pas un passage obligé.").font(.subheadline)
++                    }
++                    .padding(.vertical, 12)
++                }
++                Divider()
++                DisclosureGroup {
++                    VStack(alignment: .leading, spacing: 16) {
++                        Text("Ce qu’on sait").font(.headline).accessibilityAddTraits(.isHeader)
++                        Text("Chez 39 jeunes débutants suivis pendant 10 semaines, augmenter les répétitions ou la charge a permis des gains de force et de masse musculaire, sans différence détectée entre les deux approches.")
++                        Text("Notre choix dans l’app").font(.headline).accessibilityAddTraits(.isHeader)
++                        Text("Les répétitions et les charges réalisées servent de repères pour la suite. La proposition tient compte du matériel disponible et reste ajustable.")
++                        Text("Tu n’as pas à commencer lourd. Selon le mouvement, tu peux utiliser ton poids du corps, des élastiques ou des poids. Le renforcement peut compléter les activités que tu aimes déjà.")
++                        Link("Étude · Chaves et al., 2024", destination: URL(string: "https://pubmed.ncbi.nlm.nih.gov/38286426/")!)
++                    }
++                    .padding(.top, 16)
++                } label: {
++                    VStack(alignment: .leading, spacing: 6) {
++                        Text("Plus de répétitions ou plus de poids ?").font(.archivoBlack(22, relativeTo: .title2))
++                        Text("Il existe plusieurs façons de progresser.").font(.subheadline)
++                    }
++                    .padding(.vertical, 12)
++                }
++                Divider()
++                VStack(alignment: .leading, spacing: 10) {
++                    Text("La recherche guide nos principes.").font(.headline)
++                    Text("Elle ne valide pas à elle seule notre moteur. Ses règles d’adaptation et de reprise sont des choix produit dont l’efficacité reste à évaluer.")
++                }
++                .padding(20)
++                .background(LBSBrand.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
++                DisclosureGroup("Une situation particulière ?") {
++                    Text("Grossesse, post-partum, rééducation ou douleur demandent une attention particulière. Ce parcours général n’est pas un programme dédié à ces situations. L’app ne mesure pas ta récupération et ne remplace pas un avis médical.")
++                        .padding(.top, 12)
++                }
++                DisclosureGroup("Comment l’adaptation fonctionne") {
++                    VStack(alignment: .leading, spacing: 12) {
++                        Text("Le moteur local utilise le matériel, l’historique confirmé, le temps écoulé et les retours renseignés. Une pause ne crée pas de dette : le travail réalisé reste conservé.")
++                        Text("Les simulations vérifient la cohérence des règles ; elles ne prouvent pas leur efficacité chez chaque personne.")
++                    }
++                    .padding(.top, 12)
++                }
++                Text("Sources consultées le 7 septembre 2026.").font(.footnote)
++            }
++            .frame(maxWidth: 640, alignment: .leading)
++            .padding(24)
++            .frame(maxWidth: .infinity)
++        }
++        .multilineTextAlignment(.leading)
++        .font(.body)
++        .foregroundStyle(LBSBrand.brandText)
++        .background(LBSBrand.screenBackground.ignoresSafeArea())
++        .tint(LBSBrand.controlTint)
++        .navigationTitle(Text("Notre méthode"))
++        .navigationBarTitleDisplayMode(.inline)
++        .toolbar {
++            ToolbarItem(placement: .confirmationAction) { Button("Fermer") { dismiss() } }
++        }
++    }
++}
+--- baseline/OpenCadence/Views/MovementDemonstrationView.swift
++++ current/OpenCadence/Views/MovementDemonstrationView.swift
+@@ -6,6 +6,7 @@
+     @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
+     @Environment(\.scenePhase) private var scenePhase
+     let exerciseID: String
++    var showsPlaybackControls = true
+     @StateObject private var playback = MovementVideoPlayback()
+     @State private var lowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
+ 
+@@ -33,7 +34,7 @@
+                 .clipShape(RoundedRectangle(cornerRadius: 18))
+                 .accessibilityElement(children: .ignore)
+                 .accessibilityLabel(asset.accessibilitySummary)
+-                if asset.playback != .hold, playback.available, !playback.failed {
++                if showsPlaybackControls, asset.playback != .hold, playback.available, !playback.failed {
+                     Button { playback.toggle() } label: {
+                         Image(systemName: playback.isPlaying ? "pause.fill" : playback.finished ? "arrow.counterclockwise" : "play.fill")
+                             .font(.system(size: 18, weight: .semibold))
+--- baseline/OpenCadence/Views/PurchaseDesignPreview.swift
++++ current/OpenCadence/Views/PurchaseDesignPreview.swift
+@@ -0,0 +1,158 @@
++#if DEBUG
++import StoreKit
++import SwiftUI
++
++/// Visual preparation only. No product lookup, transaction or entitlement mutation.
++struct PurchaseDesignPaywallView: View {
++    let product: Product?
++    let onPurchase: (Product) -> Void
++    let onRestore: () -> Void
++    let onClose: () -> Void
++
++    private var availableProduct: Product? {
++        guard let product, product.type == .nonConsumable else { return nil }
++        return product
++    }
++
++    var body: some View {
++        NavigationStack {
++            ScrollView {
++                VStack(alignment: .leading, spacing: 24) {
++                    LBSWordmark()
++                    Image("paywall-selected-v5")
++                        .resizable()
++                        .scaledToFit()
++                        .frame(maxHeight: 300)
++                        .frame(maxWidth: .infinity)
++                        .blendMode(.multiply)
++                        .accessibilityHidden(true)
++                    Text("Ta bonne séance.\nQuand tu veux.")
++                        .font(.archivoBlack(42, relativeTo: .largeTitle))
++                        .fixedSize(horizontal: false, vertical: true)
++                        .accessibilityAddTraits(.isHeader)
++                    Text("Des séances adaptées à toi, à ton matériel et à tes progrès.")
++                        .font(.title3)
++                    NavigationLink("Notre méthode") { MethodView() }
++                        .frame(minHeight: 44)
++                    VStack(alignment: .leading, spacing: 16) {
++                        if let availableProduct {
++                            ViewThatFits(in: .horizontal) {
++                                HStack(alignment: .firstTextBaseline, spacing: 18) {
++                                    price(availableProduct)
++                                    paymentDescription
++                                }
++                                VStack(alignment: .leading, spacing: 8) {
++                                    price(availableProduct)
++                                    paymentDescription
++                                }
++                            }
++                        } else {
++                            Text("L’offre n’est pas encore disponible.")
++                                .font(.headline)
++                        }
++                        Button {
++                            guard let availableProduct else { return }
++                            onPurchase(availableProduct)
++                        } label: {
++                            Text("Débloquer mes séances")
++                                .font(.headline)
++                                .frame(maxWidth: .infinity, minHeight: 52)
++                                .padding(.horizontal, 12)
++                                .padding(.vertical, 4)
++                        }
++                        .buttonStyle(.borderedProminent)
++                        .tint(LBSBrand.orange)
++                        .foregroundStyle(LBSBrand.ink)
++                        .disabled(availableProduct == nil)
++                        if availableProduct != nil {
++                            Text("Accès permanent aux séances et à leur adaptation.")
++                                .font(.footnote)
++                        }
++                        Button("Restaurer un achat", action: onRestore)
++                            .frame(minHeight: 44)
++                        Link("Conditions", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
++                            .frame(minHeight: 44)
++                        Link("Confidentialité", destination: URL(string: "https://labonneseance.com/confidentialite")!)
++                            .frame(minHeight: 44)
++                    }
++                }
++                .frame(maxWidth: 560, alignment: .leading)
++                .padding(24)
++                .frame(maxWidth: .infinity)
++            }
++            .background(LBSBrand.cream.ignoresSafeArea())
++            .foregroundStyle(LBSBrand.ink)
++            .tint(LBSBrand.ink)
++            .toolbar {
++                ToolbarItem(placement: .confirmationAction) {
++                    Button("Fermer", action: onClose)
++                }
++            }
++        }
++        .preferredColorScheme(.light)
++    }
++
++    private func price(_ product: Product) -> some View {
++        Text(product.displayPrice)
++            .font(.archivoBlack(40, relativeTo: .largeTitle))
++    }
++
++    private var paymentDescription: some View {
++        VStack(alignment: .leading, spacing: 4) {
++            Text("Un seul paiement.").font(.headline)
++            Text("Aucun abonnement.").font(.subheadline)
++        }
++    }
++}
++
++struct PurchaseDesignSuccessView: View {
++    let onStart: () -> Void
++
++    var body: some View {
++        ScrollView {
++            VStack(alignment: .leading, spacing: 24) {
++                LBSWordmark()
++                VStack(alignment: .leading, spacing: 14) {
++                    Text("C’est à toi.\nOn bouge ?")
++                        .font(.archivoBlack(44, relativeTo: .largeTitle))
++                        .fixedSize(horizontal: false, vertical: true)
++                        .accessibilityAddTraits(.isHeader)
++                    Text("Ta bonne séance t’attend.\nEt les suivantes aussi.")
++                        .font(.title3)
++                    Image("purchase-selected-v5")
++                        .resizable()
++                        .scaledToFit()
++                        .frame(maxHeight: 380)
++                        .frame(maxWidth: .infinity)
++                        .blendMode(.multiply)
++                        .mask {
++                            LinearGradient(stops: [
++                                .init(color: .clear, location: 0),
++                                .init(color: .black, location: 0.08),
++                                .init(color: .black, location: 0.88),
++                                .init(color: .clear, location: 1)
++                            ], startPoint: .top, endPoint: .bottom)
++                        }
++                        .accessibilityHidden(true)
++                }
++                Button(action: onStart) {
++                    Text("Commencer ma séance")
++                        .font(.headline)
++                        .frame(maxWidth: .infinity, minHeight: 52)
++                        .padding(.horizontal, 12)
++                        .padding(.vertical, 4)
++                }
++                .buttonStyle(.borderedProminent)
++                .tint(LBSBrand.orange)
++                .foregroundStyle(LBSBrand.ink)
++            }
++            .frame(maxWidth: 560, alignment: .leading)
++            .padding(24)
++            .frame(maxWidth: .infinity)
++        }
++        .foregroundStyle(LBSBrand.ink)
++        .background(LBSBrand.cream.ignoresSafeArea())
++        .preferredColorScheme(.light)
++    }
++}
++#endif
+--- baseline/OpenCadence/Views/SettingsView.swift
++++ current/OpenCadence/Views/SettingsView.swift
+@@ -0,0 +1,140 @@
++import SwiftData
++import SwiftUI
++
++struct SettingsView: View {
++    @Environment(\.dismiss) private var dismiss
++    @EnvironmentObject private var subscriptions: SubscriptionStore
++    @Query(sort: \CompletedWorkoutRecord.endedAt, order: .reverse)
++    private var records: [CompletedWorkoutRecord]
++    let setup: UserSetupRecord?
++    @State private var destination: Destination?
++
++    private enum Destination: String, Identifiable {
++        case equipment, calibration, history, access
++        var id: String { rawValue }
++    }
++
++    var body: some View {
++        ScrollView {
++            VStack(alignment: .leading, spacing: 28) {
++                LBSWordmark()
++                Text("Paramètres")
++                    .font(.archivoBlack(40, relativeTo: .largeTitle))
++                    .accessibilityAddTraits(.isHeader)
++                VStack(alignment: .leading, spacing: 14) {
++                    Text(subscriptions.hasActiveSubscription ? String(localized: "Abonnement actif") : String(localized: "Ton accès"))
++                        .font(.archivoBlack(26, relativeTo: .title2))
++                    if !subscriptions.entitlementsLoaded {
++                        ProgressView("Vérification de l’accès…")
++                    } else if subscriptions.hasActiveSubscription {
++                        Text("Tes séances restent accessibles avec ton abonnement.")
++                    } else {
++                        Button("Voir les offres") { destination = .access }
++                            .buttonStyle(.borderedProminent)
++                            .tint(LBSBrand.orange)
++                            .foregroundStyle(LBSBrand.ink)
++                    }
++                }
++                .frame(maxWidth: .infinity, alignment: .leading)
++                .padding(20)
++                .background(LBSBrand.cardBackground, in: RoundedRectangle(cornerRadius: 20))
++                VStack(spacing: 0) {
++                    row("Mon matériel", subtitle: "Ajouter ou modifier ce que tu as", icon: "dumbbell") { destination = .equipment }
++                    if let setup, setup.requiresCalibration || setup.usesExplicitCalibration {
++                        row("Mes repères", subtitle: "Ajuster le départ du haut et du bas du corps", icon: "slider.horizontal.3") { destination = .calibration }
++                    }
++                    row("Dernières séances", subtitle: "Retrouver le travail enregistré", icon: "clock.arrow.circlepath") { destination = .history }
++                    NavigationLink {
++                        MethodView()
++                    } label: {
++                        rowLabel("Notre méthode", subtitle: "Ce qui guide ta bonne séance", icon: "book.closed")
++                    }
++                    Divider()
++                }
++                VStack(alignment: .leading, spacing: 12) {
++                    Text("Tes données").font(.archivoBlack(24, relativeTo: .title2))
++                    Text("Les rappels et le partage de statistiques ne sont pas encore disponibles.")
++                        .font(.subheadline)
++                    Link("Confidentialité", destination: URL(string: "https://labonneseance.com/confidentialite")!)
++                        .frame(minHeight: 44)
++                    Link("Conditions", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
++                        .frame(minHeight: 44)
++                }
++                Button("Restaurer un achat") {
++                    Task { _ = await subscriptions.restorePurchases() }
++                }
++                .frame(minHeight: 44)
++                .disabled(subscriptions.isWorking)
++                if let message = subscriptions.operationMessage {
++                    Text(message).font(.subheadline).accessibilityAddTraits(.updatesFrequently)
++                }
++                if case .failed(let message) = subscriptions.purchaseState {
++                    Text(message).font(.subheadline)
++                }
++            }
++            .frame(maxWidth: 640, alignment: .leading)
++            .padding(24)
++            .frame(maxWidth: .infinity)
++        }
++        .foregroundStyle(LBSBrand.brandText)
++        .background(LBSBrand.screenBackground.ignoresSafeArea())
++        .tint(LBSBrand.controlTint)
++        .navigationBarTitleDisplayMode(.inline)
++        .toolbar {
++            ToolbarItem(placement: .confirmationAction) { Button("Fermer") { dismiss() } }
++        }
++        .sheet(item: $destination) { destination in
++            switch destination {
++            case .equipment:
++                NavigationStack {
++                    EquipmentOnboardingView(existing: setup, onSaved: { self.destination = nil })
++                        .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Fermer") { self.destination = nil } } }
++                }
++            case .calibration:
++                if let setup { NavigationStack { CalibrationView(setup: setup)
++                    .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Fermer") { self.destination = nil } } }
++                } }
++            case .history:
++                NavigationStack {
++                    ScrollView {
++                        if records.isEmpty {
++                            ContentUnavailableView("Aucune séance enregistrée", systemImage: "clock")
++                        } else {
++                            RecentHistoryView(records: records).padding(24)
++                        }
++                    }
++                    .background(LBSBrand.screenBackground.ignoresSafeArea())
++                    .toolbar {
++                        ToolbarItem(placement: .confirmationAction) {
++                            Button("Fermer") { self.destination = nil }
++                        }
++                    }
++                }
++            case .access:
++                PaywallView(adaptationPreview: nil, onSubscribed: { self.destination = nil })
++            }
++        }
++    }
++
++    private func row(_ title: LocalizedStringKey, subtitle: LocalizedStringKey, icon: String, action: @escaping () -> Void) -> some View {
++        VStack(spacing: 0) {
++            Button(action: action) { rowLabel(title, subtitle: subtitle, icon: icon) }
++            Divider()
++        }
++    }
++
++    private func rowLabel(_ title: LocalizedStringKey, subtitle: LocalizedStringKey, icon: String) -> some View {
++        HStack(spacing: 14) {
++            Image(systemName: icon).frame(width: 26).accessibilityHidden(true)
++            VStack(alignment: .leading, spacing: 5) {
++                Text(title).font(.headline)
++                Text(subtitle).font(.subheadline).foregroundStyle(LBSBrand.secondaryText)
++            }
++            Spacer(minLength: 0)
++            Image(systemName: "chevron.right").accessibilityHidden(true)
++        }
++        .multilineTextAlignment(.leading)
++        .padding(.vertical, 18)
++        .contentShape(Rectangle())
++    }
++}
+--- baseline/OpenCadence/Views/WelcomeView.swift
++++ current/OpenCadence/Views/WelcomeView.swift
+@@ -0,0 +1,63 @@
++import SwiftUI
++
++struct WelcomeView: View {
++    let setup: UserSetupRecord?
++    let hasActiveWorkout: Bool
++    let onStart: () -> Void
++    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
++    @State private var showingSettings = false
++    @State private var showingMethod = false
++
++    var body: some View {
++        GeometryReader { geometry in
++            ScrollView {
++                VStack(alignment: .leading, spacing: 20) {
++                    HStack {
++                        LBSWordmark()
++                        Spacer()
++                        Button { showingSettings = true } label: {
++                            Image(systemName: "gearshape").frame(width: 44, height: 44)
++                        }
++                        .accessibilityLabel("Paramètres")
++                    }
++                    ZStack(alignment: .topLeading) {
++                        Image("home-art")
++                            .resizable().scaledToFill()
++                            .frame(height: max(300, geometry.size.height - 220))
++                            .clipped()
++                            .accessibilityHidden(true)
++                        Text((hasActiveWorkout ? String(localized: "On reprend ?") : String(localized: "On bouge ?")).replacingOccurrences(of: " ?", with: "\u{00a0}?"))
++                            .font(.archivoBlack(64, relativeTo: .largeTitle))
++                            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
++                            .tracking(-2)
++                            .frame(maxWidth: dynamicTypeSize.isAccessibilitySize ? .infinity : 290, alignment: .leading)
++                            .fixedSize(horizontal: false, vertical: true)
++                            .padding(.top, 12)
++                            .accessibilityAddTraits(.isHeader)
++                    }
++                    if hasActiveWorkout {
++                        Text("Ta séance t’attend.").font(.body)
++                    }
++                    Button(action: onStart) {
++                        Text(hasActiveWorkout ? "Reprendre ma séance" : "Commencer ma séance")
++                            .font(.headline)
++                            .frame(maxWidth: .infinity, minHeight: 54)
++                    }
++                    .buttonStyle(.plain)
++                    .foregroundStyle(LBSBrand.cream)
++                    .background(LBSBrand.ink, in: RoundedRectangle(cornerRadius: 16))
++                    Button("Est-ce fait pour moi ?") { showingMethod = true }
++                        .frame(maxWidth: .infinity, minHeight: 44)
++                        .underline()
++                }
++                .padding(22)
++                .frame(minHeight: geometry.size.height, alignment: .top)
++            }
++        }
++        .foregroundStyle(LBSBrand.brandText)
++        .background(LBSBrand.screenBackground.ignoresSafeArea())
++        .toolbar(.hidden, for: .navigationBar)
++        .sheet(isPresented: $showingSettings) { NavigationStack { SettingsView(setup: setup) } }
++        .sheet(isPresented: $showingMethod) { NavigationStack { MethodView() } }
++    }
++}
+--- baseline/OpenCadenceTests/EquipmentHandoffTests.swift
++++ current/OpenCadenceTests/EquipmentHandoffTests.swift
+@@ -0,0 +1,58 @@
++import CadenceEngine
++import Testing
++@testable import OpenCadence
++
++struct EquipmentHandoffTests {
++    private func movement(_ category: String, _ configuration: String) -> PrescribedMovement {
++        PrescribedMovement(exerciseKey: "fixture", variant: "fixture", pattern: "push", sets: 2,
++                           target: "8", restSeconds: 60,
++                           equipment: [.init(category: category, configuration: configuration)])
++    }
++
++    @Test("Two handles do not imply every single dumbbell weight is mountable as a pair")
++    func actualPairWeights() throws {
++        let inventory = try EquipmentInventoryInput.dumbbells(category: "adjustable_dumbbell", single: "4 6 8 10", pair: "4 6")
++        #expect(WorkoutLoadResolver.options(for: movement("adjustable_dumbbell", "single"), inventory: inventory) == [4, 6, 8, 10])
++        #expect(WorkoutLoadResolver.options(for: movement("adjustable_dumbbell", "pair"), inventory: inventory) == [4, 6])
++    }
++
++    @Test("An undeclared pair remains unavailable")
++    func noInferredPair() throws {
++        let inventory = try EquipmentInventoryInput.dumbbells(category: "fixed_dumbbell", single: "8 12", pair: "")
++        #expect(WorkoutLoadResolver.options(for: movement("fixed_dumbbell", "pair"), inventory: inventory).isEmpty)
++        let ambiguous = EquipmentItem(category: "fixed_dumbbell", units: 2, weightKg: 20, supportedConfigurations: ["single"])
++        #expect(WorkoutLoadResolver.options(for: movement("fixed_dumbbell", "pair"), inventory: [ambiguous]).isEmpty)
++    }
++
++    @Test("Multiple fixed weights preserve their individual configurations")
++    func multipleFixedWeights() throws {
++        let inventory = try EquipmentInventoryInput.dumbbells(category: "fixed_dumbbell", single: "8 12", pair: "8")
++        #expect(inventory.count == 2)
++        #expect(WorkoutLoadResolver.options(for: movement("fixed_dumbbell", "single"), inventory: inventory) == [8, 12])
++        #expect(WorkoutLoadResolver.options(for: movement("fixed_dumbbell", "pair"), inventory: inventory) == [8])
++    }
++
++    @Test("Invalid input is rejected instead of silently dropping weights")
++    func strictWeightInput() {
++        for value in ["8 invalid 12", "nan", "inf", "0", "-2"] {
++            #expect(throws: (any Error).self) { try EquipmentInventoryInput.weights(value) }
++        }
++        #expect(throws: (any Error).self) {
++            try EquipmentInventoryInput.dumbbells(category: "adjustable_dumbbell", single: "", pair: "")
++        }
++    }
++
++    @Test("Decimal comma, duplicates and pair-only declarations are supported")
++    func localizedWeights() throws {
++        #expect(try EquipmentInventoryInput.weights("2,5 4 2,5") == [2.5, 4])
++        let inventory = try EquipmentInventoryInput.dumbbells(category: "fixed_dumbbell", single: "", pair: "6")
++        #expect(WorkoutLoadResolver.options(for: movement("fixed_dumbbell", "single"), inventory: inventory) == [6])
++    }
++
++    @Test("Band names are only offered for a supported configuration")
++    func bandConfigurations() {
++        let inventory = [EquipmentItem(category: "resistance_band", units: 1, optionIDs: ["blue"], supportedConfigurations: ["band"])]
++        #expect(WorkoutLoadResolver.optionIDs(for: movement("resistance_band", "band"), inventory: inventory) == ["blue"])
++        #expect(WorkoutLoadResolver.optionIDs(for: movement("resistance_band", "pair"), inventory: inventory).isEmpty)
++    }
++}
+--- baseline/OpenCadenceTests/HandoffJourneyTests.swift
++++ current/OpenCadenceTests/HandoffJourneyTests.swift
+@@ -0,0 +1,81 @@
++import CadenceEngine
++import Foundation
++import Testing
++@testable import OpenCadence
++
++@MainActor
++struct HandoffJourneyTests {
++    private let inventory = [
++        EquipmentItem(category: "bodyweight", units: 1, supportedConfigurations: ["bodyweight"]),
++        EquipmentItem(category: "adjustable_dumbbell", units: 2, perUnitWeightsKg: [4, 6, 8], supportedConfigurations: ["single", "central", "unilateral", "pair"])
++    ]
++    private func initial() -> ActiveWorkoutSnapshot {
++        let prepared = WorkoutEngineBridge.prepareWorkout(
++            inventory: inventory, durationMinutes: 30, engineVersion: .previewV2,
++            todaySupports: ["floor_allowed", "stable_hand_support", "stable_incline_support", "overhead_clearance"]
++        )
++        return ActiveSessionCoordinator.start(decision: prepared.decision, v2Context: prepared.v2Context, now: .now)
++    }
++
++    @Test("Generated multi-movement fixture records only explicit sets across rest and snapshot restoration")
++    func generatedJourney() throws {
++        var snapshot = initial()
++        #expect((snapshot.decision.movements?.count ?? 0) >= 3)
++        let plannedCount = snapshot.totalSetCount
++        var now = Date.now
++        for _ in 0..<100 {
++            if snapshot.isFinished { break }
++            guard let movement = snapshot.currentMovement else { Issue.record("Missing current movement"); return }
++            if let weight = WorkoutLoadResolver.options(for: movement, inventory: inventory).first {
++                snapshot = ActiveSessionCoordinator.confirmLoad(snapshot, exerciseKey: movement.exerciseKey, perUnitWeightKg: weight, inventory: inventory)
++            }
++            snapshot.setStartedAt = now
++            snapshot = try JSONDecoder().decode(ActiveWorkoutSnapshot.self, from: JSONEncoder().encode(snapshot))
++            #expect(snapshot.setStartedAt == now)
++            let before = snapshot.recordedSets.count
++            snapshot = ActiveSessionCoordinator.recordSet(snapshot, repetitions: 8, now: now)
++            #expect(snapshot.recordedSets.count == before + 1)
++            #expect(snapshot.setStartedAt == nil)
++            if !snapshot.isFinished {
++                let recorded = snapshot.recordedSets
++                snapshot = ActiveSessionCoordinator.pauseRest(snapshot, now: now)
++                snapshot = try JSONDecoder().decode(ActiveWorkoutSnapshot.self, from: JSONEncoder().encode(snapshot))
++                snapshot = ActiveSessionCoordinator.resumeRest(snapshot, now: now)
++                now = now.addingTimeInterval(1)
++                snapshot = ActiveSessionCoordinator.completeRest(snapshot, now: now)
++                #expect(snapshot.recordedSets == recorded.map { item in
++                    var result = item
++                    if result.plannedRestSeconds != nil && result.restEndedAt == nil { result.restEndedAt = now }
++                    return result
++                })
++                #expect(snapshot.recordedSets.count == before + 1)
++            }
++        }
++        #expect(snapshot.isFinished)
++        #expect(snapshot.recordedSets.count == plannedCount)
++        #expect(Set(snapshot.recordedSets.map(\.eventID)).count == plannedCount)
++    }
++
++    @Test("Skipping a started movement requires a fresh explicit start after snapshot restoration")
++    func abandonStartedMovement() throws {
++        var snapshot = initial()
++        snapshot.setStartedAt = .now
++        let first = snapshot.currentMovement?.exerciseKey
++        snapshot = ActiveSessionCoordinator.skipCurrentMovement(snapshot)
++        snapshot = try JSONDecoder().decode(ActiveWorkoutSnapshot.self, from: JSONEncoder().encode(snapshot))
++        #expect(snapshot.currentMovement?.exerciseKey != first)
++        #expect(snapshot.setStartedAt == nil)
++        #expect(snapshot.recordedSets.isEmpty)
++    }
++    @Test("A pain stop clears the explicit set start before recovery")
++    func painClearsStart() throws {
++        var snapshot = initial()
++        snapshot.setStartedAt = .now
++        snapshot = ActiveSessionCoordinator.reportPain(snapshot, score: 3)
++        snapshot = try JSONDecoder().decode(ActiveWorkoutSnapshot.self, from: JSONEncoder().encode(snapshot))
++        #expect(snapshot.setStartedAt == nil)
++        #expect(snapshot.unresolvedSafetyEvent != nil)
++        #expect(snapshot.recordedSets.isEmpty)
++    }
++
++}

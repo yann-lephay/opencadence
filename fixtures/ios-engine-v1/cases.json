@@ -1,0 +1,1258 @@
+{
+  "version": "1.0",
+  "contract": "../../docs/IOS-ENGINE-BEHAVIOR-CONTRACT.md",
+  "candidateEquipmentCategories": [
+    "bodyweight",
+    "fixed_dumbbell",
+    "adjustable_dumbbell",
+    "pullup_bar",
+    "rower"
+  ],
+  "inputDefaults": {
+    "calibrations": { "upper": "foundation", "lower": "foundation" },
+    "limitations": []
+  },
+  "exerciseCatalog": {
+    "incline_pushup": { "pattern": "push", "variant": "incline_pushup", "target": "6-12 reps", "restSeconds": 90, "equipment": [{ "category": "bodyweight", "configuration": "bodyweight" }] },
+    "bodyweight_squat": { "pattern": "knee", "variant": "bodyweight_squat", "target": "8-15 reps", "restSeconds": 90, "equipment": [{ "category": "bodyweight", "configuration": "bodyweight" }] },
+    "bodyweight_hinge": { "pattern": "hinge", "variant": "bodyweight_hinge", "target": "8-15 reps", "restSeconds": 90, "equipment": [{ "category": "bodyweight", "configuration": "bodyweight" }] },
+    "assisted_pullup": { "pattern": "pull", "variant": "foot_assisted_pullup", "target": "3-8 reps", "restSeconds": 120, "equipment": [{ "category": "bodyweight", "configuration": "bodyweight" }, { "category": "pullup_bar", "configuration": "bodyweight" }] },
+    "one_arm_row": { "pattern": "pull", "variant": "supported_one_arm_row", "target": "8-12 reps per side", "restSeconds": 90, "equipment": [{ "category": "adjustable_dumbbell", "configuration": "unilateral" }] },
+    "goblet_squat": { "pattern": "knee", "variant": "goblet_squat", "target": "8-12 reps", "restSeconds": 90, "equipment": [{ "category": "adjustable_dumbbell", "configuration": "central" }] },
+    "floor_press": { "pattern": "push", "variant": "dumbbell_floor_press", "target": "6-12 reps", "restSeconds": 120, "equipment": [{ "category": "adjustable_dumbbell", "configuration": "pair" }] },
+    "romanian_deadlift": { "pattern": "hinge", "variant": "dumbbell_romanian_deadlift", "target": "8-12 reps", "restSeconds": 120, "equipment": [{ "category": "adjustable_dumbbell", "configuration": "pair" }] },
+    "fixed_goblet_squat": { "pattern": "knee", "variant": "goblet_squat", "target": "8-12 reps", "restSeconds": 90, "equipment": [{ "category": "fixed_dumbbell", "configuration": "central" }] },
+    "fixed_floor_press": { "pattern": "push", "variant": "dumbbell_floor_press", "target": "6-12 reps", "restSeconds": 120, "equipment": [{ "category": "fixed_dumbbell", "configuration": "pair" }] },
+    "fixed_romanian_deadlift": { "pattern": "hinge", "variant": "dumbbell_romanian_deadlift", "target": "8-12 reps", "restSeconds": 120, "equipment": [{ "category": "fixed_dumbbell", "configuration": "pair" }] }
+  },
+  "calibratedExerciseCatalog": {
+    "foundation_one_arm_row": { "pattern": "pull", "variant": "supported_one_arm_row_short_range", "calibrationBand": "foundation", "target": "6-10 reps per side", "restSeconds": 90, "equipment": [{ "category": "adjustable_dumbbell", "configuration": "unilateral" }] },
+    "foundation_floor_press": { "pattern": "push", "variant": "neutral_grip_floor_press", "calibrationBand": "foundation", "target": "6-10 reps", "restSeconds": 120, "equipment": [{ "category": "adjustable_dumbbell", "configuration": "pair" }] },
+    "established_goblet_squat": { "pattern": "knee", "variant": "tempo_goblet_squat", "calibrationBand": "established", "target": "8-12 reps", "restSeconds": 90, "equipment": [{ "category": "adjustable_dumbbell", "configuration": "central" }] },
+    "established_romanian_deadlift": { "pattern": "hinge", "variant": "dumbbell_romanian_deadlift", "calibrationBand": "established", "target": "8-12 reps", "restSeconds": 120, "equipment": [{ "category": "adjustable_dumbbell", "configuration": "pair" }] }
+  },
+  "conditioningCatalog": {
+    "rower_easy_warmup": { "category": "rower", "configuration": "rower", "target": "4-5 minutes easy" },
+    "rower_hard_finisher": { "category": "rower", "configuration": "rower", "target": "short controlled finisher" }
+  },
+  "planProfiles": {
+    "bodyweight-8": [{ "exerciseKey": "incline_pushup", "sets": 3 }, { "exerciseKey": "bodyweight_squat", "sets": 3 }, { "exerciseKey": "bodyweight_hinge", "sets": 2 }],
+    "fixed-full-12": [{ "exerciseKey": "assisted_pullup", "sets": 3 }, { "exerciseKey": "fixed_goblet_squat", "sets": 3 }, { "exerciseKey": "fixed_floor_press", "sets": 3 }, { "exerciseKey": "fixed_romanian_deadlift", "sets": 3 }],
+    "adjustable-full-16": [{ "exerciseKey": "one_arm_row", "sets": 4 }, { "exerciseKey": "goblet_squat", "sets": 4 }, { "exerciseKey": "floor_press", "sets": 4 }, { "exerciseKey": "romanian_deadlift", "sets": 4 }],
+    "adjustable-full-12": [{ "exerciseKey": "one_arm_row", "sets": 3 }, { "exerciseKey": "goblet_squat", "sets": 3 }, { "exerciseKey": "floor_press", "sets": 3 }, { "exerciseKey": "romanian_deadlift", "sets": 3 }],
+    "adjustable-pull-priority-12": [{ "exerciseKey": "one_arm_row", "sets": 4 }, { "exerciseKey": "goblet_squat", "sets": 3 }, { "exerciseKey": "floor_press", "sets": 2 }, { "exerciseKey": "romanian_deadlift", "sets": 3 }],
+    "split-calibrated-12": [{ "exerciseKey": "foundation_one_arm_row", "sets": 3 }, { "exerciseKey": "established_goblet_squat", "sets": 3 }, { "exerciseKey": "foundation_floor_press", "sets": 3 }, { "exerciseKey": "established_romanian_deadlift", "sets": 3 }],
+    "foundation-foundation-12": [{ "exerciseKey": "foundation_one_arm_row", "sets": 3 }, { "exerciseKey": "goblet_squat", "sets": 3 }, { "exerciseKey": "foundation_floor_press", "sets": 3 }, { "exerciseKey": "romanian_deadlift", "sets": 3 }],
+    "established-established-12": [{ "exerciseKey": "one_arm_row", "sets": 3 }, { "exerciseKey": "established_goblet_squat", "sets": 3 }, { "exerciseKey": "floor_press", "sets": 3 }, { "exerciseKey": "established_romanian_deadlift", "sets": 3 }],
+    "wrist-baseline-12": [{ "exerciseKey": "one_arm_row", "sets": 3 }, { "exerciseKey": "goblet_squat", "sets": 3 }, { "exerciseKey": "incline_pushup", "sets": 3 }, { "exerciseKey": "romanian_deadlift", "sets": 3 }],
+    "wrist-substitution-12": [{ "exerciseKey": "one_arm_row", "sets": 3 }, { "exerciseKey": "goblet_squat", "sets": 3 }, { "exerciseKey": "floor_press", "sets": 3 }, { "exerciseKey": "romanian_deadlift", "sets": 3 }],
+    "adjustable-pull-priority-9": [{ "exerciseKey": "one_arm_row", "sets": 3 }, { "exerciseKey": "goblet_squat", "sets": 2 }, { "exerciseKey": "floor_press", "sets": 2 }, { "exerciseKey": "romanian_deadlift", "sets": 2 }],
+    "adjustable-push-priority-9": [{ "exerciseKey": "one_arm_row", "sets": 2 }, { "exerciseKey": "goblet_squat", "sets": 2 }, { "exerciseKey": "floor_press", "sets": 3 }, { "exerciseKey": "romanian_deadlift", "sets": 2 }],
+    "adjustable-full-8": [{ "exerciseKey": "one_arm_row", "sets": 2 }, { "exerciseKey": "goblet_squat", "sets": 2 }, { "exerciseKey": "floor_press", "sets": 2 }, { "exerciseKey": "romanian_deadlift", "sets": 2 }],
+    "bodyweight-7": [{ "exerciseKey": "incline_pushup", "sets": 3 }, { "exerciseKey": "bodyweight_squat", "sets": 2 }, { "exerciseKey": "bodyweight_hinge", "sets": 2 }],
+    "bodyweight-9": [{ "exerciseKey": "incline_pushup", "sets": 3 }, { "exerciseKey": "bodyweight_squat", "sets": 3 }, { "exerciseKey": "bodyweight_hinge", "sets": 3 }],
+    "bodyweight-10": [{ "exerciseKey": "incline_pushup", "sets": 4 }, { "exerciseKey": "bodyweight_squat", "sets": 3 }, { "exerciseKey": "bodyweight_hinge", "sets": 3 }],
+    "bodyweight-12": [{ "exerciseKey": "incline_pushup", "sets": 4 }, { "exerciseKey": "bodyweight_squat", "sets": 4 }, { "exerciseKey": "bodyweight_hinge", "sets": 4 }]
+  },
+  "equipmentConfigurationGates": [
+    { "category": "bodyweight", "configuration": "bodyweight", "schemaId": "equipment.bodyweight.v1", "movementKeys": ["incline_pushup", "bodyweight_squat", "bodyweight_hinge"], "illustrationProof": null, "fixtureIds": ["fresh-bodyweight-20"], "status": "engine_ready_visual_pending" },
+    { "category": "fixed_dumbbell", "configuration": "pair", "schemaId": "equipment.fixed-dumbbell.v1", "movementKeys": ["fixed_floor_press", "fixed_romanian_deadlift"], "illustrationProof": null, "fixtureIds": ["fixed-dumbbells-and-pullup-30"], "status": "engine_ready_visual_pending" },
+    { "category": "fixed_dumbbell", "configuration": "central", "schemaId": "equipment.fixed-dumbbell.v1", "movementKeys": ["fixed_goblet_squat"], "illustrationProof": null, "fixtureIds": ["fixed-dumbbells-and-pullup-30"], "status": "engine_ready_visual_pending" },
+    { "category": "adjustable_dumbbell", "configuration": "pair", "schemaId": "equipment.adjustable-dumbbell.v1", "movementKeys": ["floor_press", "romanian_deadlift"], "illustrationProof": null, "fixtureIds": ["adjustable-dumbbells-reps-first-45"], "status": "engine_ready_visual_pending" },
+    { "category": "adjustable_dumbbell", "configuration": "central", "schemaId": "equipment.adjustable-dumbbell.v1", "movementKeys": ["goblet_squat"], "illustrationProof": null, "fixtureIds": ["adjustable-dumbbells-no-invented-load-45"], "status": "engine_ready_visual_pending" },
+    { "category": "adjustable_dumbbell", "configuration": "unilateral", "schemaId": "equipment.adjustable-dumbbell.v1", "movementKeys": ["one_arm_row"], "illustrationProof": null, "fixtureIds": ["adjustable-dumbbells-reps-first-45"], "status": "engine_ready_visual_pending" },
+    { "category": "pullup_bar", "configuration": "bodyweight", "schemaId": "equipment.pullup-bar.v1", "movementKeys": ["assisted_pullup"], "illustrationProof": null, "fixtureIds": ["fixed-dumbbells-and-pullup-30"], "status": "engine_ready_visual_pending" },
+    { "category": "rower", "configuration": "rower", "schemaId": "equipment.rower.v1", "movementKeys": [], "conditioningKeys": ["rower_easy_warmup", "rower_hard_finisher"], "illustrationProof": null, "fixtureIds": ["rower-green-and-fresh-45"], "status": "engine_ready_visual_pending" }
+  ],
+  "heldEquipmentCategories": [
+    {
+      "id": "kettlebell",
+      "reason": "Configurations simple, double et asymetrique pas encore couvertes par le lot V1."
+    },
+    {
+      "id": "resistance_band",
+      "reason": "Niveaux de resistance et points d'ancrage pas encore modelises."
+    },
+    {
+      "id": "bench_or_stable_chair",
+      "reason": "Positions, stabilite et variantes illustrees pas encore validees."
+    },
+    {
+      "id": "dip_bars",
+      "reason": "Progressions et regressions illustrees pas encore validees."
+    },
+    {
+      "id": "weighted_vest",
+      "reason": "Interaction avec les variantes au poids du corps pas encore couverte."
+    }
+  ],
+  "requiredRuleIds": [
+    "ENG-DETERMINISM-001",
+    "ENG-TIME-001",
+    "ENG-EQUIP-001",
+    "ENG-EQUIP-002",
+    "ENG-ANCHOR-001",
+    "ENG-ROLLING-001",
+    "ENG-CALIBRATION-001",
+    "ENG-READINESS-001",
+    "ENG-PROGRESS-001",
+    "ENG-PROGRESS-002",
+    "ENG-SESSION-001",
+    "ENG-SAFETY-001",
+    "ENG-LIFESTAGE-001",
+    "ENG-CYCLE-001",
+    "ENG-ROWER-001",
+    "ENG-EXPLAIN-001",
+    "ENG-INPUT-001",
+    "ENG-PERSIST-001"
+  ],
+  "cases": [
+    {
+      "id": "fresh-bodyweight-20",
+      "description": "Une premiere seance au poids du corps reste utile sans inventer de tirage.",
+      "ruleIds": [
+        "ENG-DETERMINISM-001",
+        "ENG-TIME-001",
+        "ENG-EQUIP-001",
+        "ENG-EQUIP-002",
+        "ENG-ANCHOR-001",
+        "ENG-EXPLAIN-001"
+      ],
+      "now": "2026-09-01T08:00:00.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [
+          { "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }
+        ],
+        "history": [],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "green", "factor": 1, "rirTarget": "2-3" },
+        "basePrimarySetBudget": 8,
+        "finalPrimarySetBudget": 8,
+        "planProfileId": "bodyweight-8",
+        "allowHardRower": false,
+        "requiredPatterns": ["push", "knee", "hinge"],
+        "omittedPatterns": ["pull"],
+        "usedEquipmentCategories": ["bodyweight"],
+        "forbiddenEquipmentCategories": ["fixed_dumbbell", "adjustable_dumbbell", "pullup_bar", "rower"],
+        "requiredReasonCodes": ["equipment.no_supported_pull"]
+      }
+    },
+    {
+      "id": "fixed-dumbbells-and-pullup-30",
+      "description": "Une paire fixe et une barre de traction couvrent les quatre ancrages avec la charge declaree.",
+      "ruleIds": ["ENG-TIME-001", "ENG-EQUIP-001", "ENG-EQUIP-002", "ENG-ANCHOR-001"],
+      "now": "2026-09-01T18:00:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [
+          { "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] },
+          { "category": "fixed_dumbbell", "units": 2, "weightKg": 8, "supportedConfigurations": ["pair", "single", "central", "unilateral"] },
+          { "category": "pullup_bar", "units": 1, "supportedConfigurations": ["bodyweight"] }
+        ],
+        "history": [],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "green", "factor": 1, "rirTarget": "2-3" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 12,
+        "planProfileId": "fixed-full-12",
+        "allowHardRower": false,
+        "requiredPatterns": ["pull", "push", "knee", "hinge"],
+        "omittedPatterns": [],
+        "usedEquipmentCategories": ["bodyweight", "fixed_dumbbell", "pullup_bar"],
+        "recommendedLoads": [
+          { "category": "fixed_dumbbell", "configuration": "pair", "perUnitWeightKg": 8 }
+        ],
+        "requiredReasonCodes": ["session.full_body_anchors_supported"]
+      }
+    },
+    {
+      "id": "adjustable-dumbbells-reps-first-45",
+      "description": "Une seule validation propre augmente les repetitions, pas la charge.",
+      "ruleIds": ["ENG-TIME-001", "ENG-EQUIP-001", "ENG-PROGRESS-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-04T18:00:00.000Z",
+      "input": {
+        "durationMinutes": 45,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [
+          { "category": "adjustable_dumbbell", "units": 2, "perUnitWeightsKg": [6, 8, 10], "supportedConfigurations": ["pair", "single", "central", "unilateral"] }
+        ],
+        "history": [
+          { "sessionId": "session-reps-1", "endedAt": "2026-09-01T18:30:00.000Z", "effort": 8, "painScore": 1, "exerciseRecords": [{ "exerciseKey": "floor_press", "configuration": "pair", "perUnitWeightKg": 8, "topRangeReps": 12, "completedReps": 10, "lastSetRir": 2 }] }
+        ],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "green", "factor": 1, "rirTarget": "2-3" },
+        "basePrimarySetBudget": 16,
+        "finalPrimarySetBudget": 16,
+        "planProfileId": "adjustable-full-16",
+        "allowHardRower": false,
+        "requiredPatterns": ["pull", "push", "knee", "hinge"],
+        "omittedPatterns": [],
+        "usedEquipmentCategories": ["adjustable_dumbbell"],
+        "progression": { "exerciseKey": "floor_press", "action": "increase_reps", "perUnitWeightKg": 8, "repsDelta": 1, "variablesChanged": ["reps"] },
+        "requiredReasonCodes": ["progression.reps_first"]
+      }
+    },
+    {
+      "id": "adjustable-dumbbells-next-real-load-45",
+      "description": "Deux hauts de fourchette propres autorisent seulement le palier disponible suivant.",
+      "ruleIds": ["ENG-EQUIP-001", "ENG-PROGRESS-002", "ENG-EXPLAIN-001"],
+      "now": "2026-09-07T18:00:00.000Z",
+      "input": {
+        "durationMinutes": 45,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [
+          { "category": "adjustable_dumbbell", "units": 2, "perUnitWeightsKg": [6, 8, 10], "supportedConfigurations": ["pair", "single", "central", "unilateral"] }
+        ],
+        "history": [
+          { "sessionId": "session-load-1", "endedAt": "2026-09-01T18:30:00.000Z", "effort": 8, "painScore": 0, "exerciseRecords": [{ "exerciseKey": "floor_press", "configuration": "pair", "perUnitWeightKg": 8, "topRangeReps": 12, "completedReps": 12, "lastSetRir": 2 }] },
+          { "sessionId": "session-load-2", "endedAt": "2026-09-04T18:30:00.000Z", "effort": 8, "painScore": 1, "exerciseRecords": [{ "exerciseKey": "floor_press", "configuration": "pair", "perUnitWeightKg": 8, "topRangeReps": 12, "completedReps": 12, "lastSetRir": 3 }] }
+        ],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "green", "factor": 1, "rirTarget": "2-3" },
+        "basePrimarySetBudget": 16,
+        "finalPrimarySetBudget": 16,
+        "planProfileId": "adjustable-full-16",
+        "allowHardRower": false,
+        "usedEquipmentCategories": ["adjustable_dumbbell"],
+        "progression": { "exerciseKey": "floor_press", "action": "increase_load", "perUnitWeightKg": 10, "repsDelta": -4, "variablesChanged": ["load", "reps_reset"] },
+        "requiredReasonCodes": ["progression.two_clean_ceiling_sessions", "progression.next_available_load"]
+      }
+    },
+    {
+      "id": "adjustable-dumbbells-no-invented-load-45",
+      "description": "Sans palier superieur disponible, la charge reste a 10 kg par unite.",
+      "ruleIds": ["ENG-EQUIP-001", "ENG-PROGRESS-002", "ENG-EXPLAIN-001"],
+      "now": "2026-09-10T18:00:00.000Z",
+      "input": {
+        "durationMinutes": 45,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [
+          { "category": "adjustable_dumbbell", "units": 2, "perUnitWeightsKg": [6, 8, 10], "supportedConfigurations": ["pair", "single", "central", "unilateral"] }
+        ],
+        "history": [
+          { "sessionId": "session-hold-1", "endedAt": "2026-09-04T18:30:00.000Z", "effort": 7, "painScore": 0, "exerciseRecords": [{ "exerciseKey": "goblet_squat", "configuration": "central", "perUnitWeightKg": 10, "topRangeReps": 15, "completedReps": 15, "lastSetRir": 3 }] },
+          { "sessionId": "session-hold-2", "endedAt": "2026-09-07T18:30:00.000Z", "effort": 8, "painScore": 0, "exerciseRecords": [{ "exerciseKey": "goblet_squat", "configuration": "central", "perUnitWeightKg": 10, "topRangeReps": 15, "completedReps": 15, "lastSetRir": 2 }] }
+        ],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "green", "factor": 1, "rirTarget": "2-3" },
+        "basePrimarySetBudget": 16,
+        "finalPrimarySetBudget": 16,
+        "planProfileId": "adjustable-full-16",
+        "allowHardRower": false,
+        "usedEquipmentCategories": ["adjustable_dumbbell"],
+        "progression": { "exerciseKey": "goblet_squat", "action": "hold_load", "perUnitWeightKg": 10, "repsDelta": 0, "variablesChanged": [] },
+        "requiredReasonCodes": ["progression.no_higher_available"]
+      }
+    },
+    {
+      "id": "repeated-high-effort-30",
+      "description": "Deux efforts a 9 sur trois seances reduisent le volume et retirent le rameur intense.",
+      "ruleIds": ["ENG-TIME-001", "ENG-READINESS-001", "ENG-ROWER-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-10T18:00:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [
+          { "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] },
+          { "category": "rower", "units": 1, "supportedConfigurations": ["rower"] }
+        ],
+        "history": [
+          { "sessionId": "session-effort-1", "endedAt": "2026-09-02T18:30:00.000Z", "effort": 9, "painScore": 1 },
+          { "sessionId": "session-effort-2", "endedAt": "2026-09-05T18:30:00.000Z", "effort": 7, "painScore": 0 },
+          { "sessionId": "session-effort-3", "endedAt": "2026-09-08T18:30:00.000Z", "effort": 9, "painScore": 1 }
+        ],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "reduced", "factor": 0.65, "rirTarget": "3-4" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 8,
+        "planProfileId": "bodyweight-8",
+        "allowHardRower": false,
+        "usedEquipmentCategories": ["bodyweight"],
+        "requiredReasonCodes": ["readiness.repeated_high_effort"]
+      }
+    },
+    {
+      "id": "previous-pain-five-30",
+      "description": "Une douleur precedente a 5 prend la priorite, bloque la progression et le rameur intense.",
+      "ruleIds": ["ENG-TIME-001", "ENG-READINESS-001", "ENG-SAFETY-001", "ENG-ROWER-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-10T18:00:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [{ "sessionId": "session-pain-1", "endedAt": "2026-09-07T18:30:00.000Z", "effort": 7, "painScore": 5 }],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "technical", "factor": 0.55, "rirTarget": "3-4" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 7,
+        "planProfileId": "bodyweight-7",
+        "allowHardRower": false,
+        "usedEquipmentCategories": ["bodyweight"],
+        "forbidProgression": true,
+        "requiredReasonCodes": ["readiness.previous_pain_five", "safety.stop_if_pain_persists"]
+      }
+    },
+    {
+      "id": "less-than-24-hours-45",
+      "description": "Un intervalle inferieur a 24 heures produit un passage technique a 55 pour cent.",
+      "ruleIds": ["ENG-TIME-001", "ENG-READINESS-001"],
+      "now": "2026-09-10T08:00:00.000Z",
+      "input": {
+        "durationMinutes": 45,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [{ "sessionId": "session-recent-1", "endedAt": "2026-09-09T18:00:00.000Z", "effort": 7, "painScore": 0 }],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "technical", "factor": 0.55, "rirTarget": "3-4" },
+        "basePrimarySetBudget": 16,
+        "finalPrimarySetBudget": 9,
+        "planProfileId": "bodyweight-9",
+        "allowHardRower": false,
+        "usedEquipmentCategories": ["bodyweight"],
+        "requiredReasonCodes": ["readiness.less_than_24_hours"]
+      }
+    },
+    {
+      "id": "return-after-10-days-45",
+      "description": "Une reprise apres dix jours vise 75 pour cent du volume.",
+      "ruleIds": ["ENG-TIME-001", "ENG-READINESS-001"],
+      "now": "2026-09-11T18:00:00.000Z",
+      "input": {
+        "durationMinutes": 45,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [{ "sessionId": "session-return-10", "endedAt": "2026-09-01T18:00:00.000Z", "effort": 7, "painScore": 0 }],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "return", "factor": 0.75, "rirTarget": "3-4" },
+        "basePrimarySetBudget": 16,
+        "finalPrimarySetBudget": 12,
+        "planProfileId": "bodyweight-12",
+        "allowHardRower": false,
+        "usedEquipmentCategories": ["bodyweight"],
+        "requiredReasonCodes": ["readiness.return_8_to_14_days"]
+      }
+    },
+    {
+      "id": "return-after-15-days-45",
+      "description": "Une reprise apres plus de quatorze jours declenche une recalibration a 60 pour cent.",
+      "ruleIds": ["ENG-TIME-001", "ENG-READINESS-001"],
+      "now": "2026-09-17T18:00:00.000Z",
+      "input": {
+        "durationMinutes": 45,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [{ "sessionId": "session-return-15", "endedAt": "2026-09-01T18:00:00.000Z", "effort": 7, "painScore": 0 }],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "recalibration", "factor": 0.6, "rirTarget": "3-4" },
+        "basePrimarySetBudget": 16,
+        "finalPrimarySetBudget": 10,
+        "planProfileId": "bodyweight-10",
+        "allowHardRower": false,
+        "usedEquipmentCategories": ["bodyweight"],
+        "requiredReasonCodes": ["readiness.return_over_14_days"]
+      }
+    },
+    {
+      "id": "moderate-declared-symptoms-30",
+      "description": "Des symptomes declares de niveau 4 gardent le budget mais retirent le rameur intense.",
+      "ruleIds": ["ENG-CYCLE-001", "ENG-ROWER-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-12T18:00:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "cycle_natural",
+        "symptomTracking": { "enabled": true, "todayScore": 4 },
+        "inventory": [
+          { "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] },
+          { "category": "rower", "units": 1, "supportedConfigurations": ["rower"] }
+        ],
+        "history": [],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "green_test_start", "factor": 1, "rirTarget": "2-3" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 12,
+        "planProfileId": "bodyweight-12",
+        "allowHardRower": false,
+        "usedEquipmentCategories": ["bodyweight"],
+        "requiredReasonCodes": ["symptoms.moderate_declared", "symptoms.first_movements_test"]
+      }
+    },
+    {
+      "id": "high-declared-symptoms-30",
+      "description": "Des symptomes declares de niveau 7 plafonnent le facteur a 65 pour cent.",
+      "ruleIds": ["ENG-TIME-001", "ENG-CYCLE-001", "ENG-ROWER-001"],
+      "now": "2026-09-13T18:00:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "cycle_natural",
+        "symptomTracking": { "enabled": true, "todayScore": 7 },
+        "inventory": [
+          { "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] },
+          { "category": "rower", "units": 1, "supportedConfigurations": ["rower"] }
+        ],
+        "history": [],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "reduced", "factor": 0.65, "rirTarget": "3-4" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 8,
+        "planProfileId": "bodyweight-8",
+        "allowHardRower": false,
+        "usedEquipmentCategories": ["bodyweight"],
+        "requiredReasonCodes": ["symptoms.high_declared"]
+      }
+    },
+    {
+      "id": "pregnancy-blocks-standard-mode",
+      "description": "La grossesse bloque le moteur standard au lieu de generer une seance allegee.",
+      "ruleIds": ["ENG-LIFESTAGE-001", "ENG-SAFETY-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-14T08:00:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "pregnancy",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "block_standard_mode",
+        "blockReason": "life_stage.dedicated_mode_required",
+        "requiredReasonCodes": ["life_stage.pregnancy_standard_mode_blocked"]
+      }
+    },
+    {
+      "id": "postpartum-blocks-standard-mode",
+      "description": "Le post-partum bloque egalement le moteur standard.",
+      "ruleIds": ["ENG-LIFESTAGE-001", "ENG-SAFETY-001"],
+      "now": "2026-09-14T09:00:00.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "postpartum",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "block_standard_mode",
+        "blockReason": "life_stage.dedicated_mode_required",
+        "requiredReasonCodes": ["life_stage.postpartum_standard_mode_blocked"]
+      }
+    },
+    {
+      "id": "interrupted-session-makeup",
+      "description": "Le rattrapage ne reprend que les mouvements sautes et ne cree aucune dette.",
+      "ruleIds": ["ENG-SESSION-001", "ENG-EQUIP-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-16T08:00:00.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [
+          { "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] },
+          { "category": "adjustable_dumbbell", "units": 2, "perUnitWeightsKg": [6, 8, 10], "supportedConfigurations": ["pair", "central", "unilateral"] }
+        ],
+        "history": [
+          { "sessionId": "session-interrupted-1", "endedAt": "2026-09-15T08:20:00.000Z", "effort": 7, "painScore": 1, "completedExerciseKeys": ["goblet_squat", "floor_press"], "skippedExerciseKeys": ["one_arm_row", "romanian_deadlift"], "conditioningCompleted": false, "endedEarly": true }
+        ],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_makeup",
+        "allowHardRower": false,
+        "makeup": {
+          "includedExerciseKeys": ["one_arm_row", "romanian_deadlift"],
+          "excludedExerciseKeys": ["goblet_squat", "floor_press"],
+          "includeConditioning": false,
+          "createsDebt": false
+        },
+        "requiredReasonCodes": ["session.optional_makeup_after_interruption"]
+      }
+    },
+    {
+      "id": "rest-timer-resumes-from-absolute-deadline",
+      "description": "Apres relance, le repos reprend a partir de l'echeance persistante et non de sa duree initiale.",
+      "ruleIds": ["ENG-DETERMINISM-001", "ENG-SESSION-001"],
+      "now": "2026-09-16T08:01:15.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [],
+        "activeSession": {
+          "startedAt": "2026-09-16T08:00:00.000Z",
+          "currentExerciseKey": "pushup",
+          "currentSetIndex": 1,
+          "restDeadline": "2026-09-16T08:02:00.000Z",
+          "originalRestSeconds": 90
+        }
+      },
+      "expected": {
+        "decision": "resume_active_session",
+        "restTimer": {
+          "deadline": "2026-09-16T08:02:00.000Z",
+          "remainingSeconds": 45,
+          "mustNotResetToSeconds": 90
+        },
+        "requiredReasonCodes": ["session.active_restored"]
+      }
+    },
+    {
+      "id": "rower-green-and-fresh-45",
+      "description": "Le rameur intense est permis en etat vert a 45 minutes si aucun finisher recent n'existe.",
+      "ruleIds": ["ENG-EQUIP-001", "ENG-READINESS-001", "ENG-ROWER-001"],
+      "now": "2026-09-20T18:00:00.000Z",
+      "input": {
+        "durationMinutes": 45,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [
+          { "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] },
+          { "category": "rower", "units": 1, "supportedConfigurations": ["rower"] }
+        ],
+        "history": [{ "sessionId": "session-rower-green", "endedAt": "2026-09-17T18:30:00.000Z", "effort": 7, "painScore": 0, "hardRowerFinisher": false }],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "green", "factor": 1, "rirTarget": "2-3" },
+        "basePrimarySetBudget": 16,
+        "finalPrimarySetBudget": 12,
+        "planProfileId": "bodyweight-12",
+        "allowHardRower": true,
+        "usedEquipmentCategories": ["bodyweight", "rower"],
+        "requiredReasonCodes": ["rower.hard_finisher_eligible", "equipment.pattern_capacity_cap"]
+      }
+    },
+    {
+      "id": "rower-finisher-too-recent-45",
+      "description": "Un finisher intense dans les sept derniers jours retire le prochain finisher.",
+      "ruleIds": ["ENG-ROWER-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-20T18:00:00.000Z",
+      "input": {
+        "durationMinutes": 45,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [
+          { "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] },
+          { "category": "rower", "units": 1, "supportedConfigurations": ["rower"] }
+        ],
+        "history": [{ "sessionId": "session-rower-recent", "endedAt": "2026-09-17T18:30:00.000Z", "effort": 7, "painScore": 0, "hardRowerFinisher": true }],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "green", "factor": 1, "rirTarget": "2-3" },
+        "basePrimarySetBudget": 16,
+        "finalPrimarySetBudget": 12,
+        "planProfileId": "bodyweight-12",
+        "allowHardRower": false,
+        "usedEquipmentCategories": ["bodyweight"],
+        "requiredReasonCodes": ["rower.hard_finisher_within_7_days", "equipment.pattern_capacity_cap"]
+      }
+    },
+    {
+      "id": "split-upper-lower-calibration-30",
+      "description": "Une calibration haute prudente ne declasse pas la calibration basse deja etablie.",
+      "ruleIds": ["ENG-CALIBRATION-001", "ENG-ANCHOR-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-21T08:00:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "not_specified",
+        "calibrations": { "upper": "foundation", "lower": "established" },
+        "calibrationIsExplicit": true,
+        "limitations": [],
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "adjustable_dumbbell", "units": 2, "perUnitWeightsKg": [4, 6, 8], "supportedConfigurations": ["pair", "central", "unilateral"] }],
+        "history": [],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "green", "factor": 1, "rirTarget": "2-3" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 12,
+        "planProfileId": "split-calibrated-12",
+        "allowHardRower": false,
+        "calibrationAssertions": { "foundation_one_arm_row": "foundation", "foundation_floor_press": "foundation", "established_goblet_squat": "established", "established_romanian_deadlift": "established" },
+        "usedEquipmentCategories": ["adjustable_dumbbell"],
+        "requiredReasonCodes": ["calibration.user_selected_variants", "calibration.upper_lower_independent"]
+      }
+    },
+    {
+      "id": "explicit-foundation-upper-foundation-lower-30",
+      "description": "Deux reperes progressifs explicites calibrent chaque famille sans etre pris pour un simple defaut technique.",
+      "ruleIds": ["ENG-CALIBRATION-001", "ENG-ANCHOR-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-21T08:05:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "not_specified",
+        "calibrations": { "upper": "foundation", "lower": "foundation" },
+        "calibrationIsExplicit": true,
+        "limitations": [],
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "adjustable_dumbbell", "units": 2, "perUnitWeightsKg": [4, 6, 8], "supportedConfigurations": ["pair", "central", "unilateral"] }],
+        "history": [],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "green", "factor": 1, "rirTarget": "2-3" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 12,
+        "planProfileId": "foundation-foundation-12",
+        "allowHardRower": false,
+        "stableExerciseKeys": ["foundation_one_arm_row", "goblet_squat", "foundation_floor_press", "romanian_deadlift"],
+        "calibrationAssertions": { "foundation_one_arm_row": "foundation", "foundation_floor_press": "foundation" },
+        "usedEquipmentCategories": ["adjustable_dumbbell"],
+        "requiredReasonCodes": ["calibration.user_selected_variants"]
+      }
+    },
+    {
+      "id": "explicit-established-upper-foundation-lower-30",
+      "description": "Un haut du corps familier et un bas progressif conservent les variantes generiques compatibles de chaque famille.",
+      "ruleIds": ["ENG-CALIBRATION-001", "ENG-ANCHOR-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-21T08:10:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "not_specified",
+        "calibrations": { "upper": "established", "lower": "foundation" },
+        "calibrationIsExplicit": true,
+        "limitations": [],
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "adjustable_dumbbell", "units": 2, "perUnitWeightsKg": [4, 6, 8], "supportedConfigurations": ["pair", "central", "unilateral"] }],
+        "history": [],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "green", "factor": 1, "rirTarget": "2-3" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 12,
+        "planProfileId": "adjustable-full-12",
+        "allowHardRower": false,
+        "stableExerciseKeys": ["one_arm_row", "goblet_squat", "floor_press", "romanian_deadlift"],
+        "usedEquipmentCategories": ["adjustable_dumbbell"],
+        "requiredReasonCodes": ["calibration.user_selected_variants", "calibration.upper_lower_independent"]
+      }
+    },
+    {
+      "id": "explicit-established-upper-established-lower-30",
+      "description": "Deux reperes familiers explicites selectionnent les variantes etablies sans creer de niveau global unique.",
+      "ruleIds": ["ENG-CALIBRATION-001", "ENG-ANCHOR-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-21T08:15:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "not_specified",
+        "calibrations": { "upper": "established", "lower": "established" },
+        "calibrationIsExplicit": true,
+        "limitations": [],
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "adjustable_dumbbell", "units": 2, "perUnitWeightsKg": [4, 6, 8], "supportedConfigurations": ["pair", "central", "unilateral"] }],
+        "history": [],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "green", "factor": 1, "rirTarget": "2-3" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 12,
+        "planProfileId": "established-established-12",
+        "allowHardRower": false,
+        "stableExerciseKeys": ["one_arm_row", "established_goblet_squat", "floor_press", "established_romanian_deadlift"],
+        "calibrationAssertions": { "established_goblet_squat": "established", "established_romanian_deadlift": "established" },
+        "usedEquipmentCategories": ["adjustable_dumbbell"],
+        "requiredReasonCodes": ["calibration.user_selected_variants"]
+      }
+    },
+    {
+      "id": "declared-wrist-limitation-substitutes-push-30",
+      "description": "Une limitation d'extension du poignet retire les pompes sans retirer les jambes ni le tirage.",
+      "ruleIds": ["ENG-CALIBRATION-001", "ENG-EQUIP-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-21T09:00:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "not_specified",
+        "calibrations": { "upper": "foundation", "lower": "foundation" },
+        "limitations": [{ "id": "avoid_loaded_wrist_extension", "excludedExerciseKeys": ["incline_pushup"] }],
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [
+          { "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] },
+          { "category": "adjustable_dumbbell", "units": 2, "perUnitWeightsKg": [4, 6, 8], "supportedConfigurations": ["pair", "central", "unilateral"] }
+        ],
+        "history": [],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "green", "factor": 1, "rirTarget": "2-3" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 12,
+        "planProfileId": "wrist-substitution-12",
+        "allowHardRower": false,
+        "forbiddenExerciseKeys": ["incline_pushup"],
+        "substitutionAssertion": { "comparisonFixtureId": "same-profile-without-wrist-limitation-30", "fromExerciseKey": "incline_pushup", "toExerciseKey": "floor_press" },
+        "excludedExerciseKeys": ["incline_pushup"],
+        "usedEquipmentCategories": ["adjustable_dumbbell"],
+        "requiredReasonCodes": ["limitation.user_excluded_movement", "limitation.push_variant_substituted"]
+      }
+    },
+    {
+      "id": "rolling-underexposed-pull-keeps-variants-30",
+      "description": "Le plan roulant donne une serie de plus au tirage sous-expose sans changer les variantes stables.",
+      "ruleIds": ["ENG-ROLLING-001", "ENG-DETERMINISM-001", "ENG-READINESS-001", "ENG-TIME-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-22T18:00:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "adjustable_dumbbell", "units": 2, "perUnitWeightsKg": [6, 8, 10], "supportedConfigurations": ["pair", "central", "unilateral"] }],
+        "history": [
+          { "sessionId": "session-rolling-1", "endedAt": "2026-09-19T18:30:00.000Z", "effort": 9, "painScore": 0, "exerciseRecords": [{ "exerciseKey": "one_arm_row" }, { "exerciseKey": "goblet_squat" }, { "exerciseKey": "floor_press" }, { "exerciseKey": "romanian_deadlift" }] }
+        ],
+        "rollingState": { "credits7": { "pull": 1, "push": 4, "knee": 4, "hinge": 3 }, "credits21": { "pull": 6, "push": 12, "knee": 12, "hinge": 9 }, "targets7": { "pull": 4, "push": 4, "knee": 4, "hinge": 4 }, "targets21": { "pull": 12, "push": 12, "knee": 12, "hinge": 12 }, "profilePriorities": { "pull": 0, "push": 0, "knee": 0, "hinge": 0 }, "daysSinceExposure": { "pull": 3, "push": 3, "knee": 3, "hinge": 3 } },
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "reduced", "factor": 0.75, "rirTarget": "3-4" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 9,
+        "planProfileId": "adjustable-pull-priority-9",
+        "allowHardRower": false,
+        "stableExerciseKeys": ["one_arm_row", "goblet_squat", "floor_press", "romanian_deadlift"],
+        "rollingPriorityFirst": "pull",
+        "usedEquipmentCategories": ["adjustable_dumbbell"],
+        "requiredReasonCodes": ["rolling.pull_underexposed_7d", "rolling.variants_kept_stable"]
+      }
+    },
+    {
+      "id": "same-profile-without-wrist-limitation-30",
+      "description": "Le profil temoin sans limitation conserve les pompes inclinees que le cas suivant substitue.",
+      "ruleIds": ["ENG-CALIBRATION-001", "ENG-DETERMINISM-001"],
+      "now": "2026-09-21T09:00:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "not_specified",
+        "calibrations": { "upper": "foundation", "lower": "foundation" },
+        "limitations": [],
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [
+          { "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] },
+          { "category": "adjustable_dumbbell", "units": 2, "perUnitWeightsKg": [4, 6, 8], "supportedConfigurations": ["pair", "central", "unilateral"] }
+        ],
+        "history": [],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "green", "factor": 1, "rirTarget": "2-3" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 12,
+        "planProfileId": "wrist-baseline-12",
+        "allowHardRower": false,
+        "usedEquipmentCategories": ["bodyweight", "adjustable_dumbbell"],
+        "requiredReasonCodes": ["calibration.no_limitation_substitution"]
+      }
+    },
+    {
+      "id": "rolling-seven-day-signal-wins-over-21-day-30",
+      "description": "Un deficit a sept jours sur la poussee prime sur un deficit a 21 jours sur le tirage.",
+      "ruleIds": ["ENG-ROLLING-001", "ENG-DETERMINISM-001", "ENG-READINESS-001", "ENG-TIME-001"],
+      "now": "2026-09-22T19:00:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "adjustable_dumbbell", "units": 2, "perUnitWeightsKg": [6, 8, 10], "supportedConfigurations": ["pair", "central", "unilateral"] }],
+        "history": [{ "sessionId": "session-rolling-conflict", "endedAt": "2026-09-19T19:00:00.000Z", "effort": 9, "painScore": 0 }],
+        "rollingState": { "credits7": { "pull": 4, "push": 2, "knee": 4, "hinge": 4 }, "credits21": { "pull": 3, "push": 12, "knee": 12, "hinge": 12 }, "targets7": { "pull": 4, "push": 4, "knee": 4, "hinge": 4 }, "targets21": { "pull": 12, "push": 12, "knee": 12, "hinge": 12 }, "profilePriorities": { "pull": 0, "push": 0, "knee": 0, "hinge": 0 }, "daysSinceExposure": { "pull": 3, "push": 3, "knee": 3, "hinge": 3 } },
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "reduced", "factor": 0.75, "rirTarget": "3-4" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 9,
+        "planProfileId": "adjustable-push-priority-9",
+        "allowHardRower": false,
+        "rollingPriorityFirst": "push",
+        "usedEquipmentCategories": ["adjustable_dumbbell"],
+        "requiredReasonCodes": ["rolling.push_deficit_7d_precedes_pull_deficit_21d"]
+      }
+    },
+    {
+      "id": "rolling-perfect-tie-uses-stable-order-30",
+      "description": "Une egalite parfaite utilise toujours l'ordre tirage, poussee, genou puis charniere.",
+      "ruleIds": ["ENG-ROLLING-001", "ENG-DETERMINISM-001", "ENG-READINESS-001", "ENG-TIME-001"],
+      "now": "2026-09-22T20:00:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "adjustable_dumbbell", "units": 2, "perUnitWeightsKg": [6, 8, 10], "supportedConfigurations": ["pair", "central", "unilateral"] }],
+        "history": [{ "sessionId": "session-rolling-tie", "endedAt": "2026-09-19T20:00:00.000Z", "effort": 9, "painScore": 0 }],
+        "rollingState": { "credits7": { "pull": 2, "push": 2, "knee": 2, "hinge": 2 }, "credits21": { "pull": 6, "push": 6, "knee": 6, "hinge": 6 }, "targets7": { "pull": 4, "push": 4, "knee": 4, "hinge": 4 }, "targets21": { "pull": 12, "push": 12, "knee": 12, "hinge": 12 }, "profilePriorities": { "pull": 0, "push": 0, "knee": 0, "hinge": 0 }, "daysSinceExposure": { "pull": 3, "push": 3, "knee": 3, "hinge": 3 } },
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "reduced", "factor": 0.75, "rirTarget": "3-4" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 9,
+        "planProfileId": "adjustable-pull-priority-9",
+        "allowHardRower": false,
+        "rollingPriorityFirst": "pull",
+        "usedEquipmentCategories": ["adjustable_dumbbell"],
+        "requiredReasonCodes": ["rolling.stable_tie_break_pull_first"]
+      }
+    },
+    {
+      "id": "invalid-pair-with-one-unit",
+      "description": "Une seule charge ne peut jamais etre interpretee comme une paire meme si la configuration le pretend.",
+      "ruleIds": ["ENG-EQUIP-001", "ENG-INPUT-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-23T08:00:00.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "fixed_dumbbell", "units": 1, "weightKg": 8, "supportedConfigurations": ["pair"] }],
+        "history": [],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "request_valid_input",
+        "errorCode": "equipment.pair_requires_two_units",
+        "preserveInput": true,
+        "requiredReasonCodes": ["equipment.pair_requires_two_units"]
+      }
+    },
+    {
+      "id": "invalid-future-history",
+      "description": "Une seance historique datee dans le futur est refusee sans modifier silencieusement sa date.",
+      "ruleIds": ["ENG-INPUT-001", "ENG-DETERMINISM-001"],
+      "now": "2026-09-23T08:00:00.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [{ "sessionId": "session-future-invalid", "endedAt": "2026-09-24T08:00:00.000Z", "effort": 7, "painScore": 0 }],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "request_valid_input",
+        "errorCode": "history.session_in_future",
+        "preserveInput": true,
+        "requiredReasonCodes": ["history.session_in_future"]
+      }
+    },
+    {
+      "id": "current-pain-three-stops-set",
+      "description": "Une douleur courante de niveau 3 arrete la serie avant de proposer une adaptation bornee.",
+      "ruleIds": ["ENG-SAFETY-001", "ENG-SESSION-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-23T09:00:00.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [],
+        "activeSession": { "sessionId": "active-pain-3", "version": 3, "completedSetCount": 2, "processedEventIds": [] },
+        "sessionEvent": { "eventId": "event-pain-3", "type": "pain_reported", "painScore": 3, "redFlags": [] }
+      },
+      "expected": {
+        "decision": "active_session_transition",
+        "transition": "stop_current_set",
+        "completedSetCount": 2,
+        "offeredActions": ["reduce_range", "substitute_exercise", "stop_exercise"],
+        "requiredReasonCodes": ["safety.pain_three_or_four"]
+      }
+    },
+    {
+      "id": "current-pain-five-stops-exercise",
+      "description": "Une douleur courante de niveau 5 arrete l'exercice et conserve les series deja validees.",
+      "ruleIds": ["ENG-SAFETY-001", "ENG-SESSION-001"],
+      "now": "2026-09-23T09:05:00.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [],
+        "activeSession": { "sessionId": "active-pain-5", "version": 2, "completedSetCount": 1, "processedEventIds": [] },
+        "sessionEvent": { "eventId": "event-pain-5", "type": "pain_reported", "painScore": 5, "redFlags": [] }
+      },
+      "expected": {
+        "decision": "active_session_transition",
+        "transition": "stop_current_exercise",
+        "completedSetCount": 1,
+        "requiredReasonCodes": ["safety.pain_five_or_more"]
+      }
+    },
+    {
+      "id": "systemic-red-flag-stops-session",
+      "description": "Un signal d'alerte systemique arrete la seance et oriente sans poser de diagnostic.",
+      "ruleIds": ["ENG-SAFETY-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-23T09:10:00.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [],
+        "activeSession": { "sessionId": "active-red-flag", "version": 4, "completedSetCount": 3, "processedEventIds": [] },
+        "sessionEvent": { "eventId": "event-red-flag", "type": "alert_reported", "redFlags": ["chest_pressure"] }
+      },
+      "expected": {
+        "decision": "active_session_transition",
+        "transition": "stop_session_and_orient",
+        "completedSetCount": 3,
+        "mustNotDiagnose": true,
+        "requiredReasonCodes": ["safety.systemic_red_flag"]
+      }
+    },
+    {
+      "id": "rest-timer-expired-while-away",
+      "description": "Une echeance depassee restaure un repos termine et jamais un compteur negatif ou reinitialise.",
+      "ruleIds": ["ENG-SESSION-001", "ENG-PERSIST-001", "ENG-DETERMINISM-001"],
+      "now": "2026-09-23T10:03:00.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [],
+        "activeSession": { "sessionId": "active-expired-rest", "version": 2, "restDeadline": "2026-09-23T10:02:00.000Z", "originalRestSeconds": 90, "processedEventIds": [] }
+      },
+      "expected": {
+        "decision": "resume_active_session",
+        "restTimer": { "deadline": "2026-09-23T10:02:00.000Z", "remainingSeconds": 0, "mustNotResetToSeconds": 90 },
+        "requiredReasonCodes": ["session.rest_elapsed_while_away"]
+      }
+    },
+    {
+      "id": "explicit-rest-pause-freezes-remaining-time",
+      "description": "Seule l'action Pause fige le repos et retire l'echeance jusqu'a une reprise explicite.",
+      "ruleIds": ["ENG-SESSION-001", "ENG-PERSIST-001"],
+      "now": "2026-09-23T10:01:15.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [],
+        "activeSession": { "sessionId": "active-pause-rest", "version": 2, "restDeadline": "2026-09-23T10:02:00.000Z", "originalRestSeconds": 90, "processedEventIds": [] },
+        "sessionEvent": { "eventId": "event-pause-rest", "type": "pause_rest" }
+      },
+      "expected": {
+        "decision": "active_session_transition",
+        "transition": "rest_paused",
+        "pausedRemainingSeconds": 45,
+        "restDeadline": null,
+        "requiredReasonCodes": ["session.rest_paused_explicitly"]
+      }
+    },
+    {
+      "id": "duplicate-set-event-is-idempotent",
+      "description": "Rejouer le meme evenement de serie apres relance ne cree jamais une seconde serie.",
+      "ruleIds": ["ENG-SESSION-001", "ENG-PERSIST-001", "ENG-DETERMINISM-001"],
+      "now": "2026-09-23T10:10:00.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [],
+        "activeSession": { "sessionId": "active-idempotent", "version": 5, "completedSetCount": 3, "processedEventIds": ["event-set-3"] },
+        "sessionEvent": { "eventId": "event-set-3", "type": "complete_set", "completedReps": 10 }
+      },
+      "expected": {
+        "decision": "active_session_transition",
+        "transition": "duplicate_event_ignored",
+        "completedSetCount": 3,
+        "requiredReasonCodes": ["session.duplicate_event_ignored"]
+      }
+    },
+    {
+      "id": "corrupt-active-snapshot-restores-previous",
+      "description": "Un snapshot actif corrompu est refuse et le dernier snapshot valide reste la seule recovery proposee.",
+      "ruleIds": ["ENG-INPUT-001", "ENG-PERSIST-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-23T10:20:00.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [],
+        "activeSession": { "sessionId": "active-corrupt", "version": 6, "checksumValid": false },
+        "previousValidSnapshot": { "sessionId": "active-corrupt", "version": 5, "completedSetCount": 2, "checksumValid": true }
+      },
+      "expected": {
+        "decision": "request_valid_input",
+        "errorCode": "session.snapshot_corrupt",
+        "recovery": "restore_previous_valid_snapshot",
+        "restoredVersion": 5,
+        "requiredReasonCodes": ["session.snapshot_corrupt"]
+      }
+    },
+    {
+      "id": "explicit-rest-resume-creates-new-deadline",
+      "description": "Reprendre un repos explicitement pause cree une nouvelle echeance depuis le temps fige.",
+      "ruleIds": ["ENG-SESSION-001", "ENG-PERSIST-001", "ENG-DETERMINISM-001"],
+      "now": "2026-09-23T11:00:00.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [],
+        "activeSession": { "sessionId": "active-resume-rest", "version": 3, "restDeadline": null, "pausedRemainingSeconds": 45, "originalRestSeconds": 90, "processedEventIds": [] },
+        "sessionEvent": { "eventId": "event-resume-rest", "type": "resume_rest" }
+      },
+      "expected": {
+        "decision": "active_session_transition",
+        "transition": "rest_resumed",
+        "restDeadline": "2026-09-23T11:00:45.000Z",
+        "pausedRemainingSeconds": null,
+        "requiredReasonCodes": ["session.rest_resumed_explicitly"]
+      }
+    },
+    {
+      "id": "skip-rest-completes-rest",
+      "description": "Passer le repos termine immediatement le repos sans modifier une serie deja validee.",
+      "ruleIds": ["ENG-SESSION-001", "ENG-PERSIST-001"],
+      "now": "2026-09-23T11:05:00.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [],
+        "activeSession": { "sessionId": "active-skip-rest", "version": 3, "restDeadline": "2026-09-23T11:05:30.000Z", "originalRestSeconds": 90, "completedSetCount": 2, "processedEventIds": [] },
+        "sessionEvent": { "eventId": "event-skip-rest", "type": "skip_rest" }
+      },
+      "expected": {
+        "decision": "active_session_transition",
+        "transition": "rest_completed",
+        "restDeadline": null,
+        "completedSetCount": 2,
+        "requiredReasonCodes": ["session.rest_skipped_explicitly"]
+      }
+    },
+    {
+      "id": "restart-rest-uses-prescribed-duration",
+      "description": "Recommencer le repos cree une echeance depuis la duree prescrite et non le temps restant.",
+      "ruleIds": ["ENG-SESSION-001", "ENG-PERSIST-001", "ENG-DETERMINISM-001"],
+      "now": "2026-09-23T11:10:00.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [],
+        "activeSession": { "sessionId": "active-restart-rest", "version": 3, "restDeadline": "2026-09-23T11:10:20.000Z", "originalRestSeconds": 90, "processedEventIds": [] },
+        "sessionEvent": { "eventId": "event-restart-rest", "type": "restart_rest" }
+      },
+      "expected": {
+        "decision": "active_session_transition",
+        "transition": "rest_restarted",
+        "restDeadline": "2026-09-23T11:11:30.000Z",
+        "requiredReasonCodes": ["session.rest_restarted_explicitly"]
+      }
+    },
+    {
+      "id": "persistence-failure-keeps-memory-visible",
+      "description": "Un echec d'ecriture garde la seance en memoire, visible et exportable avant de quitter.",
+      "ruleIds": ["ENG-PERSIST-001", "ENG-SESSION-001", "ENG-EXPLAIN-001"],
+      "now": "2026-09-23T11:15:00.000Z",
+      "input": {
+        "durationMinutes": 20,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [],
+        "activeSession": { "sessionId": "active-save-failed", "version": 4, "completedSetCount": 3, "processedEventIds": [] },
+        "sessionEvent": { "eventId": "event-save-failed", "type": "persistence_failed", "failedVersion": 5 }
+      },
+      "expected": {
+        "decision": "active_session_transition",
+        "transition": "save_failed_visible",
+        "completedSetCount": 3,
+        "inMemoryStatePreserved": true,
+        "canRetry": true,
+        "canExportRecovery": true,
+        "requiredReasonCodes": ["persistence.write_failed_visible"]
+      }
+    },
+    {
+      "id": "less-than-48-hours-after-effort-eight-30",
+      "description": "A moins de 48 heures apres un effort a 8, le volume passe a 75 pour cent.",
+      "ruleIds": ["ENG-READINESS-001", "ENG-TIME-001"],
+      "now": "2026-09-25T08:00:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [{ "sessionId": "session-under-48", "endedAt": "2026-09-23T12:00:00.000Z", "effort": 8, "painScore": 0 }],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "reduced", "factor": 0.75, "rirTarget": "3-4" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 9,
+        "planProfileId": "bodyweight-9",
+        "allowHardRower": false,
+        "usedEquipmentCategories": ["bodyweight"],
+        "requiredReasonCodes": ["readiness.less_than_48_hours_after_high_effort"]
+      }
+    },
+    {
+      "id": "isolated-effort-nine-30",
+      "description": "Un effort a 9 isole reduit prudemment la prochaine seance sans declencher la regle repetee.",
+      "ruleIds": ["ENG-READINESS-001", "ENG-TIME-001"],
+      "now": "2026-09-26T08:00:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [{ "sessionId": "session-isolated-nine", "endedAt": "2026-09-23T08:00:00.000Z", "effort": 9, "painScore": 0 }],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "reduced", "factor": 0.75, "rirTarget": "3-4" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 9,
+        "planProfileId": "bodyweight-9",
+        "allowHardRower": false,
+        "usedEquipmentCategories": ["bodyweight"],
+        "requiredReasonCodes": ["readiness.isolated_effort_nine"]
+      }
+    },
+    {
+      "id": "previous-pain-three-30",
+      "description": "Une douleur precedente de niveau 3 reduit la prochaine seance sans la qualifier de normale.",
+      "ruleIds": ["ENG-READINESS-001", "ENG-SAFETY-001", "ENG-TIME-001"],
+      "now": "2026-09-26T09:00:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [{ "sessionId": "session-pain-three", "endedAt": "2026-09-23T09:00:00.000Z", "effort": 7, "painScore": 3 }],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "reduced", "factor": 0.75, "rirTarget": "3-4" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 9,
+        "planProfileId": "bodyweight-9",
+        "allowHardRower": false,
+        "usedEquipmentCategories": ["bodyweight"],
+        "requiredReasonCodes": ["readiness.previous_pain_three_or_four"]
+      }
+    },
+    {
+      "id": "exactly-24-hours-is-not-under-24",
+      "description": "A exactement 24 heures, la branche strictement inferieure a 24 heures ne s'applique pas.",
+      "ruleIds": ["ENG-READINESS-001", "ENG-DETERMINISM-001"],
+      "now": "2026-09-27T08:00:00.000Z",
+      "input": {
+        "durationMinutes": 45,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [{ "sessionId": "session-exact-24", "endedAt": "2026-09-26T08:00:00.000Z", "effort": 7, "painScore": 0 }],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "green", "factor": 1, "rirTarget": "2-3" },
+        "basePrimarySetBudget": 16,
+        "finalPrimarySetBudget": 12,
+        "planProfileId": "bodyweight-12",
+        "allowHardRower": false,
+        "usedEquipmentCategories": ["bodyweight"],
+        "requiredReasonCodes": ["readiness.green_at_24_hour_boundary", "equipment.pattern_capacity_cap"]
+      }
+    },
+    {
+      "id": "exactly-48-hours-after-effort-eight-is-green",
+      "description": "A exactement 48 heures, la branche effort 8 strictement inferieure a 48 heures ne s'applique pas.",
+      "ruleIds": ["ENG-READINESS-001", "ENG-DETERMINISM-001"],
+      "now": "2026-09-28T08:00:00.000Z",
+      "input": {
+        "durationMinutes": 30,
+        "physiologicalContext": "not_specified",
+        "symptomTracking": { "enabled": false, "todayScore": null },
+        "inventory": [{ "category": "bodyweight", "units": 1, "supportedConfigurations": ["bodyweight"] }],
+        "history": [{ "sessionId": "session-exact-48", "endedAt": "2026-09-26T08:00:00.000Z", "effort": 8, "painScore": 0 }],
+        "activeSession": null
+      },
+      "expected": {
+        "decision": "generate_workout",
+        "readiness": { "label": "green", "factor": 1, "rirTarget": "2-3" },
+        "basePrimarySetBudget": 12,
+        "finalPrimarySetBudget": 12,
+        "planProfileId": "bodyweight-12",
+        "allowHardRower": false,
+        "usedEquipmentCategories": ["bodyweight"],
+        "requiredReasonCodes": ["readiness.green_at_48_hour_boundary"]
+      }
+    }
+  ]
+}

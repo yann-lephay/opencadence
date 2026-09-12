@@ -12,6 +12,14 @@ import { profileHasEquipment } from "./equipment";
 type Variant = Omit<WorkoutItem, "id" | "sets" | "targetValue" | "superset" | "restSeconds"> & {
   repRange: [number, number];
   baseValue: number;
+  timing: {
+    setupSeconds: number;
+    transitionSeconds: number;
+    secondsPerRep?: number;
+    sides?: 1 | 2;
+    fixedWorkSeconds?: number;
+    loggingSeconds: number;
+  };
 };
 
 type Readiness = {
@@ -46,6 +54,12 @@ const variants: Record<MovementPattern, Variant[]> = {
       target: "4–5 min · RPE 3–4",
       repRange: [240, 300],
       baseValue: 240,
+      timing: {
+        setupSeconds: 45,
+        transitionSeconds: 20,
+        fixedWorkSeconds: 300,
+        loggingSeconds: 15,
+      },
       restBand: "Transition",
       rirTarget: "Facile",
       equipment: "Rameur",
@@ -65,6 +79,13 @@ const variants: Record<MovementPattern, Variant[]> = {
       target: "4–8 reps",
       repRange: [4, 8],
       baseValue: 5,
+      timing: {
+        setupSeconds: 20,
+        transitionSeconds: 20,
+        secondsPerRep: 4,
+        sides: 1,
+        loggingSeconds: 20,
+      },
       restBand: "2–3 min localement",
       rirTarget: "2–3 RIR",
       equipment: "Barre de traction",
@@ -86,6 +107,13 @@ const variants: Record<MovementPattern, Variant[]> = {
       target: "8–15 reps / côté",
       repRange: [8, 15],
       baseValue: 10,
+      timing: {
+        setupSeconds: 35,
+        transitionSeconds: 25,
+        secondsPerRep: 3,
+        sides: 2,
+        loggingSeconds: 20,
+      },
       restBand: "2 min localement",
       rirTarget: "2–3 RIR",
       equipment: "Haltère 6 kg ou haltère déjà chargé",
@@ -109,6 +137,13 @@ const variants: Record<MovementPattern, Variant[]> = {
       target: "6–15 reps",
       repRange: [6, 15],
       baseValue: 10,
+      timing: {
+        setupSeconds: 15,
+        transitionSeconds: 20,
+        secondsPerRep: 3,
+        sides: 1,
+        loggingSeconds: 20,
+      },
       restBand: "2–3 min localement",
       rirTarget: "2–3 RIR",
       equipment: "Poids du corps · gilet 10 kg si le cap devient facile",
@@ -130,6 +165,13 @@ const variants: Record<MovementPattern, Variant[]> = {
       target: "6–12 reps",
       repRange: [6, 12],
       baseValue: 9,
+      timing: {
+        setupSeconds: 45,
+        transitionSeconds: 25,
+        secondsPerRep: 3,
+        sides: 1,
+        loggingSeconds: 20,
+      },
       restBand: "2–3 min localement",
       rirTarget: "2–3 RIR",
       equipment: "Haltères déjà chargés",
@@ -153,6 +195,13 @@ const variants: Record<MovementPattern, Variant[]> = {
       target: "8–12 reps / côté",
       repRange: [8, 12],
       baseValue: 9,
+      timing: {
+        setupSeconds: 25,
+        transitionSeconds: 25,
+        secondsPerRep: 3,
+        sides: 2,
+        loggingSeconds: 20,
+      },
       restBand: "2–3 min localement",
       rirTarget: "2–3 RIR",
       equipment: "Poids du corps · gilet 10 kg si nécessaire",
@@ -174,6 +223,13 @@ const variants: Record<MovementPattern, Variant[]> = {
       target: "8–15 reps",
       repRange: [8, 15],
       baseValue: 10,
+      timing: {
+        setupSeconds: 30,
+        transitionSeconds: 25,
+        secondsPerRep: 4,
+        sides: 1,
+        loggingSeconds: 20,
+      },
       restBand: "2–3 min localement",
       rirTarget: "2–3 RIR",
       equipment: "Un haltère tenu contre la poitrine",
@@ -197,15 +253,28 @@ const variants: Record<MovementPattern, Variant[]> = {
       target: "8–15 reps",
       repRange: [8, 15],
       baseValue: 10,
+      timing: {
+        setupSeconds: 35,
+        transitionSeconds: 25,
+        secondsPerRep: 4,
+        sides: 1,
+        loggingSeconds: 20,
+      },
       restBand: "2–3 min localement",
       rirTarget: "2–3 RIR",
-      equipment: "Haltères déjà chargés",
+      equipment: "Deux haltères de 6 kg ou un haltère lourd tenu à deux mains",
       loadOptions: [
         { label: "2 × 6 kg", totalKg: 12 },
+        { label: "1 × 15–16 kg centré", totalKg: 15.5 },
         { label: "2 × 15–16 kg", totalKg: 31 },
       ],
       purpose: "Ancrage de chaîne postérieure",
-      cues: ["Hanches loin derrière", "Haltères près des jambes", "Arrête l’amplitude avant d’arrondir le dos"],
+      cues: [
+        "Hanches loin derrière",
+        "Avec un seul haltère : tiens-le à deux mains, centré et près des jambes",
+        "Première série prudente après une hausse de charge",
+        "Arrête l’amplitude avant d’arrondir le dos",
+      ],
     },
     {
       variantId: "bridge-vest",
@@ -218,12 +287,20 @@ const variants: Record<MovementPattern, Variant[]> = {
       target: "12–20 reps",
       repRange: [12, 20],
       baseValue: 14,
+      timing: {
+        setupSeconds: 40,
+        transitionSeconds: 25,
+        secondsPerRep: 3,
+        sides: 1,
+        loggingSeconds: 20,
+      },
       restBand: "90 s localement",
       rirTarget: "2–3 RIR",
       equipment: "Gilet lesté 10 kg",
       loadOptions: [
         { label: "Poids du corps", totalKg: 0 },
         { label: "Gilet 10 kg", totalKg: 10 },
+        { label: "1 × 15–16 kg", totalKg: 15.5 },
       ],
       purpose: "Charnière simple lorsque le dos a besoin de souffler",
       cues: ["Pieds stables", "Serre les fessiers en haut", "Ne cambre pas pour gagner de l’amplitude"],
@@ -241,6 +318,13 @@ const variants: Record<MovementPattern, Variant[]> = {
       target: "10–20 reps",
       repRange: [10, 20],
       baseValue: 12,
+      timing: {
+        setupSeconds: 20,
+        transitionSeconds: 20,
+        secondsPerRep: 3,
+        sides: 1,
+        loggingSeconds: 20,
+      },
       restBand: "60–90 s",
       rirTarget: "2–3 RIR",
       equipment: "Haltères 1, 5 ou 6 kg",
@@ -263,12 +347,20 @@ const variants: Record<MovementPattern, Variant[]> = {
       target: "10–20 reps",
       repRange: [10, 20],
       baseValue: 12,
+      timing: {
+        setupSeconds: 30,
+        transitionSeconds: 20,
+        secondsPerRep: 3,
+        sides: 1,
+        loggingSeconds: 20,
+      },
       restBand: "60–90 s",
       rirTarget: "2–3 RIR",
-      equipment: "Haltères 5 kg · 1 kg en tempo si nécessaire",
+      equipment: "Haltères 5 ou 6 kg · 1 kg en tempo si nécessaire",
       loadOptions: [
         { label: "2 × 1 kg", totalKg: 2 },
         { label: "2 × 5 kg", totalKg: 10 },
+        { label: "2 × 6 kg", totalKg: 12 },
       ],
       purpose: "Priorité arrière d’épaule et omoplates",
       cues: ["Buste incliné et dos long", "Écarte sans hausser les épaules", "Marque une courte pause en haut"],
@@ -286,6 +378,12 @@ const variants: Record<MovementPattern, Variant[]> = {
       target: "25–40 s / côté",
       repRange: [25, 40],
       baseValue: 30,
+      timing: {
+        setupSeconds: 20,
+        transitionSeconds: 20,
+        sides: 1,
+        loggingSeconds: 10,
+      },
       restBand: "60 s",
       rirTarget: "Avant compensation",
       equipment: "Poids du corps",
@@ -305,6 +403,12 @@ const variants: Record<MovementPattern, Variant[]> = {
       target: "4 × 30 s soutenu / 30 s facile",
       repRange: [240, 240],
       baseValue: 240,
+      timing: {
+        setupSeconds: 45,
+        transitionSeconds: 20,
+        fixedWorkSeconds: 240,
+        loggingSeconds: 15,
+      },
       restBand: "Intégré",
       rirTarget: "RPE 7–8",
       hardRower: true,
@@ -315,6 +419,116 @@ const variants: Record<MovementPattern, Variant[]> = {
   ],
 };
 
+const SESSION_FLOW_SECONDS = 90;
+
+function variantTiming(variantId: string) {
+  for (const family of Object.values(variants)) {
+    const variant = family.find((candidate) => candidate.variantId === variantId);
+    if (variant) return variant.timing;
+  }
+  return null;
+}
+
+function workoutSequence(items: WorkoutItem[]) {
+  const sequence: Array<{ itemIndex: number; setIndex: number }> = [];
+  const visitedPairs = new Set<string>();
+
+  items.forEach((item, itemIndex) => {
+    if (!item.superset) {
+      for (let setIndex = 0; setIndex < item.sets; setIndex += 1) {
+        sequence.push({ itemIndex, setIndex });
+      }
+      return;
+    }
+    if (visitedPairs.has(item.superset)) return;
+    visitedPairs.add(item.superset);
+    const pair = items
+      .map((entry, index) => ({ entry, index }))
+      .filter(({ entry }) => entry.superset === item.superset);
+    const rounds = Math.max(...pair.map(({ entry }) => entry.sets));
+    for (let setIndex = 0; setIndex < rounds; setIndex += 1) {
+      for (const paired of pair) {
+        if (setIndex < paired.entry.sets) {
+          sequence.push({ itemIndex: paired.index, setIndex });
+        }
+      }
+    }
+  });
+
+  return sequence;
+}
+
+export function estimateWorkoutSeconds(items: WorkoutItem[]) {
+  const sequence = workoutSequence(items);
+  let seconds = SESSION_FLOW_SECONDS;
+
+  for (const item of items) {
+    const timing = variantTiming(item.variantId);
+    if (!timing) continue;
+    seconds += timing.setupSeconds + timing.transitionSeconds;
+  }
+
+  sequence.forEach((step, sequenceIndex) => {
+    const item = items[step.itemIndex];
+    const timing = variantTiming(item.variantId);
+    const target = item.targetValues?.[step.setIndex] ?? item.targetValue;
+    const workSeconds = timing?.fixedWorkSeconds
+      ?? (item.mode === "time"
+        ? target
+        : item.mode === "distance"
+          ? 240
+          : target * (timing?.secondsPerRep ?? 3) * (timing?.sides ?? 1));
+    seconds += workSeconds + (timing?.loggingSeconds ?? 20);
+
+    if (sequenceIndex + 1 < sequence.length) {
+      const changingSide = item.variantId === "side-plank" && step.setIndex + 1 < item.sets;
+      seconds += changingSide ? 15 : item.restSeconds;
+    }
+  });
+
+  return seconds;
+}
+
+function resizeWorkoutItem(item: WorkoutItem, sets: number): WorkoutItem {
+  return {
+    ...item,
+    sets,
+    targetValues: item.targetValues?.slice(0, sets),
+  };
+}
+
+function fitWorkoutToDuration(
+  items: WorkoutItem[],
+  durationMinutes: number,
+  priorityScores: Partial<Record<MovementPattern, number>>,
+) {
+  const budgetSeconds = durationMinutes * 60;
+  let fitted: WorkoutItem[] = items.map((item) => ({
+    ...item,
+    targetValues: item.targetValues?.slice(),
+  }));
+
+  if (estimateWorkoutSeconds(fitted) > budgetSeconds) {
+    fitted = fitted.filter((item) => item.pattern !== "conditioning");
+  }
+
+  while (estimateWorkoutSeconds(fitted) > budgetSeconds) {
+    const candidates = fitted
+      .filter((item) => item.pattern !== "warmup" && item.sets > 1)
+      .sort((a, b) => {
+        if (a.sets !== b.sets) return b.sets - a.sets;
+        return (priorityScores[a.pattern] ?? 0) - (priorityScores[b.pattern] ?? 0);
+      });
+    const candidate = candidates[0];
+    if (!candidate) break;
+    fitted = fitted.map((item) =>
+      item.id === candidate.id ? resizeWorkoutItem(item, item.sets - 1) : item,
+    );
+  }
+
+  return fitted;
+}
+
 function diagnosticItem(
   variant: Variant,
   id: string,
@@ -323,7 +537,7 @@ function diagnosticItem(
   restSeconds: number,
   purpose = variant.purpose,
 ): WorkoutItem {
-  const { repRange: _repRange, baseValue: _baseValue, ...base } = variant;
+  const { repRange: _repRange, baseValue: _baseValue, timing: _timing, ...base } = variant;
   const firstLoad = variant.loadOptions?.[0];
   return {
     ...base,
@@ -654,13 +868,16 @@ function loadRecommendation(state: CadenceState, variant: Variant, readiness: Re
         reason = "Marge ou confort insuffisant : retour temporaire au palier précédent.";
       }
     } else if (
-      readiness.factor === 1 &&
+      readiness.factor >= 0.75 &&
       hitCeiling &&
       sameLoadSuccesses >= 2 &&
       currentIndex < options.length - 1
     ) {
       recommendedIndex += 1;
-      reason = "Haut de fourchette validé deux fois avec une bonne marge : palier suivant proposé.";
+      reason =
+        readiness.factor < 1
+          ? "Haut de fourchette validé deux fois : palier suivant avec répétitions basses et première série prudente."
+          : "Haut de fourchette validé deux fois avec une bonne marge : palier suivant proposé.";
     } else if (hitCeiling && currentIndex < options.length - 1) {
       reason = "Haut de fourchette atteint : encore une séance propre avant d’ajouter de la charge.";
     }
@@ -757,17 +974,19 @@ function variantSupported(profile: Profile, variant: Variant) {
 function stableVariant(state: CadenceState, pattern: MovementPattern) {
   const supported = variants[pattern].filter((variant) => variantSupported(state.profile, variant));
   for (const session of state.history.slice(0, 8)) {
-    const prior = session.workout.items.find((item) => item.pattern === pattern && item.anchor);
+    const prior = session.workout.items.find(
+      (item) => item.pattern === pattern && completedSets(session, item) > 0,
+    );
     const match = prior && supported.find((variant) => variant.variantId === prior.variantId);
     if (match) return match;
   }
   return supported[0] ?? null;
 }
 
-function plannedVariant(state: CadenceState, pattern: MovementPattern) {
+function plannedVariant(state: CadenceState, pattern: MovementPattern, rotate: boolean) {
   const supported = variants[pattern].filter((variant) => variantSupported(state.profile, variant));
   const stable = stableVariant(state, pattern);
-  if (!stable || supported.length < 2 || !["pull", "shoulders"].includes(pattern)) {
+  if (!stable || supported.length < 2 || !rotate) {
     return stable;
   }
 
@@ -783,10 +1002,20 @@ function plannedVariant(state: CadenceState, pattern: MovementPattern) {
     consecutiveExposures += 1;
   }
 
-  if (!latestVariantId || consecutiveExposures < 4) return stable;
+  const minimumExposures = pattern === "shoulders" ? 2 : pattern === "hinge" ? 1 : 3;
+  if (!latestVariantId || consecutiveExposures < minimumExposures) return stable;
   const currentIndex = supported.findIndex((variant) => variant.variantId === latestVariantId);
   if (currentIndex < 0) return stable;
   return supported[(currentIndex + 1) % supported.length];
+}
+
+function workoutVariationIndex(state: CadenceState, now: Date) {
+  const seed = `${now.toISOString().slice(0, 10)}-${state.history.length}-${state.history[0]?.id ?? "start"}`;
+  let hash = 0;
+  for (const character of seed) {
+    hash = (hash * 31 + character.charCodeAt(0)) | 0;
+  }
+  return Math.abs(hash);
 }
 
 function latestCompletedVariantId(state: CadenceState, pattern: MovementPattern) {
@@ -820,8 +1049,9 @@ function workoutItem(
     variant.pattern === "warmup" || variant.pattern === "conditioning"
       ? variant.target
       : `${variant.repRange[0]}–${variant.repRange[1]} ${unit}${variant.exercise.includes("côté") ? " / côté" : ""}`;
+  const { timing: _timing, ...publicVariant } = variant;
   return {
-    ...variant,
+    ...publicVariant,
     id: `${variant.variantId}-${suffix}`,
     sets,
     superset,
@@ -834,6 +1064,122 @@ function workoutItem(
       variant.pattern === "warmup" || variant.pattern === "conditioning" || variant.pattern === "core"
         ? variant.rirTarget
         : readiness.rirTarget,
+  };
+}
+
+function buildMakeupWorkout(state: CadenceState, now: Date): Workout | null {
+  const last = state.history[0];
+  const skipped = new Set(last?.skippedItemIds ?? []);
+  if (!last || skipped.size === 0 || last.pain >= 3) return null;
+
+  const age = now.getTime() - new Date(last.completedAt).getTime();
+  if (age < 0 || age > 2 * DAY) return null;
+
+  const unfinished = last.workout.items.filter(
+    (item) =>
+      skipped.has(item.id) &&
+      !["warmup", "conditioning"].includes(item.pattern) &&
+      completedSets(last, item) < item.sets,
+  );
+  if (unfinished.length === 0) return null;
+
+  const readiness: Readiness = {
+    factor: 0.85,
+    label: "Orange",
+    rirTarget: "2 RIR",
+    hardRowerAllowed: false,
+    note: "Complément volontairement ciblé après une séance arrêtée plus tôt.",
+  };
+  const timestamp = now.getTime();
+  const items: WorkoutItem[] = [];
+  const warmup = stableVariant(state, "warmup");
+  if (warmup) {
+    items.push(workoutItem(state, warmup, 1, null, 20, readiness, `${timestamp}-warmup`));
+  }
+
+  for (const priorItem of unfinished) {
+    const variant = variants[priorItem.pattern].find(
+      (candidate) => candidate.variantId === priorItem.variantId && variantSupported(state.profile, candidate),
+    );
+    if (!variant) continue;
+    const missingSets = Math.max(1, priorItem.sets - completedSets(last, priorItem));
+    const cap = priorItem.pattern === "shoulders" ? 3 : priorItem.pattern === "core" ? 2 : 2;
+    const planned = workoutItem(
+      state,
+      variant,
+      Math.min(missingSets, cap),
+      null,
+      Math.max(60, priorItem.restSeconds),
+      readiness,
+      `${timestamp}-${priorItem.pattern}`,
+    );
+    if (priorItem.pattern === "shoulders") {
+      planned.cues = [
+        ...planned.cues,
+        "Le côté le plus faible donne le signal d’arrêt aux deux bras",
+      ];
+    }
+    items.push(planned);
+  }
+
+  const shoulderWasUnfinished = unfinished.some((item) => item.pattern === "shoulders");
+  const shoulderPriority = /épaule|deltoïde/i.test(
+    state.profile.physicalBalance.priorities.join(" "),
+  );
+  if (shoulderWasUnfinished && shoulderPriority) {
+    const plannedShoulderIds = new Set(items.map((item) => item.variantId));
+    const alternate = variants.shoulders.find(
+      (variant) =>
+        !plannedShoulderIds.has(variant.variantId) && variantSupported(state.profile, variant),
+    );
+    if (alternate) {
+      const accessory = workoutItem(
+        state,
+        alternate,
+        2,
+        null,
+        75,
+        readiness,
+        `${timestamp}-shoulders-balance`,
+      );
+      accessory.cues = [
+        ...accessory.cues,
+        "Le côté le plus faible donne le signal d’arrêt aux deux bras",
+      ];
+      items.push(accessory);
+    }
+  }
+
+  const focusLabels: Partial<Record<MovementPattern, string>> = {
+    pull: "Dos",
+    push: "Poussée",
+    knee: "Jambes",
+    hinge: "Chaîne postérieure",
+    shoulders: "Épaules",
+    core: "Gainage",
+  };
+  const focus = Array.from(
+    new Set(
+      items
+        .map((item) => focusLabels[item.pattern])
+        .filter((label): label is string => Boolean(label)),
+    ),
+  );
+  const workingSets = items
+    .filter((item) => item.pattern !== "warmup")
+    .reduce((sum, item) => sum + item.sets, 0);
+
+  return {
+    id: `makeup-${timestamp}`,
+    title: "Compléter sans rattraper",
+    subtitle: `${workingSets} séries ciblées · ${focus.join(" · ")}`,
+    kind: "Complément · Modéré",
+    estimatedMinutes: 30,
+    intensity: "Modérée",
+    focus,
+    coachNote:
+      "On complète seulement les familles laissées de côté, sans doubler ce qui a déjà été bien travaillé. Pour les épaules, garde environ deux répétitions propres en réserve et arrête les deux bras quand le côté le plus faible perd sa trajectoire.",
+    items,
   };
 }
 
@@ -932,49 +1278,36 @@ function patternScore(
   return scores.reduce((sum, score) => sum + score, 0) / scores.length;
 }
 
-function baseBudget(minutes: number) {
-  if (minutes <= 30) return 12;
-  if (minutes <= 38) return 14;
-  return 16;
-}
-
 export function buildNextWorkout(state: CadenceState, now = new Date()): Workout {
+  const makeup = buildMakeupWorkout(state, now);
+  if (makeup) return makeup;
+
   const readiness = getReadiness(state, now);
   const duration = Math.min(45, Math.max(30, state.profile.sessionMinutes));
-  const budget = Math.max(4, Math.round(baseBudget(duration) * readiness.factor));
   const credits7 = calculateRollingCredits(state.history, 7);
   const credits21 = calculateRollingCredits(state.history, 21);
+  const variationIndex = workoutVariationIndex(state, now);
+  const rotatingMainPattern = (["knee", "hinge", "pull", "push"] as const)[variationIndex % 4];
   const selectedVariants: Partial<Record<MovementPattern, Variant>> = {
-    pull: plannedVariant(state, "pull") ?? undefined,
-    knee: stableVariant(state, "knee") ?? undefined,
-    push: stableVariant(state, "push") ?? undefined,
-    hinge: stableVariant(state, "hinge") ?? undefined,
-    shoulders: plannedVariant(state, "shoulders") ?? undefined,
+    pull: plannedVariant(state, "pull", rotatingMainPattern === "pull") ?? undefined,
+    knee: plannedVariant(state, "knee", rotatingMainPattern === "knee") ?? undefined,
+    push: plannedVariant(state, "push", rotatingMainPattern === "push") ?? undefined,
+    hinge: plannedVariant(state, "hinge", rotatingMainPattern === "hinge") ?? undefined,
+    shoulders: plannedVariant(state, "shoulders", true) ?? undefined,
     warmup: stableVariant(state, "warmup") ?? undefined,
     conditioning: stableVariant(state, "conditioning") ?? undefined,
   };
   const corePatterns: MovementPattern[] = (["pull", "knee", "push", "hinge"] as const).filter(
     (pattern) => Boolean(selectedVariants[pattern]),
   );
-  const sets: Record<string, number> = Object.fromEntries(corePatterns.map((pattern) => [pattern, budget >= 8 ? 2 : 1]));
-  let remaining = Math.max(0, budget - Object.values(sets).reduce((sum, value) => sum + value, 0));
-  const shoulderSets = readiness.factor < 0.7 ? 1 : duration >= 40 ? 3 : 2;
-  const usableShoulderSets = selectedVariants.shoulders ? Math.min(shoulderSets, remaining) : 0;
-  remaining -= usableShoulderSets;
-
-  const ranked = [...corePatterns].sort(
-    (a, b) =>
-      patternScore(b, state, credits7, credits21, now, readiness) -
-      patternScore(a, state, credits7, credits21, now, readiness),
+  const maximumSets = readiness.factor >= 0.9 ? 3 : readiness.factor >= 0.7 ? 2 : 1;
+  const sets: Record<string, number> = Object.fromEntries(
+    corePatterns.map((pattern) => [pattern, maximumSets]),
   );
-  for (const pattern of ranked) {
-    if (remaining <= 0) break;
-    sets[pattern] += 1;
-    remaining -= 1;
-  }
+  const shoulderSets = selectedVariants.shoulders ? maximumSets : 0;
 
   const timestamp = now.getTime();
-  const plannedRotations = (["pull", "shoulders"] as const)
+  const plannedRotations = (["pull", "knee", "push", "hinge", "shoulders"] as const)
     .filter(
       (pattern) =>
         selectedVariants[pattern] &&
@@ -987,29 +1320,49 @@ export function buildNextWorkout(state: CadenceState, now = new Date()): Workout
   if (selectedVariants.warmup) {
     items.push(workoutItem(state, selectedVariants.warmup, 1, null, 20, readiness, `${timestamp}-warmup`));
   }
-  if (selectedVariants.pull) {
-    items.push(workoutItem(state, selectedVariants.pull, sets.pull, "A", 25, readiness, `${timestamp}-pull`));
-  }
-  if (selectedVariants.knee) {
-    items.push(workoutItem(state, selectedVariants.knee, sets.knee, "A", 70, readiness, `${timestamp}-knee`));
-  }
-  if (selectedVariants.push) {
-    items.push(workoutItem(state, selectedVariants.push, sets.push, "B", 25, readiness, `${timestamp}-push`));
-  }
-  if (selectedVariants.hinge) {
-    items.push(workoutItem(state, selectedVariants.hinge, sets.hinge, "B", 70, readiness, `${timestamp}-hinge`));
-  }
-
-  if (usableShoulderSets > 0 && selectedVariants.shoulders) {
+  const coreOrderTemplates: Array<Array<"pull" | "knee" | "push" | "hinge">> = [
+    ["pull", "knee", "push", "hinge"],
+    ["push", "hinge", "pull", "knee"],
+    ["knee", "pull", "hinge", "push"],
+  ];
+  const coreOrder = coreOrderTemplates[variationIndex % coreOrderTemplates.length];
+  const shoulderItem =
+    shoulderSets > 0 && selectedVariants.shoulders
+      ? workoutItem(
+          state,
+          selectedVariants.shoulders,
+          shoulderSets,
+          null,
+          60,
+          readiness,
+          `${timestamp}-shoulders`,
+        )
+      : null;
+  const shoulderInsertAfter = variationIndex % 3 === 0 ? 0 : 2;
+  if (shoulderItem && shoulderInsertAfter === 0) items.push(shoulderItem);
+  for (const [index, pattern] of coreOrder.entries()) {
+    const variant = selectedVariants[pattern];
+    if (!variant) continue;
+    const superset = pattern === "pull" || pattern === "knee" ? "A" : "B";
+    const restSeconds = pattern === "pull" || pattern === "push" ? 25 : 70;
     items.push(
-      workoutItem(state, selectedVariants.shoulders, usableShoulderSets, null, 60, readiness, `${timestamp}-shoulders`),
+      workoutItem(
+        state,
+        variant,
+        sets[pattern],
+        superset,
+        restSeconds,
+        readiness,
+        `${timestamp}-${pattern}`,
+      ),
     );
+    if (shoulderItem && index + 1 === shoulderInsertAfter) items.push(shoulderItem);
   }
   items.push(
     workoutItem(
       state,
       variants.core[0],
-      2,
+      readiness.factor < 0.7 ? 1 : 2,
       null,
       60,
       readiness,
@@ -1041,13 +1394,23 @@ export function buildNextWorkout(state: CadenceState, now = new Date()): Workout
     );
   }
 
-  const coreSetCount = corePatterns.reduce((sum, pattern) => sum + sets[pattern], 0);
+  const priorityScores: Partial<Record<MovementPattern, number>> = Object.fromEntries(
+    ([...corePatterns, "shoulders"] as MovementPattern[]).map((pattern) => [
+      pattern,
+      patternScore(pattern, state, credits7, credits21, now, readiness),
+    ]),
+  );
+  const fittedItems = fitWorkoutToDuration(items, duration, priorityScores);
+  const estimatedMinutes = Math.ceil(estimateWorkoutSeconds(fittedItems) / 60);
+  const coreSetCount = fittedItems
+    .filter((item) => corePatterns.includes(item.pattern))
+    .reduce((sum, item) => sum + item.sets, 0);
   return {
     id: `adaptive-${timestamp}`,
     title: readiness.label === "Reprise" ? "Reprendre le fil" : "Le socle complet",
-    subtitle: `${coreSetCount} séries sur ${corePatterns.length} ancrage${corePatterns.length > 1 ? "s" : ""} compatible${corePatterns.length > 1 ? "s" : ""} · supersets non concurrents`,
+    subtitle: `${coreSetCount} séries sur ${corePatterns.length} ancrage${corePatterns.length > 1 ? "s" : ""} compatible${corePatterns.length > 1 ? "s" : ""} · environ ${estimatedMinutes} min`,
     kind: `Full body · ${readiness.label}`,
-    estimatedMinutes: duration,
+    estimatedMinutes,
     intensity: readiness.label === "Verte" ? "Soutenue maîtrisée" : "Modérée",
     focus: [
       ...(selectedVariants.pull ? ["Dos"] : []),
@@ -1056,7 +1419,7 @@ export function buildNextWorkout(state: CadenceState, now = new Date()): Workout
       "Chaîne postérieure",
       ...(selectedVariants.shoulders ? ["Épaules"] : []),
     ],
-    coachNote: `${readiness.note} OpenCadence utilise seulement les variantes compatibles avec le matériel déclaré.${selectedVariants.pull ? " Les séries disponibles vont aux groupes les moins exposés récemment et aux priorités de ton profil." : " Aucun tirage illustré compatible n’est encore disponible : ajoute du matériel ou demande à Codex de proposer une nouvelle variante."}${plannedRotations.length ? ` Rotation planifiée aujourd’hui : ${plannedRotations.join(" et ")}, après quatre expositions au même mouvement.` : ""}`,
-    items,
+    coachNote: `${readiness.note} La séance est calibrée sur ta fenêtre de ${duration} minutes, installation, repos et saisie compris. OpenCadence utilise seulement les variantes compatibles avec le matériel déclaré.${selectedVariants.pull ? " Les séries disponibles vont aux groupes les moins exposés récemment et aux priorités de ton profil." : " Aucun tirage illustré compatible n’est encore disponible : ajoute du matériel ou demande à Codex de proposer une nouvelle variante."}${plannedRotations.length ? ` Variation planifiée aujourd’hui : ${plannedRotations.join(" et ")}. Les autres repères restent stables pour mesurer la progression.` : ""}`,
+    items: fittedItems,
   };
 }

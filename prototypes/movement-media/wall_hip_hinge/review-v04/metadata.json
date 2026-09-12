@@ -1,0 +1,59 @@
+{
+  "movementId": "wall_hip_hinge",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "rework-2026-09-05/wall_hip_hinge_keyposes_v02.png",
+    "rework-2026-09-05/wall_hip_hinge_keyposes_v02.png",
+    "rework-2026-09-05/wall_hip_hinge_keyposes_v02.png",
+    "rework-2026-09-05/wall_hip_hinge_keyposes_v02.png"
+  ],
+  "boardCellIndices": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "boardCellCrops": [
+    "606x606+15+15",
+    "606x606+634+15",
+    "606x606+15+634",
+    "606x606+634+634"
+  ],
+  "uniqueSourceFrames": 4,
+  "visiblyDistinctPoses": 4,
+  "displayedSteps": 7,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "wall_hip_hinge_review_v04.mp4",
+  "poster": "wall_hip_hinge_poster_review_v04.webp",
+  "fallback": "wall_hip_hinge_fallback_review_v04.webp",
+  "fallbackSourceIndices": [
+    1,
+    2,
+    4
+  ],
+  "notes": [
+    "Fallback to four independently reviewed key poses; eight-pose board rejected for relative foot/wall drift.",
+    "Low-density exception: four distinct poses and seven displayed steps, not twelve unique frames.",
+    "Small global frame drift remains a prototype reserve; no anatomical modification or professional certification.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

@@ -1,0 +1,272 @@
+{
+  "version": "0.1",
+  "objective": {
+    "requestedOutcome": "Transformer une première séance gratuite réellement terminée en décision d’abonnement claire, puis permettre à chaque abonné de reprendre sans dette après une absence.",
+    "nonGoals": [
+      "Créer un freemium durable ou une période d’essai chronométrée.",
+      "Bloquer le bilan, l’historique acquis, les réglages ou la restauration des achats.",
+      "Ajouter une grille de plans, des fonctions premium artificielles, une remise fictive ou un compte à rebours.",
+      "Culpabiliser une absence avec un streak perdu, un retard ou un rattrapage.",
+      "Modifier les règles du moteur d’entraînement dans ce parcours commercial."
+    ],
+    "changeType": "journey"
+  },
+  "surface": {
+    "id": "ios:first-session/paywall-return",
+    "mode": "guided",
+    "scope": {
+      "kind": "dialog",
+      "parentId": "ios:onboarding-workout"
+    },
+    "episode": {
+      "trigger": "La première séance gratuite est sauvegardée et son bilan factuel a été rendu visible.",
+      "userJob": "Comprendre ce que l’app a appris, savoir ce que je débloque et choisir simplement si je veux obtenir la prochaine séance adaptée.",
+      "completionEvidence": "La personne achète ou restaure un abonnement et peut ouvrir la séance suivante, ou ferme le paywall en conservant son bilan, son historique et un chemin explicite pour revenir plus tard."
+    }
+  },
+  "truth": {
+    "mustBeTrue": [
+      "La première séance complète et son bilan sont accessibles sans achat.",
+      "L’aperçu de la prochaine adaptation est calculé uniquement à partir des données réellement enregistrées pendant la première séance.",
+      "Seule la génération ou l’ouverture d’une nouvelle séance adaptative est réservée aux abonnés.",
+      "L’abonnement annuel et l’abonnement mensuel donnent accès aux mêmes fonctions ; seule la durée de facturation change.",
+      "Le prix, la période, le renouvellement et l’éligibilité de chaque offre viennent du produit StoreKit réellement chargé, jamais d’une valeur codée en dur.",
+      "L’accès payant est accordé uniquement à partir d’un droit StoreKit vérifié et restaurable.",
+      "Une absence ne crée ni séance à rattraper, ni augmentation compensatoire, ni message de culpabilité.",
+      "Une personne non abonnée conserve l’accès à ses données déjà acquises et peut restaurer un achat."
+    ],
+    "canonicalTerms": [
+      {
+        "canonical": "Abonnement auto-renouvelable",
+        "userFacing": "Continuer pendant un an ou choisir le mensuel",
+        "precisionMoment": "Sous chaque offre et avant confirmation Apple, avec prix, période et renouvellement.",
+        "source": "StoreKit Product.displayPrice, subscriptionPeriod et App Store Connect"
+      },
+      {
+        "canonical": "Droit actif",
+        "userFacing": "Abonnement actif",
+        "precisionMoment": "Au lancement, au retour au premier plan, après achat et après restauration.",
+        "source": "StoreKit 2 Transaction.currentEntitlements"
+      },
+      {
+        "canonical": "Première séance gratuite",
+        "userFacing": "Votre première séance est faite",
+        "precisionMoment": "Après la sauvegarde réussie du premier bilan, une seule fois par historique local valide.",
+        "source": "Historique local de séance et contrat produit V1"
+      }
+    ]
+  },
+  "decision": {
+    "currentState": "Première séance terminée, faits enregistrés, adaptation suivante disponible en aperçu et accès actuel avec ou sans abonnement.",
+    "dominantAction": {
+      "id": "purchase-annual-subscription",
+      "label": "Continuer pendant un an",
+      "expectedResult": "La feuille d’achat Apple présente l’offre annuelle réellement chargée ; après transaction vérifiée, la prochaine séance devient accessible.",
+      "reversibility": "time_limited",
+      "guard": "confirm"
+    },
+    "constraints": [
+      {
+        "id": "summary-before-paywall",
+        "mustBeTrue": "Le bilan et la preuve de personnalisation sont visibles avant la demande de paiement.",
+        "detectability": "immediate",
+        "consequence": "Le paywall demanderait de payer une promesse abstraite avant la première valeur reçue.",
+        "recovery": "Revenir au bilan gratuit et ne présenter le paywall qu’après son affichage réussi."
+      },
+      {
+        "id": "store-products-loaded",
+        "mustBeTrue": "Les produits annuel et mensuel sont chargés depuis StoreKit avec leurs prix localisés.",
+        "detectability": "immediate",
+        "consequence": "Le prix ou la période pourrait être absent, faux ou incompatible avec la confirmation Apple.",
+        "recovery": "Masquer les actions d’achat, proposer Réessayer et laisser accessibles bilan, historique et restauration."
+      },
+      {
+        "id": "verified-entitlement-only",
+        "mustBeTrue": "L’achat ou la restauration produit un droit vérifié avant de déverrouiller une nouvelle séance.",
+        "detectability": "immediate",
+        "consequence": "Une séance pourrait être débloquée à tort ou un achat réel rester sans effet.",
+        "recovery": "Revérifier les droits, proposer Restaurer les achats et conserver l’état de la séance gratuite."
+      },
+      {
+        "id": "no-data-hostage",
+        "mustBeTrue": "Fermer le paywall laisse consultables le bilan, l’historique et les réglages.",
+        "detectability": "immediate",
+        "consequence": "La personne perdrait l’accès à des données produites avant l’achat.",
+        "recovery": "Fermer vers l’historique et garder un accès non bloquant à l’abonnement dans les réglages."
+      },
+      {
+        "id": "return-without-debt",
+        "mustBeTrue": "La prochaine séance repart de l’état réel après l’absence, sans compensation punitive.",
+        "detectability": "delayed",
+        "consequence": "Le produit contredirait sa promesse et pourrait proposer un volume inadapté.",
+        "recovery": "Recalculer la séance avec l’historique daté et les informations du jour, puis expliquer brièvement l’ajustement."
+      }
+    ]
+  },
+  "languageAndTrust": {
+    "complexityAbsorbed": [
+      "Vérification des transactions et des droits StoreKit.",
+      "Localisation des prix et calcul de l’offre disponible.",
+      "Recalcul du plan roulant après une absence.",
+      "Synchronisation entre l’état local du parcours et le droit d’abonnement."
+    ],
+    "consequencesNeverHidden": [
+      "L’offre choisie se renouvelle automatiquement jusqu’à résiliation depuis le compte Apple.",
+      "L’annuel et le mensuel ont des périodes et des prix différents mais ouvrent le même produit.",
+      "Sans abonnement actif, aucune nouvelle séance adaptative n’est générée.",
+      "Une transaction échouée, annulée ou en attente ne débloque pas immédiatement la suite."
+    ],
+    "reassurance": [
+      {
+        "claim": "Votre première séance est faite. La prochaine est déjà ajustée à ce que vous venez d’accomplir.",
+        "evidence": "Le bilan sauvegardé et l’aperçu citent une adaptation réelle issue des séries confirmées.",
+        "placement": "Entre le bilan gratuit et les offres d’abonnement."
+      },
+      {
+        "claim": "Vous reprenez simplement là où vous en êtes.",
+        "evidence": "Le moteur utilise l’historique daté sans dette, streak ni volume compensatoire.",
+        "placement": "Sous la promesse annuelle et lors du premier retour après une absence."
+      },
+      {
+        "claim": "Vos séances déjà enregistrées restent accessibles.",
+        "evidence": "Fermer le paywall renvoie vers le bilan ou l’historique, qui ne dépendent pas du droit payant.",
+        "placement": "Près de l’action de fermeture et dans la gestion de l’abonnement."
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "first-session-summary",
+      "purpose": "evidence",
+      "visibility": "persistent",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Prouve la valeur reçue avant toute demande de paiement."
+    },
+    {
+      "id": "next-adaptation-preview",
+      "purpose": "evidence",
+      "visibility": "persistent",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Relie l’abonnement à une prochaine décision concrète plutôt qu’à une promesse générique."
+    },
+    {
+      "id": "annual-offer",
+      "purpose": "decision",
+      "visibility": "persistent",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "C’est l’offre recommandée et la décision dominante du lancement."
+    },
+    {
+      "id": "monthly-offer",
+      "purpose": "decision",
+      "visibility": "persistent",
+      "hierarchy": 2,
+      "verdict": "keep",
+      "reason": "Laisse une option moins engageante sans créer un second niveau fonctionnel."
+    },
+    {
+      "id": "restore-purchases",
+      "purpose": "recovery",
+      "visibility": "persistent",
+      "hierarchy": 2,
+      "verdict": "keep",
+      "reason": "Récupère un droit acheté sur le compte Apple sans demander un nouvel achat."
+    },
+    {
+      "id": "close-to-history",
+      "purpose": "recovery",
+      "visibility": "persistent",
+      "hierarchy": 2,
+      "verdict": "keep",
+      "reason": "Le paywall bloque la prochaine séance, jamais l’accès aux données déjà acquises."
+    },
+    {
+      "id": "countdown-or-fake-discount",
+      "purpose": "expression",
+      "visibility": "on_demand",
+      "hierarchy": 3,
+      "verdict": "remove",
+      "reason": "Aucune urgence ou économie non démontrée n’aide une décision honnête."
+    }
+  ],
+  "states": [
+    {
+      "id": "free-summary-ready",
+      "kind": "partial_success",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Voir l’adaptation suivante puis choisir une offre ou fermer.",
+      "recovery": "Le bilan reste accessible sans abonnement."
+    },
+    {
+      "id": "store-products-unavailable",
+      "kind": "error",
+      "blocking": true,
+      "preserveInput": true,
+      "nextStep": "Réessayer de charger les offres ou revenir à l’historique.",
+      "recovery": "Ne jamais afficher de prix de secours codé en dur."
+    },
+    {
+      "id": "purchase-pending",
+      "kind": "loading",
+      "blocking": true,
+      "preserveInput": true,
+      "nextStep": "Attendre la confirmation Apple puis revérifier le droit.",
+      "recovery": "La personne peut quitter ; l’app revérifie le droit au prochain lancement."
+    },
+    {
+      "id": "purchase-cancelled-or-failed",
+      "kind": "error",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Réessayer, choisir l’autre période ou revenir à l’historique.",
+      "recovery": "Aucune séance ni donnée existante n’est supprimée."
+    },
+    {
+      "id": "entitlement-active",
+      "kind": "partial_success",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Ouvrir la prochaine séance adaptée.",
+      "recovery": "Revérifier ou restaurer les droits si l’accès disparaît à tort."
+    },
+    {
+      "id": "return-after-absence",
+      "kind": "partial_success",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Indiquer le temps et l’état du jour puis ouvrir la séance recalculée.",
+      "recovery": "Modifier ces entrées avant de commencer ; aucun rattrapage n’est imposé."
+    }
+  ],
+  "motion": [
+    {
+      "id": "paywall-reveal",
+      "purpose": "continuity",
+      "meaningWithoutMotion": true,
+      "fallback": "Le bilan, l’aperçu et les offres restent compris dans le même ordre sans animation."
+    }
+  ],
+  "review": {
+    "risk": "R2",
+    "domains": [
+      "product",
+      "payment",
+      "privacy"
+    ],
+    "requiredJudges": [
+      "product",
+      "experience",
+      "language",
+      "risk"
+    ],
+    "humanGate": [
+      "Yann valide le prix et la hiérarchie annuelle/mensuelle avant configuration App Store Connect.",
+      "Les textes légaux et la restauration sont vérifiés sur un achat sandbox avant soumission.",
+      "Après une réinstallation, l’éligibilité gratuite suit l’historique restauré localement ou via iCloud ; aucun backend anti-abus dédié n’est ajouté en V1."
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+Use case: scientific-educational
+Asset type: controlled A/B test for a La Bonne Séance stop-motion exercise loop
+Input image: Image 1 is the exact visual source, the exact starting pose, and the immutable background plate.
+
+Create one clean 3 by 3 contact sheet containing exactly nine equal square frames, read left to right and top to bottom. Show only the downward phase of one incline push-up. Frame 1 is the supplied top position. Frames 2 through 8 bend both elbows in small, evenly spaced increments. Frame 9 is the controlled bottom position with the chest close to the bench. Every adjacent pose must be clearly distinct.
+
+ABSOLUTE FIXED-SCENE CONTRACT:
+- Copy the room and equipment from Image 1 identically into every cell as if the exact same background plate were duplicated nine times before placing the person.
+- The wall texture, baseboard, floor pattern, mat edges, shelf, every shelf object, both plants, basket, bench top, bench legs, bench feet, all shadows and every visible edge must occupy the exact same pixel coordinates in all nine cells.
+- Do not regenerate, reinterpret, repaint, resize, translate, rotate, relight, crop or restyle the background or bench between cells.
+- The camera is physically locked: identical viewpoint, focal length, framing, crop, scale, horizon and margins in every cell.
+- Only the woman's pose may change. Her identity, face, hair, clothing, shoes, body proportions and rendering texture remain the same.
+
+MOTION CONTRACT:
+Both palms remain fixed at exactly the same pixel coordinates on the bench. Both forefeet remain fixed at exactly the same pixel coordinates on the mat. The body remains one rigid straight line from head through hips to heels and lowers around these four fixed contact points. Only the elbow angles, shoulder position and resulting rigid-body height change. Elbows track backward about 30–45 degrees; no shoulder shrug.
+
+Composition: full body, hands, feet, mat and complete bench visible in every square; identical square boundaries with thin even gutters.
+
+Constraints: no text, numbers, arrows, labels or watermark.
+Avoid: any background movement, global image movement, camera drift, zoom, crop drift, bench drift, floor drift, shelf drift, plant drift, shadow drift, lighting drift, palm movement, foot sliding, hip sag, hip pike, neck collapse, elbow flare, identity drift, anatomy drift, duplicated limbs, disappearing limbs, morphing or extra equipment.

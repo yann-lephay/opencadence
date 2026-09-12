@@ -1,0 +1,127 @@
+{
+  "version": "0.1",
+  "objective": {
+    "requestedOutcome": "Partager volontairement les nouvelles séances des utilisateurs payants sous pseudonyme, arrêter et supprimer sans gêner la séance.",
+    "nonGoals": [
+      "Collecte gratuite ou rétroactive",
+      "Données de santé et texte libre",
+      "Ajustement distant du moteur",
+      "Publication"
+    ],
+    "changeType": "surface"
+  },
+  "surface": {
+    "id": "ios:session-sharing",
+    "mode": "guided",
+    "scope": {
+      "kind": "section",
+      "parentId": "ios:settings"
+    },
+    "episode": {
+      "trigger": "Accueil après accès payant vérifié ou réglages.",
+      "end": "Choix explicite enregistré ou partage arrêté.",
+      "userJob": "Choisir de contribuer sans conditionner son entraînement.",
+      "completionEvidence": "Aucun envoi avant accord ; état actif ou suppression en attente fidèle au serveur."
+    },
+    "invariants": [
+      "Accès payant vérifié et consentement versionné requis.",
+      "Pas de rétroactivité ; première séance gratuite exclue.",
+      "Refus ne modifie aucun droit ni recommandation.",
+      "Suppression accessible même après perte de droits.",
+      "Pas de questionnaire pendant effort ou repos."
+    ],
+    "canonicalTerms": []
+  },
+  "truth": {
+    "mustBeTrue": [
+      "Accès payant vérifié et consentement versionné requis.",
+      "Pas de rétroactivité ; première séance gratuite exclue.",
+      "Refus ne modifie aucun droit ni recommandation.",
+      "Suppression accessible même après perte de droits.",
+      "Pas de questionnaire pendant effort ou repos."
+    ],
+    "assumptions": []
+  },
+  "decision": {
+    "currentState": "Pratique déclarée ou inconnue, variante proposée, travail confirmé et repos courant.",
+    "dominantAction": {
+      "id": "save-calibration",
+      "label": "Commencer la série",
+      "expectedResult": "La série commence explicitement avec la proposition corrigée si nécessaire.",
+      "reversibility": "reversible",
+      "guard": "review"
+    },
+    "constraints": [
+      {
+        "id": "confirmed-immutable",
+        "mustBeTrue": "Une correction ne modifie aucune confirmation ni échéance de repos.",
+        "detectability": "immediate",
+        "consequence": "Perte des faits et de confiance.",
+        "recovery": "Conserver le snapshot précédent si le calcul ou le stockage échoue."
+      },
+      {
+        "id": "scope-separated",
+        "mustBeTrue": "Seuls les repères explicitement durables sont ajoutés au profil.",
+        "detectability": "delayed",
+        "consequence": "Une difficulté ponctuelle deviendrait un niveau permanent.",
+        "recovery": "Conserver les choix du jour dans le contexte actif."
+      },
+      {
+        "id": "catalog-preserved",
+        "mustBeTrue": "La configuration de catalogue initiale reste la même pendant les ajustements.",
+        "detectability": "immediate",
+        "consequence": "Une variante non autorisée pourrait être introduite.",
+        "recovery": "Refuser la correction et conserver la séance."
+      },
+      {
+        "id": "repetition-gap",
+        "mustBeTrue": "Aucun effort ni cause ne sont déduits des répétitions seules. Une préférence explicite de répétitions reste attachée à sa charge.",
+        "detectability": "delayed",
+        "consequence": "Questions répétées ou difficulté mal ajustée.",
+        "recovery": "Maintenir les répétitions réalisées et proposer un réglage local facultatif."
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "sharing",
+      "purpose": "decision",
+      "visibility": "on_demand",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Accord explicite après lecture des données et conséquences."
+    }
+  ],
+  "states": [
+    {
+      "id": "offline",
+      "kind": "error",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Réessayer au prochain retour connecté.",
+      "recovery": "Aucun échec ne bloque la sauvegarde de séance."
+    }
+  ],
+  "languageAndTrust": {
+    "complexityAbsorbed": [
+      "Identifiant aléatoire, file locale et reprise idempotente."
+    ],
+    "consequencesNeverHidden": [
+      "Données pseudonymes, pas anonymes ; date et performances envoyées.",
+      "Suppression distante différée hors connexion."
+    ],
+    "reassurance": []
+  },
+  "motion": [],
+  "review": {
+    "risk": "R2",
+    "domains": [
+      "saas"
+    ],
+    "requiredJudges": [
+      "product",
+      "experience"
+    ],
+    "humanGate": []
+  }
+}

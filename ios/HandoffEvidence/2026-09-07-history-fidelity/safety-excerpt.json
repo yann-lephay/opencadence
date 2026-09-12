@@ -1,0 +1,49 @@
+{
+  "persona": "explicit_stop",
+  "policy": "auto_max",
+  "seed": 7,
+  "day": 92,
+  "startedAt": "2027-04-17T08:00:00.000Z",
+  "interruptionCause": "explicit_safety_signal",
+  "catalogVersion": "product-v2.1.0",
+  "decisionPolicyVersion": "2.1.0",
+  "endedAt": "2027-04-17T08:01:16.000Z",
+  "movements": [
+    {
+      "exerciseId": "squat",
+      "plannedSets": 3,
+      "confirmedSets": 1,
+      "safety": true,
+      "source": "syntheticScenario",
+      "completedAt": [
+        "2027-04-17T08:01:16.000Z"
+      ]
+    },
+    {
+      "exerciseId": "wall_hip_hinge",
+      "plannedSets": 3,
+      "confirmedSets": 0,
+      "safety": false,
+      "source": "syntheticScenario",
+      "completedAt": []
+    },
+    {
+      "exerciseId": "supported_one_arm_row__adjustable",
+      "plannedSets": 3,
+      "confirmedSets": 0,
+      "safety": false,
+      "source": "syntheticScenario",
+      "completedAt": []
+    },
+    {
+      "exerciseId": "push_up",
+      "plannedSets": 3,
+      "confirmedSets": 0,
+      "safety": false,
+      "source": "syntheticScenario",
+      "completedAt": []
+    }
+  ],
+  "restObservations": [],
+  "priorRestObservationCount": 80
+}

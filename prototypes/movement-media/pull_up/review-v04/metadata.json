@@ -1,0 +1,67 @@
+{
+  "movementId": "pull_up",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "rework-2026-09-05/assembly/board_1.png",
+    "rework-2026-09-05/assembly/board_2.png",
+    "rework-2026-09-05/assembly/board_3.png",
+    "rework-2026-09-05/assembly/board_4.png",
+    "rework-2026-09-05/assembly/top_aligned.png",
+    "rework-2026-09-05/assembly/board_5.png",
+    "rework-2026-09-05/assembly/board_6.png",
+    "rework-2026-09-05/assembly/board_7.png",
+    "rework-2026-09-05/assembly/board_8.png"
+  ],
+  "boardCellIndices": [
+    1,
+    2,
+    3,
+    4,
+    null,
+    5,
+    6,
+    7,
+    8
+  ],
+  "boardCellCrops": null,
+  "uniqueSourceFrames": 9,
+  "visiblyDistinctPoses": 7,
+  "displayedSteps": 10,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    4,
+    6,
+    7,
+    8,
+    9
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "pull_up_review_v04.mp4",
+  "poster": "pull_up_poster_review_v04.webp",
+  "fallback": "pull_up_fallback_review_v04.webp",
+  "fallbackSourceIndices": [
+    1,
+    5,
+    9
+  ],
+  "notes": [
+    "Board crop uses actual panel coordinates x=14+440*column, y=14 or450, size424 square. This removes gutter-induced drift from the initial equal-grid preview.",
+    "Corrected top proportionally resized to424 square, translated +9px horizontally and -12px vertically on the complete image, without body deformation. All nine images receive identical24px cream border so head and equipment retain margins.",
+    "Chin-above-bar top retained. Slight width of wall brackets and knee arrangement still varies; prototype, not biomechanical or release validation.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

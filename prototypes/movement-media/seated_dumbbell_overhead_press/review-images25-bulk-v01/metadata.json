@@ -1,0 +1,83 @@
+{
+  "movementId": "seated_dumbbell_overhead_press",
+  "status": "visual_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png"
+  ],
+  "boardCellIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "boardCellCrops": [
+    "408x408+5+5",
+    "408x408+423+5",
+    "408x408+841+5",
+    "408x408+5+423",
+    "408x408+423+423",
+    "408x408+841+423",
+    "408x408+5+841",
+    "408x408+423+841",
+    "408x408+841+841"
+  ],
+  "uniqueSourceFrames": 9,
+  "visiblyDistinctPoses": 9,
+  "displayedSteps": 16,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    8,
+    7,
+    6,
+    5,
+    4,
+    3,
+    2
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "seated_dumbbell_overhead_press_review_images25_bulk_v01.mp4",
+  "poster": "seated_dumbbell_overhead_press_poster_review_images25_bulk_v01.webp",
+  "fallback": "seated_dumbbell_overhead_press_fallback_review_images25_bulk_v01.webp",
+  "fallbackSourceIndices": [
+    1,
+    5,
+    9
+  ],
+  "notes": [
+    "Nine progressive dumbbell heights extracted from one bulk board.",
+    "Seat, feet and torso remain stable and both arms move symmetrically to visual inspection; final wrist and shoulder alignment still require explicit human review.",
+    "Return reuses the exact outbound poses in reverse; no anatomical interpolation.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

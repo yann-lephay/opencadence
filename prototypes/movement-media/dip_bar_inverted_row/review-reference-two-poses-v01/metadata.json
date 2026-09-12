@@ -1,0 +1,44 @@
+{
+  "movementId": "dip_bar_inverted_row",
+  "status": "two_pose_comparison_pending_user_review",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "real-reference-2026-09-06/loop-work/low.png",
+    "real-reference-2026-09-06/loop-work/high-aligned.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": [
+    "746x746+52+70",
+    "746x746+52+70"
+  ],
+  "uniqueSourceFrames": 2,
+  "visiblyDistinctPoses": 2,
+  "displayedSteps": 2,
+  "sequenceSourceIndices": [
+    1,
+    2
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": false,
+  "interpolatedFrames": 0,
+  "video": "dip_bar_inverted_row_review_reference_two_poses_v01.mp4",
+  "poster": "dip_bar_inverted_row_poster_review_reference_two_poses_v01.webp",
+  "fallback": "dip_bar_inverted_row_fallback_review_reference_two_poses_v01.webp",
+  "fallbackSourceIndices": [
+    1,
+    2
+  ],
+  "notes": [
+    "User explicitly requested the two accepted endpoint photos only. Two seconds per photo, four seconds total; loop reset returns to the low pose.",
+    "Same globally registered endpoints and common crop as review-reference-loop-v02. No new image generation, crossfade, optical flow or anatomical deformation.",
+    "Shows two positions, not the continuous trajectory. Residual equipment and heel shifts remain. No app, catalog or release-manifest change; source rights and professional validation not cleared.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

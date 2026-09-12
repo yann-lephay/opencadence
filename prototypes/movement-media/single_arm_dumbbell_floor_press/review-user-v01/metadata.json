@@ -1,0 +1,46 @@
+{
+  "movementId": "single_arm_dumbbell_floor_press",
+  "status": "user_correction_pending_visual_review",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "user-redo-2026-09-06/two-poses-v03.png",
+    "user-redo-2026-09-06/two-poses-v03.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": [
+    "620x1244+5+5",
+    "620x1244+629+5"
+  ],
+  "uniqueSourceFrames": 2,
+  "visiblyDistinctPoses": 2,
+  "displayedSteps": 4,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    1,
+    2
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "single_arm_dumbbell_floor_press_review_user_v01.mp4",
+  "poster": "single_arm_dumbbell_floor_press_poster_review_user_v01.webp",
+  "fallback": "single_arm_dumbbell_floor_press_fallback_review_user_v01.webp",
+  "fallbackSourceIndices": [
+    1,
+    2
+  ],
+  "notes": [
+    "Rebuilt from elevated foot-end angle to show both arms; only two endpoints retained, one free arm on floor and same working arm holding one dumbbell.",
+    "Two portrait sources fitted in square without clipping the body. Two-position alternation twice in four seconds, not continuous trajectory. Previous side-view attempts not selected. Palette now more muted green; requires user visual review.",
+    "No professional or release approval, app/catalog/manifest unchanged.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

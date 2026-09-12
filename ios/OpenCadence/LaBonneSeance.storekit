@@ -1,0 +1,69 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "3DB076C5",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "59.99",
+      "familyShareable" : false,
+      "internalID" : "A82F19C4",
+      "localizations" : [
+        {
+          "description" : "Un achat unique pour débloquer tes séances. Sans abonnement.",
+          "displayName" : "Accès à vie",
+          "locale" : "fr"
+        },
+        {
+          "description" : "Unlock your workouts with one purchase. No subscription.",
+          "displayName" : "Lifetime access",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Desbloquea tus sesiones con un pago único. Sin suscripción.",
+          "displayName" : "Acceso de por vida",
+          "locale" : "es_ES"
+        },
+        {
+          "description" : "Einmal kaufen und Trainings freischalten. Ohne Abo.",
+          "displayName" : "Lebenslanger Zugang",
+          "locale" : "de"
+        }
+      ],
+      "productID" : "fr.labonneseance.lifetime",
+      "referenceName" : "La Bonne Séance — accès à vie",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_askToBuyEnabled" : false,
+    "_billingGracePeriodEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_disableDialogs" : false,
+    "_failTransactionsEnabled" : false,
+    "_locale" : "fr",
+    "_renewalBillingIssuesEnabled" : false,
+    "_storefront" : "FRA",
+    "_storeKitErrors" : [
+
+    ],
+    "_timeRate" : 0
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 5,
+    "minor" : 0
+  }
+}

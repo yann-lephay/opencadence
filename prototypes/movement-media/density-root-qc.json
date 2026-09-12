@@ -1,0 +1,425 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-05",
+  "scope": "Density-only QC of seated_band_row, wall_hip_hinge, low_step_up, reverse_lunge, plus registered suitcase_march. Existing app/registry/assets unchanged.",
+  "method": "Read-only inspection of prior selected fallback boards and new density source boards. No physical or professional validation. Eight generated cells are not assumed to be eight distinct poses.",
+  "professionalValidation": false,
+  "releaseApproved": false,
+  "attempts": [
+    {
+      "movementId": "seated_band_row",
+      "source": "seated_band_row/density-2026-09-05/phases-v01.png",
+      "verdict": "REJET POUR DENSITÉ",
+      "generatedCells": 8,
+      "clearlyDistinctUsefulStates": 3,
+      "representativeCells": [
+        1,
+        3,
+        4
+      ],
+      "excludedOrRedundant": [
+        2,
+        5,
+        6,
+        7,
+        8
+      ],
+      "notes": [
+        "1 et2 quasi identiques bras tendus ;3 mi-tirage ;4–8 regroupent la fin de tirage avec microvariations.",
+        "Pas de gain démontré contre le prototype quatreclés ; les deux clés centrales anciennes sont elles-mêmes proches.",
+        "Bande orange et orientation générale cohérentes ; rejet de la prétention de huit poses, pas rejet de chaque illustration."
+      ],
+      "nextMinimalAction": "Produire des singles entre bras presque tendus et coude vertical, puis entre mi-tirage et mains près des côtes. Garder tronc, pieds, tapis et trajet de bande fixes."
+    },
+    {
+      "movementId": "wall_hip_hinge",
+      "source": "wall_hip_hinge/density-2026-09-05/phases-v01.png",
+      "verdict": "REJET POUR DENSITÉ",
+      "generatedCells": 8,
+      "clearlyDistinctUsefulStates": 4,
+      "possibleAdditionalState": 6,
+      "representativeCells": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "excludedOrRedundant": [
+        5,
+        7,
+        8
+      ],
+      "notes": [
+        "Quatre principales inclinaisons 1,2,3,4 ;5 ressemble4,6–8 répètent surtout le point bas avec modification de tête et faible inclinaison supplémentaire.",
+        "Ne pas compter flexion cervicale ou changement de cadrage comme nouvel état de charnière.",
+        "L'ancienne séquence4clés conserve une distance pied/mur plus facile à lire."
+      ],
+      "nextMinimalAction": "Trois singles environ15°,45°,70° entre les quatreclés, avec distance talon/mur fixe et genoux seulement déverrouillés."
+    },
+    {
+      "movementId": "low_step_up",
+      "source": "low_step_up/density-2026-09-05/phases-v01.png",
+      "verdict": "REJET",
+      "generatedCells": 8,
+      "clearlyDistinctUsefulStates": null,
+      "representativeCells": [],
+      "excludedOrRedundant": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "notes": [
+        "6 montre les deux pieds sans appui clair sur le step ;7 invente un second support ;8 devient une montée sur pointes.",
+        "La séquence change la position du pied porteur et la géométrie de support. Les premières cellules ne suffisent pas à constituer une montée complète stable.",
+        "Réserve également relevée dans l'ancien fallbackv03 : le talon semble déborder derrière l'arête dans la phase haute ; ne pas propager ce défaut."
+      ],
+      "nextMinimalAction": "Repartir du pied intégralement posé sur le step. Densifier le décollage de la jambe libre et l'extension du genou porteur, sans haussement de talon, sans nouveau support."
+    },
+    {
+      "movementId": "reverse_lunge",
+      "source": "reverse_lunge/density-2026-09-05/phases-v01.png",
+      "verdict": "REJET",
+      "generatedCells": 8,
+      "clearlyDistinctUsefulStates": 3,
+      "representativeCells": [
+        1,
+        2,
+        4
+      ],
+      "excludedOrRedundant": [
+        3,
+        5,
+        6,
+        7,
+        8
+      ],
+      "notes": [
+        "2/3 restent proches ;5–8 sont des quasi-doublons de posture basse et semblent poser le genou arrière au sol.",
+        "Le pied avant se décale dans les cellules, ne pas confondre déplacement d'image et pas arrière.",
+        "Nouvelle séquence non retenue ; ancienne séquence alignée quatreclés garde un genou arrière visiblement au-dessus du sol."
+      ],
+      "nextMinimalAction": "Singles séparés : début du pas arrière, réception des orteils, demi-descente puis descente contrôlée. Pied avant fixé, genou arrière sans contact sol."
+    },
+    {
+      "movementId": "seated_band_row",
+      "sources": [
+        "seated_band_row/density-2026-09-05/between-01-02-early.png",
+        "seated_band_row/density-2026-09-05/between-01-02-late.png",
+        "seated_band_row/density-2026-09-05/between-02-04.png"
+      ],
+      "verdict": "À CONFIRMER AU MONTAGE",
+      "generatedCells": 3,
+      "clearAdditionalUsefulStates": 1,
+      "notes": [
+        "Early apporte une vraie flexion intermédiaire entre bras tendus et mi-tirage.",
+        "Late reste proche de la mi-flexion ancienne ; between02-04 reste proche du tirage final ancien.",
+        "Compte prudent de l'ensemble anciens+singles :4–5 états fonctionnels, pas7 annoncé automatiquement. Corps, pieds et bande plausibles sur les sources."
+      ],
+      "nextMinimalAction": "Contrôler le montage séquentiel, ne compter comme distincts que les déplacements de main/coude réellement nouveaux."
+    },
+    {
+      "movementId": "wall_hip_hinge",
+      "sources": [
+        "wall_hip_hinge/density-2026-09-05/between-01-02.png",
+        "wall_hip_hinge/density-2026-09-05/between-02-03.png",
+        "wall_hip_hinge/density-2026-09-05/between-03-04.png"
+      ],
+      "verdict": "À CONFIRMER AU MONTAGE",
+      "generatedCells": 3,
+      "clearAdditionalUsefulStates": null,
+      "notes": [
+        "Between01-02 montre déjà une charnière marquée ~35–40° et reste proche de l'ancienne2, ne remplit pas clairement le palier initial~15°.",
+        "Les deux autres singles restent proches des deux états bas anciens ; modifications de tête ou de genou ne valent pas trois nouvelles phases de charnière.",
+        "Distance pied/mur et contacts globalement plausibles. Compte prudent ensemble4–5 états certains plutôt que7."
+      ],
+      "nextMinimalAction": "Voir le montage pour mesurer le gain réel ; conserver l'écart au début du mouvement comme question ouverte si aucun palier intermédiaire."
+    },
+    {
+      "movementId": "wall_hip_hinge",
+      "source": "wall_hip_hinge/review-density-v01/contact-sheet.png",
+      "verdict": "REJET DU MONTAGE",
+      "sourceFrames": 7,
+      "notes": [
+        "Montage examiné : phase5 redresse le buste après4, derniers états trop proches/non monotones.",
+        "Les nouvelles sources ne comblent pas suffisamment le début de charnière. Ne pas remplacer le prototypev04 par ce diagnostic."
+      ]
+    },
+    {
+      "movementId": "seated_band_row",
+      "source": "seated_band_row/review-density-v01/contact-sheet.png",
+      "verdict": "REJET DU MONTAGE",
+      "sourceFrames": 7,
+      "notes": [
+        "Deux singles tardifs doublonnent les anciens états et accentuent des différences de cadrage.",
+        "Ne conserver que le single early parmi les trois nouveaux."
+      ]
+    },
+    {
+      "movementId": "seated_band_row",
+      "source": "seated_band_row/review-density-v02/contact-sheet.png",
+      "verdict": "PASS PROTOTYPE",
+      "sourceFrames": 5,
+      "displayedSteps": 9,
+      "clearlyDistinctUsefulStates": 4,
+      "notes": [
+        "Une phase early améliore réellement le passage bras tendus→mi-tirage ; anciennes phases centrales très proches.",
+        "Bande et appuis plausibles, aucune anatomie coupée. Comptage prudent4états certains/5sources, sans promesse de cinq angles nettement distincts.",
+        "Densité reste sous la cible ; amélioration limitée assumée. Pas de validation professionnelle."
+      ]
+    },
+    {
+      "movementId": "low_step_up",
+      "sources": [
+        "low_step_up/density-2026-09-05/between-01-02.png",
+        "low_step_up/density-2026-09-05/between-02-03.png",
+        "low_step_up/density-2026-09-05/top-corrected.png",
+        "low_step_up/review-density-v01/contact-sheet.png"
+      ],
+      "verdict": "SÉLECTION CORRIGÉE À RENDRE",
+      "sourceFrames": 4,
+      "displayedSteps": 7,
+      "clearlyDistinctUsefulStates": 4,
+      "selectedSources": [
+        "review-v03/frames/pose_01.png",
+        "density-2026-09-05/between-01-02.png",
+        "density-2026-09-05/between-02-03.png",
+        "density-2026-09-05/top-corrected.png"
+      ],
+      "notes": [
+        "Top-corrected garde clairement le talon porteur sur le support, vrai gain qualitatif.",
+        "Les anciennes phases2/3 doublonnent les singles et restent ambiguës au talon ; exclues de la nouvelle sélection.",
+        "Conserver seulement ancienne1 et trois nouveaux singles, puis retour. Quatre positions/sept étapes, pas gain de densité revendiqué.",
+        "Grand premier changement de hauteur encore visible ; exception de densité plutôt qu'ajout de doublons."
+      ]
+    },
+    {
+      "movementId": "reverse_lunge",
+      "sources": [
+        "reverse_lunge/density-2026-09-05/between-01-02.png",
+        "reverse_lunge/density-2026-09-05/between-02-04.png",
+        "reverse_lunge/density-2026-09-05/between-04-03.png",
+        "reverse_lunge/review-density-v01/contact-sheet.png"
+      ],
+      "verdict": "PASS PROTOTYPE APRÈS RÉORDONNANCEMENT",
+      "sourceFrames": 7,
+      "displayedSteps": 13,
+      "clearlyDistinctUsefulStates": 7,
+      "sequenceSourceIndicesOneBased": [
+        1,
+        2,
+        3,
+        5,
+        4,
+        6,
+        7,
+        6,
+        4,
+        5,
+        3,
+        2,
+        1
+      ],
+      "notes": [
+        "Trois nouvelles phases utiles : pas arrière airborne, flexion initiale, flexion avancée.",
+        "Le montage diagnostic inversait4/5 : le single between02-04 est plus fléchi que l'ancienne source suivante.",
+        "Ordre corrigé lisible ; pied avant sensiblement fixe, genou arrière ne touche pas le sol, corps complet.",
+        "Retour par mêmes images statiques, pas une vidéo réelle jouée à l'envers. Pas de validation professionnelle."
+      ]
+    },
+    {
+      "movementId": "low_step_up",
+      "source": "low_step_up/review-density-v02/metadata.json",
+      "visualEvidence": "low_step_up/review-density-v02/low_step_up_fallback_review_density_v02.webp",
+      "verdict": "PASS PROTOTYPE",
+      "sourceFrames": 4,
+      "displayedSteps": 7,
+      "clearlyDistinctUsefulStates": 4,
+      "sequenceSourceIndicesOneBased": [
+        1,
+        2,
+        3,
+        4,
+        3,
+        2,
+        1
+      ],
+      "notes": [
+        "Rendu final contrôlé : anciennes poses ambiguës exclues, talon haut entièrement posé sur le step.",
+        "Gain qualitatif réel par correction de contact ; pas de gain de densité, quatreposes/septétapes seulement.",
+        "Faible échantillonnage et première transition ample à soumettre à la revue utilisateur."
+      ]
+    },
+    {
+      "movementId": "reverse_lunge",
+      "source": "reverse_lunge/review-density-v02/metadata.json",
+      "visualEvidence": "reverse_lunge/review-density-v02/reverse_lunge_fallback_review_density_v02.webp",
+      "verdict": "PASS PROTOTYPE",
+      "sourceFrames": 7,
+      "displayedSteps": 13,
+      "clearlyDistinctUsefulStates": 7,
+      "sequenceSourceIndicesOneBased": [
+        1,
+        2,
+        3,
+        5,
+        4,
+        6,
+        7,
+        6,
+        4,
+        5,
+        3,
+        2,
+        1
+      ],
+      "notes": [
+        "Rendu final vérifié : ordre corrigé présent dans métadonnées, fallback cohérent, corps complet et genou arrière sans contact sol.",
+        "Vraie amélioration de densité par trois états supplémentaires utiles. Petites différences de texture et cadrage restent réserves de prototype."
+      ]
+    }
+  ],
+  "latestDecisions": {
+    "seated_band_row": {
+      "selected": "review-density-v02",
+      "verdict": "PASS PROTOTYPE",
+      "sourceFrames": 5,
+      "distinctStates": 4,
+      "displayedSteps": 9,
+      "displayedStepTargetMet": false,
+      "distinctPoseTargetMet": false
+    },
+    "wall_hip_hinge": {
+      "selected": "review-v04",
+      "verdict": "CONSERVER PROTOTYPE ANTÉRIEUR",
+      "sourceFrames": 4,
+      "distinctStates": 4,
+      "displayedSteps": 7,
+      "displayedStepTargetMet": false,
+      "distinctPoseTargetMet": false
+    },
+    "low_step_up": {
+      "selected": "review-density-v02",
+      "verdict": "PASS PROTOTYPE",
+      "sourceFrames": 4,
+      "distinctStates": 4,
+      "displayedSteps": 7,
+      "displayedStepTargetMet": false,
+      "distinctPoseTargetMet": false
+    },
+    "reverse_lunge": {
+      "selected": "review-density-v02",
+      "verdict": "PASS PROTOTYPE",
+      "sourceFrames": 7,
+      "distinctStates": 7,
+      "displayedSteps": 13,
+      "displayedStepTargetMet": true,
+      "distinctPoseTargetMet": false
+    },
+    "suitcase_march": {
+      "selected": "review-density-v02",
+      "verdict": "PASS PROTOTYPE AVEC RÉSERVES",
+      "replaces": "review-v03",
+      "sourceFrames": 9,
+      "distinctStates": 7,
+      "metadataDeclaredDistinctStates": 8,
+      "displayedSteps": 16,
+      "displayedStepTargetMet": true,
+      "distinctPoseTargetMet": false
+    }
+  },
+  "finalTechnicalCheck": {
+    "versions": [
+      "seated_band_row/review-density-v02",
+      "low_step_up/review-density-v02",
+      "reverse_lunge/review-density-v02"
+    ],
+    "method": "ffprobe and metadata checked after rendering; fallback inspected. No claim of live playback.",
+    "each": {
+      "durationSeconds": 4,
+      "codec": "h264",
+      "width": 612,
+      "height": 612,
+      "encodedFps": 30,
+      "encodedFrames": 120
+    },
+    "note": "Encoded frames are repeats for timing, not distinct anatomical poses. Wall retained version had been checked in previous QC."
+  },
+  "densityMetricDefinitions": {
+    "displayedStepTargetMinimum": 12,
+    "distinctPoseTargetMinimum": 12,
+    "note": "Deux objectifs séparés : les étapes affichées peuvent réutiliser une même source, les poses distinctes décrivent des états corporels utiles réellement différents. Ni le nombre de fichiers ni les 120 frames encodées ne prouvent 12 poses."
+  },
+  "marchRegistrationReview": {
+    "movementId": "suitcase_march",
+    "version": "review-density-v02",
+    "comparedWith": "review-v03",
+    "verdict": "PASS PROTOTYPE AVEC RÉSERVES",
+    "replacementRecommended": true,
+    "sourceFrames": 9,
+    "metadataDeclaredDistinctStates": 8,
+    "clearlyDistinctUsefulStates": 7,
+    "displayedSteps": 16,
+    "displayedStepTargetMet": true,
+    "distinctPoseTargetMet": false,
+    "durationSeconds": 4,
+    "sequenceSourceIndicesOneBased": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      8,
+      7,
+      6,
+      5,
+      4,
+      3,
+      2
+    ],
+    "evidence": [
+      "suitcase_march/density-2026-09-05/registration-v02/contact.png",
+      "suitcase_march/density-2026-09-05/registration-v02/pose_06.png",
+      "suitcase_march/density-2026-09-05/registration-v02/pose_07.png",
+      "suitcase_march/review-v03/suitcase_march_fallback_review_v03.webp",
+      "suitcase_march/review-density-v02/suitcase_march_fallback_review_density_v02.webp",
+      "suitcase_march/review-density-v02/metadata.json",
+      "density-gait-registration.json"
+    ],
+    "positiveFindings": [
+      "La hauteur de tête et les semelles en appui restent plus stables après recalage uniforme ; pas de zoom manifeste du personnage dans la planche recalée.",
+      "L'alternance est lisible : genou gauche haut, descente gauche, appui double, montée droite, puis retour par les mêmes états vers la gauche. Ce n'est pas une marche arrière.",
+      "L'haltère reste dans la main droite anatomique, à gauche de l'image. Aucun changement de main ou miroir spatial constaté.",
+      "Le nouveau fallback inclut un véritable appui double central. Corps, pieds et charge restent visibles ; le recadrage atteint le tapis mais pas les appuis corporels.",
+      "Crème, vert encre et petite touche orange compatibles avec la palette calme ; rendu moins fortement tramé que les premières planches rétro."
+    ],
+    "reserves": [
+      "Le tapis et les meubles changent encore légèrement de géométrie/position indépendamment du corps ; recalage ne signifie pas décor parfaitement fixe.",
+      "Les sources 6/7 ont une teinte de peau et un contraste plus orange, ainsi qu'un visage/texturage plus accentué. Leur transition peut encore scintiller.",
+      "6/7 décrivent un petit lever de pied droit très proche ; 8/9 décrivent un genou droit haut très proche. Sept états franchement distincts est un compte prudent, huit reste une estimation optimiste.",
+      "Le passage 7 vers 8 reste plus ample que la descente gauche ; la densité est asymétrique et les 16 étapes ne sont pas 16 poses.",
+      "Le retour réutilise des images statiques ; aucune transition physique continue ni exécution réelle n'est prouvée."
+    ],
+    "minimalDecision": "Remplacer l'ancien v03 uniquement dans la sélection de prototypes à montrer. Ne pas ouvrir une nouvelle génération pour des microdifférences esthétiques ; faire juger la gêne de scintillement/du saut droit en lecture par Yann avant tout statut prêt.",
+    "technicalCheck": {
+      "method": "ffprobe",
+      "codec": "h264",
+      "width": 612,
+      "height": 612,
+      "fps": 30,
+      "durationSeconds": 4,
+      "encodedFrames": 120
+    },
+    "methodLimit": "Inspection de planche, poses, fallbacks et métadonnées ; pas de lecture vidéo en temps réel revendiquée, ni validation professionnelle.",
+    "professionalValidation": false,
+    "releaseApproved": false
+  }
+}

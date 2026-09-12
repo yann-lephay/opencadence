@@ -1,0 +1,36 @@
+{
+  "movementId": "dead_bug",
+  "status": "technical_test_only",
+  "motionKind": "isometric",
+  "playback": "loop_review",
+  "sources": [
+    "user-redo-2026-09-06-b/center.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": null,
+  "uniqueSourceFrames": 1,
+  "visiblyDistinctPoses": 1,
+  "displayedSteps": 1,
+  "sequenceSourceIndices": [
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": false,
+  "interpolatedFrames": 0,
+  "video": "dead_bug_review_rendercheck4.mp4",
+  "poster": "dead_bug_poster_review_rendercheck4.webp",
+  "fallback": "dead_bug_fallback_review_rendercheck4.webp",
+  "fallbackSourceIndices": [
+    1
+  ],
+  "notes": [
+    "Renderer default-duration regression test, not a demonstration.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

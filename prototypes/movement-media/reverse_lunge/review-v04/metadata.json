@@ -1,0 +1,49 @@
+{
+  "movementId": "reverse_lunge",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "rework-2026-09-05/aligned-fourkeys-v01/crop_1.png",
+    "rework-2026-09-05/aligned-fourkeys-v01/crop_2.png",
+    "rework-2026-09-05/aligned-fourkeys-v01/crop_3.png",
+    "rework-2026-09-05/aligned-fourkeys-v01/crop_4.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": null,
+  "uniqueSourceFrames": 4,
+  "visiblyDistinctPoses": 4,
+  "displayedSteps": 7,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    4,
+    3,
+    4,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "reverse_lunge_review_v04.mp4",
+  "poster": "reverse_lunge_poster_review_v04.webp",
+  "fallback": "reverse_lunge_fallback_review_v04.webp",
+  "fallbackSourceIndices": [
+    1,
+    4,
+    3
+  ],
+  "notes": [
+    "Four new key poses, seven displayed steps. Explicit order standing, backward step, half-depth, low, half-depth, backward step, standing.",
+    "Whole-frame translations only align front foot; no limb warp, mirroring, interpolation or recoloring. A shared crop removes all virtually extended edge pixels; original body remains intact.",
+    "Front foot contact stable after registration, rear knee stays visibly above floor. Sparse four-pose prototype; small floor-line displacement and tight head margin remain.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

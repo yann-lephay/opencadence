@@ -1,0 +1,360 @@
+{
+  "version": "0.1",
+  "objective": {
+    "requestedOutcome": "Guider une personne série après série, enregistrer exactement ce qu’elle réalise et préserver une reprise sûre après interruption.",
+    "nonGoals": [
+      "Afficher tout l’historique ou toutes les explications du moteur pendant l’effort.",
+      "Diagnostiquer une douleur ou corriger automatiquement la technique par caméra.",
+      "Imposer une charge, une répétition ou la poursuite d’une séance.",
+      "Ajouter classement, calories, streak ou gamification punitive."
+    ],
+    "changeType": "journey"
+  },
+  "surface": {
+    "id": "ios:workout/active-session",
+    "mode": "guided",
+    "scope": {
+      "kind": "page",
+      "parentId": "ios:workout"
+    },
+    "episode": {
+      "trigger": "La personne confirme l’aperçu de la séance ou reprend une séance active persistée.",
+      "userJob": "Savoir quoi faire maintenant, enregistrer ce que j’ai réellement fait et pouvoir m’arrêter sans perdre ni falsifier ma progression.",
+      "completionEvidence": "Chaque série réalisée possède une valeur et un horodatage, chaque exercice non réalisé est explicite, le bilan correspond aux faits et l’état peut être restauré après fermeture de l’app."
+    }
+  },
+  "truth": {
+    "mustBeTrue": [
+      "Le mouvement, la variante, la charge et le matériel affichés correspondent à la prescription persistée au démarrage de la séance.",
+      "La charge utilisée est confirmée par la personne et appartient à une configuration déclarée.",
+      "Une série n’est comptée qu’après une action explicite d’enregistrement.",
+      "Aucune série n’est enregistrée ni avancée automatiquement : la personne valide le résultat après l’exécution.",
+      "Dans le parcours nominal, à taille de texte standard, le mouvement, la démonstration, la prescription, la saisie du résultat, l’action d’enregistrement et les sorties Passer, Gêne et Terminer restent accessibles sans défilement sur le plus petit iPhone pris en charge.",
+      "Pendant l’effort et le repos, l’écran utilise une seule surface visuelle plein écran : aucun en-tête de navigation ni conteneur décoratif extérieur ne sépare l’état de séance de ses commandes.",
+      "La progression de séance appartient au même en-tête que le mouvement ou le repos ; elle ne flotte pas comme un module indépendant au-dessus de l’outil.",
+      "Aux tailles de texte d’accessibilité, le contenu peut défiler afin qu’aucune information ou action ne soit tronquée.",
+      "Une éventuelle présentation paysage conserve exactement les mêmes états, décisions et actions ; elle change uniquement leur disposition.",
+      "Un exercice non réalisé est enregistré comme sauté et jamais comme une série à zéro répétition.",
+      "Arrêter tôt conserve les séries réalisées et marque explicitement le reste comme non réalisé.",
+      "Le timer de repos dérive d’une échéance persistée et se recalcule au retour au premier plan.",
+      "Au premier plan, le repos émet un signal à 3, 2 et 1 secondes puis un son distinct à zéro, sans démarrer ni enregistrer une série. Le son est désactivable et respecte le mode silencieux. Pause, passage du repos, sortie et interruption annulent les signaux ; les signaux manqués ne sont pas rejoués au retour.",
+      "Mettre l’app en arrière-plan ne met pas le repos en pause ; seule l’action explicite Pause fige le temps restant.",
+      "Une charge en paire affiche le poids par unité et le total, par exemple 2 × 8 kg — 8 kg par haltère — 16 kg au total.",
+      "Le RIR est demandé uniquement lorsque son estimation améliore une décision future, au minimum sur la dernière série comparable.",
+      "Une douleur vive, croissante, électrique, une perte de force ou un signal d’alerte ne reçoit jamais une réassurance de poursuite.",
+      "La prochaine séance n’est calculée qu’après validation du bilan réel."
+    ],
+    "canonicalTerms": [
+      {
+        "canonical": "Répétitions en réserve (RIR)",
+        "userFacing": "Répétitions encore possibles",
+        "precisionMoment": "Après la dernière série d’un mouvement lorsque la valeur pilote la progression.",
+        "source": "docs/80-20-DOCTRINE.md#effort-et-progression"
+      },
+      {
+        "canonical": "Série réalisée",
+        "userFacing": "Série enregistrée",
+        "precisionMoment": "Après validation du nombre réellement réalisé et de la charge utilisée.",
+        "source": "docs/IOS-ENGINE-BEHAVIOR-CONTRACT.md#vérité-de-séance"
+      },
+      {
+        "canonical": "Exercice non réalisé",
+        "userFacing": "Je ne fais pas cet exercice aujourd’hui",
+        "precisionMoment": "Dans les actions secondaires et dans le bilan de séance.",
+        "source": "docs/IOS-ENGINE-BEHAVIOR-CONTRACT.md#vérité-de-séance"
+      },
+      {
+        "canonical": "Échéance de repos",
+        "userFacing": "Temps de récupération restant",
+        "precisionMoment": "Pendant le repos et lors d’une reprise après verrouillage ou interruption.",
+        "source": "docs/IOS-ENGINE-BEHAVIOR-CONTRACT.md#timers-et-reprise"
+      }
+    ]
+  },
+  "decision": {
+    "currentState": "Le mouvement et la série actuels, la cible, la charge proposée et utilisée, le progrès réel, l’état du timer et tout signal qui change la sécurité ou la suite.",
+    "dominantAction": {
+      "id": "record-completed-set",
+      "label": "Enregistrer la série",
+      "expectedResult": "La série réelle est persistée, une annulation immédiate reste possible et l’app passe au repos ou à l’étape suivante.",
+      "reversibility": "reversible",
+      "guard": "undo"
+    },
+    "constraints": [
+      {
+        "id": "declared-load-only",
+        "mustBeTrue": "La charge confirmée appartient aux configurations déclarées pour ce mouvement.",
+        "detectability": "immediate",
+        "consequence": "L’historique et la progression reposeraient sur une charge inexistante ou mal comprise.",
+        "recovery": "Revenir au sélecteur de charge, corriger l’inventaire ou choisir une configuration disponible sans perdre la saisie de la série."
+      },
+      {
+        "id": "set-result-needs-explicit-confirmation",
+        "mustBeTrue": "La valeur réalisée est confirmée avant comptabilisation.",
+        "detectability": "immediate",
+        "consequence": "Une série pourrait être créée par un timer terminé ou un geste involontaire.",
+        "recovery": "Ne rien enregistrer automatiquement et proposer une annulation immédiate après validation."
+      },
+      {
+        "id": "rest-deadline-survives-background",
+        "mustBeTrue": "L’échéance de repos et l’étape suivante sont persistées avant passage en arrière-plan.",
+        "detectability": "delayed",
+        "consequence": "Le timer pourrait reprendre faux ou faire perdre la position dans la séance.",
+        "recovery": "Recalculer depuis l’échéance persistée et montrer l’étape restaurée avant toute nouvelle saisie."
+      },
+      {
+        "id": "pain-never-normalized",
+        "mustBeTrue": "Une gêne ou douleur déclarée ne reçoit pas de formulation qui la qualifie de normale.",
+        "detectability": "immediate",
+        "consequence": "La personne pourrait poursuivre malgré un signal nécessitant un arrêt ou un avis adapté.",
+        "recovery": "Permettre d’arrêter le mouvement ou la séance, conserver le progrès et afficher une orientation bornée sans diagnostic."
+      },
+      {
+        "id": "pain-three-or-four-stops-current-set",
+        "mustBeTrue": "Une douleur déclarée à 3 ou 4 arrête la série en cours et propose réduction d’amplitude, substitution ou arrêt du mouvement avant toute reprise.",
+        "detectability": "immediate",
+        "consequence": "La règle de sécurité existerait dans le moteur sans action concrète au moment utile.",
+        "recovery": "Conserver les séries déjà réalisées, enregistrer le signal séparément et laisser choisir une option bornée sans diagnostiquer."
+      },
+      {
+        "id": "rest-controls-have-distinct-semantics",
+        "mustBeTrue": "Pause fige explicitement le temps restant, Passer termine le repos et Recommencer crée une nouvelle échéance à partir de la durée prescrite.",
+        "detectability": "immediate",
+        "consequence": "Le repos pourrait être prolongé ou réinitialisé différemment selon l’implémentation.",
+        "recovery": "Afficher le nouvel état et permettre d’annuler immédiatement la dernière action de timer."
+      },
+      {
+        "id": "storage-failure-preserves-local-progress",
+        "mustBeTrue": "Un échec de persistance ne détruit pas les résultats présents en mémoire et reste visible avant de quitter.",
+        "detectability": "immediate",
+        "consequence": "La personne pourrait croire sa séance enregistrée alors qu’elle sera perdue.",
+        "recovery": "Conserver l’état en mémoire, réessayer, proposer un export de secours et empêcher une fermeture silencieusement destructive."
+      },
+      {
+        "id": "ending-early-is-truthful",
+        "mustBeTrue": "Les éléments non terminés sont distincts des séries réalisées.",
+        "detectability": "immediate",
+        "consequence": "Le moteur pourrait créer une dette fictive ou sous-estimer la performance réelle.",
+        "recovery": "Montrer le bilan réalisé/non réalisé et permettre de revenir avant validation finale."
+      }
+    ]
+  },
+  "languageAndTrust": {
+    "complexityAbsorbed": [
+      "Ordonnancement des supersets et calcul de la prochaine étape.",
+      "Persistance atomique du progrès, des échéances et de la position.",
+      "Calcul du pourcentage de progression et préparation du bilan.",
+      "Choix de la prochaine séance à partir du bilan validé."
+    ],
+    "consequencesNeverHidden": [
+      "La charge proposée n’est pas une obligation.",
+      "Sauter ou arrêter conserve uniquement ce qui a réellement été fait.",
+      "Un échec de sauvegarde est visible avant de quitter.",
+      "Une douleur ou un signal d’alerte peut justifier l’arrêt et un avis professionnel."
+    ],
+    "reassurance": [
+      {
+        "claim": "Tu gardes la décision finale sur la charge et l’arrêt de la série.",
+        "evidence": "La charge est sélectionnée avant enregistrement et les actions Sauter et Arrêter restent disponibles.",
+        "placement": "À proximité de la charge et sous l’action principale."
+      },
+      {
+        "claim": "Seules les séries enregistrées seront comptées.",
+        "evidence": "Le modèle sépare SetResult et skippedItemIds, puis le bilan les affiche séparément.",
+        "placement": "Au premier saut, lors d’un arrêt anticipé et dans le bilan."
+      },
+      {
+        "claim": "La séance peut reprendre après verrouillage ou fermeture.",
+        "evidence": "La position, le progrès et l’échéance de repos sont persistés et couverts par une fixture de reprise.",
+        "placement": "Lors de la restauration et seulement après preuve technique."
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "current-movement-state",
+      "purpose": "state",
+      "visibility": "persistent",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Rend le mouvement, la série, le côté et la progression immédiatement perceptibles."
+    },
+    {
+      "id": "exercise-figure-and-cues",
+      "purpose": "orientation",
+      "visibility": "persistent",
+      "hierarchy": 2,
+      "verdict": "keep",
+      "reason": "Aide à comprendre le mouvement sans prétendre évaluer la technique."
+    },
+    {
+      "id": "target-and-load",
+      "purpose": "constraint",
+      "visibility": "persistent",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Définit ce qui est proposé et ce que la personne doit confirmer ; une paire affiche toujours quantité, poids par unité et poids total."
+    },
+    {
+      "id": "actual-result-entry",
+      "purpose": "decision",
+      "visibility": "persistent",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Produit la donnée réelle qui termine le sous-job de la série."
+    },
+    {
+      "id": "rest-state",
+      "purpose": "recovery",
+      "visibility": "contextual",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Rend le temps restant et les actions pause, passer ou recommencer récupérables."
+    },
+    {
+      "id": "skip-and-stop-actions",
+      "purpose": "recovery",
+      "visibility": "persistent",
+      "hierarchy": 2,
+      "verdict": "keep",
+      "reason": "Permet de rester fidèle au réel sans transformer une séance incomplète en échec."
+    },
+    {
+      "id": "report-pain-or-alert",
+      "purpose": "recovery",
+      "visibility": "persistent",
+      "hierarchy": 2,
+      "verdict": "keep",
+      "reason": "Offre un chemin explicite pour arrêter la série ou la séance et conserver la cause déclarée sans diagnostic."
+    },
+    {
+      "id": "reachable-primary-controls",
+      "purpose": "decision",
+      "visibility": "persistent",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Enregistrer, ajuster les répétitions et choisir la charge restent dans la zone basse atteignable au pouce, avec cibles tactiles d’au moins 44 × 44 points."
+    },
+    {
+      "id": "one-screen-nominal-layout",
+      "purpose": "decision",
+      "visibility": "persistent",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Pendant une série nominale, aucun défilement ne doit séparer la démonstration, la valeur réellement réalisée, son enregistrement et les sorties de séance."
+    },
+    {
+      "id": "unified-full-screen-surface",
+      "purpose": "orientation",
+      "visibility": "persistent",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Le mouvement, sa progression et ses commandes forment un seul outil plein écran ; une carte posée dans une page système ferait apparaître deux interfaces concurrentes."
+    },
+    {
+      "id": "landscape-split-layout",
+      "purpose": "orientation",
+      "visibility": "contextual",
+      "hierarchy": 2,
+      "verdict": "review",
+      "reason": "Une disposition visuel à gauche et commandes à droite peut faciliter l’usage posé à distance, mais reste une preuve Debug tant que les autres écrans et petits appareils ne sont pas validés en paysage."
+    },
+    {
+      "id": "built-in-workout-music",
+      "purpose": "orientation",
+      "visibility": "on_demand",
+      "hierarchy": 3,
+      "verdict": "defer",
+      "reason": "La musique ne résout aucune décision de série. La V1 doit d’abord cohabiter correctement avec l’audio déjà choisi par la personne et valider séparément l’utilité de signaux sonores courts."
+    },
+    {
+      "id": "engine-explanation-detail",
+      "purpose": "evidence",
+      "visibility": "on_demand",
+      "hierarchy": 3,
+      "verdict": "defer",
+      "reason": "L’explication complète appartient à l’aperçu ou au bilan, pas au milieu d’une série."
+    }
+  ],
+  "states": [
+    {
+      "id": "session-restoring",
+      "kind": "loading",
+      "blocking": true,
+      "preserveInput": true,
+      "nextStep": "Restaurer la dernière position persistée avant d’afficher une action de série.",
+      "recovery": "Si la restauration échoue, proposer la dernière sauvegarde valide ou un export de secours."
+    },
+    {
+      "id": "save-failed",
+      "kind": "error",
+      "blocking": true,
+      "preserveInput": true,
+      "nextStep": "Réessayer l’enregistrement sans refaire la série.",
+      "recovery": "Conserver les résultats en mémoire et permettre un export de secours avant de quitter."
+    },
+    {
+      "id": "ended-early",
+      "kind": "partial_success",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Vérifier le bilan réalisé et non réalisé.",
+      "recovery": "Revenir à la séance ou valider le bilan sans dette d’entraînement."
+    },
+    {
+      "id": "prescription-invalid-after-inventory-change",
+      "kind": "unavailable",
+      "blocking": true,
+      "preserveInput": true,
+      "nextStep": "Conserver la séance active telle qu’elle a été démarrée ou la terminer proprement.",
+      "recovery": "Appliquer le nouvel inventaire uniquement à la prochaine séance."
+    },
+    {
+      "id": "pain-reported-during-set",
+      "kind": "partial_success",
+      "blocking": true,
+      "preserveInput": true,
+      "nextStep": "Arrêter la série et choisir entre réduire l’amplitude, substituer, arrêter le mouvement ou arrêter la séance selon le signal déclaré.",
+      "recovery": "Conserver la série précédente et la douleur séparément, sans créer une série nulle ni une obligation de poursuivre."
+    },
+    {
+      "id": "rest-paused-explicitly",
+      "kind": "partial_success",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Reprendre le repos, le passer ou le recommencer avec une nouvelle échéance.",
+      "recovery": "Reprendre calcule une échéance depuis le temps figé ; un simple arrière-plan n’utilise jamais cet état."
+    }
+  ],
+  "motion": [
+    {
+      "id": "exercise-phase-loop",
+      "purpose": "orientation",
+      "meaningWithoutMotion": true
+    },
+    {
+      "id": "rest-countdown-change",
+      "purpose": "continuity",
+      "meaningWithoutMotion": true
+    }
+  ],
+  "review": {
+    "risk": "R2",
+    "domains": [
+      "saas",
+      "personal_data",
+      "claims"
+    ],
+    "requiredJudges": [
+      "truth",
+      "product",
+      "experience",
+      "risk"
+    ],
+    "humanGate": [
+      "Yann valide la hiérarchie entre Enregistrer la série, Sauter et Arrêter sur les maquettes réelles.",
+      "Le parcours critique passe VoiceOver, Dynamic Type, contraste, réduction des animations et usage à une main sans clavier obligatoire.",
+      "Les formulations liées à la douleur et aux signaux d’alerte reçoivent une revue qualifiée avant TestFlight."
+    ]
+  }
+}

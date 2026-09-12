@@ -1,0 +1,191 @@
+{
+  "version": "0.1",
+  "objective": {
+    "requestedOutcome": "Choisir des repères de départ séparés pour le haut et le bas du corps afin que la première variante proposée soit faisable sans créer de niveau global.",
+    "nonGoals": [
+      "Classer la personne comme débutante, intermédiaire ou avancée.",
+      "Déduire une capacité depuis l’âge, le sexe, le poids ou une donnée de santé.",
+      "Promettre qu’un choix remplace une observation réelle en séance.",
+      "Ajouter une variante ou un mouvement sans catalogue et illustration validés."
+    ],
+    "changeType": "surface"
+  },
+  "surface": {
+    "id": "ios:onboarding/calibration",
+    "mode": "guided",
+    "scope": {
+      "kind": "page",
+      "parentId": "ios:onboarding"
+    },
+    "episode": {
+      "trigger": "Un inventaire compatible avec plusieurs variantes est enregistré ou la personne choisit de modifier ses repères.",
+      "userJob": "Indiquer séparément où je préfère démarrer pour le haut et le bas du corps sans devoir estimer un niveau sportif général.",
+      "completionEvidence": "Les deux choix sont persistés comme explicites, chaque famille utilise une variante correspondante lorsqu’elle existe et modifier un repère ne change pas l’autre."
+    }
+  },
+  "truth": {
+    "mustBeTrue": [
+      "Haut et bas du corps restent deux décisions indépendantes.",
+      "Une valeur technique par défaut n’est jamais présentée comme un choix effectué par la personne.",
+      "Un choix explicite modifie réellement la sélection du moteur lorsqu’une variante compatible existe.",
+      "L’absence de variante calibrée conserve la variante compatible standard sans inventer une différence.",
+      "La calibration ne change ni le sexe, ni la santé, ni un niveau global et reste modifiable.",
+      "Les performances enregistrées et les limitations déclarées restent prioritaires lorsqu’elles rendent une variante inadaptée."
+    ],
+    "canonicalTerms": [
+      {
+        "canonical": "Foundation",
+        "userFacing": "Reprendre progressivement",
+        "precisionMoment": "Lors du choix du repère haut ou bas avant la première séance concernée.",
+        "source": "docs/IOS-ENGINE-BEHAVIOR-CONTRACT.md#eng-calibration-001--calibration-locale-et-limitations"
+      },
+      {
+        "canonical": "Established",
+        "userFacing": "Mouvements déjà familiers",
+        "precisionMoment": "Lorsqu’une pratique régulière rend la variante standard immédiatement compréhensible.",
+        "source": "docs/IOS-ENGINE-BEHAVIOR-CONTRACT.md#eng-calibration-001--calibration-locale-et-limitations"
+      }
+    ]
+  },
+  "decision": {
+    "currentState": "Le repère haut, le repère bas, leur statut choisi ou encore par défaut et les variantes réellement disponibles pour l’inventaire.",
+    "dominantAction": {
+      "id": "save-calibration",
+      "label": "Enregistrer mes repères",
+      "expectedResult": "Les deux repères choisis sont persistés et utilisés uniquement pour les séances futures.",
+      "reversibility": "reversible",
+      "guard": "review"
+    },
+    "constraints": [
+      {
+        "id": "upper-lower-independent",
+        "mustBeTrue": "Modifier le repère haut ne modifie pas le repère bas, et inversement.",
+        "detectability": "immediate",
+        "consequence": "Une force ou une familiarité locale deviendrait un classement global trompeur.",
+        "recovery": "Rétablir uniquement le repère concerné et recalculer la prochaine séance."
+      },
+      {
+        "id": "explicit-choice-has-effect",
+        "mustBeTrue": "Chaque combinaison explicite possède un scénario moteur démontrant son effet ou son fallback compatible.",
+        "detectability": "immediate",
+        "consequence": "L’interface demanderait une décision que le moteur ignore.",
+        "recovery": "Masquer le choix tant que le catalogue et l’oracle ne couvrent pas cette combinaison."
+      },
+      {
+        "id": "no-global-level",
+        "mustBeTrue": "Aucun résumé ne fusionne les deux repères en un niveau unique.",
+        "detectability": "immediate",
+        "consequence": "Le produit pourrait surclasser ou déclasser une partie du corps à partir de l’autre.",
+        "recovery": "Afficher les deux repères séparément dans le profil et l’explication de séance."
+      },
+      {
+        "id": "save-preserves-history",
+        "mustBeTrue": "Une recalibration ne réécrit aucune séance passée et ne s’applique qu’aux décisions futures.",
+        "detectability": "delayed",
+        "consequence": "Les résultats historiques cesseraient de décrire ce qui a réellement été fait.",
+        "recovery": "Restaurer les snapshots historiques et recalculer uniquement la prochaine séance."
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "upper-body-choice",
+      "purpose": "decision",
+      "visibility": "persistent",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Choix local pour les mouvements de tirage et de poussée."
+    },
+    {
+      "id": "lower-body-choice",
+      "purpose": "decision",
+      "visibility": "persistent",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Choix local distinct pour les mouvements de genou et de hanches."
+    },
+    {
+      "id": "no-global-score-explanation",
+      "purpose": "evidence",
+      "visibility": "persistent",
+      "hierarchy": 2,
+      "verdict": "keep",
+      "reason": "Explique pourquoi les deux décisions ne sont pas fusionnées."
+    },
+    {
+      "id": "fitness-test",
+      "purpose": "orientation",
+      "visibility": "on_demand",
+      "hierarchy": 3,
+      "verdict": "defer",
+      "reason": "Un test d’exécution exige des illustrations et un protocole validés ; il ne doit pas être simulé par un questionnaire vague."
+    }
+  ],
+  "states": [
+    {
+      "id": "calibration-required",
+      "kind": "empty",
+      "blocking": true,
+      "preserveInput": true,
+      "nextStep": "Choisir un repère haut et un repère bas.",
+      "recovery": "Revenir au matériel sans créer de profil incomplet."
+    },
+    {
+      "id": "calibration-ready",
+      "kind": "partial_success",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Vérifier les deux choix puis les enregistrer.",
+      "recovery": "Modifier l’un des deux repères indépendamment."
+    },
+    {
+      "id": "calibration-save-failed",
+      "kind": "error",
+      "blocking": true,
+      "preserveInput": true,
+      "nextStep": "Réessayer l’enregistrement sans perdre les choix.",
+      "recovery": "Conserver le dernier profil valide et les deux sélections à l’écran."
+    },
+    {
+      "id": "calibrated-variant-unavailable",
+      "kind": "partial_success",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Utiliser la variante standard compatible et expliquer que le choix sera appliqué lorsqu’une variante validée existe.",
+      "recovery": "Modifier le matériel ou conserver le repère sans promettre un effet immédiat."
+    }
+  ],
+  "languageAndTrust": {
+    "complexityAbsorbed": [
+      "Correspondance entre les deux choix humains et les bandes foundation ou established du catalogue.",
+      "Sélection de la meilleure variante compatible sans exposer les identifiants internes.",
+      "Fallback vers la variante standard lorsque le matériel ne possède pas encore de variante calibrée."
+    ],
+    "consequencesNeverHidden": [
+      "Chaque repère s’applique uniquement aux séances futures.",
+      "Un choix peut conserver la variante standard lorsque le catalogue ne possède pas encore d’alternative validée.",
+      "Les deux repères restent indépendants et modifiables."
+    ],
+    "reassurance": [
+      {
+        "claim": "Il n’existe pas de niveau global dans OpenCadence.",
+        "evidence": "Le moteur conserve deux champs distincts et les applique à des familles différentes.",
+        "placement": "Avant les deux choix et dans le résumé de profil."
+      }
+    ]
+  },
+  "motion": [],
+  "review": {
+    "risk": "R1",
+    "domains": [
+      "saas"
+    ],
+    "requiredJudges": [
+      "product",
+      "experience"
+    ],
+    "humanGate": [
+      "Avant direction visuelle finale, vérifier que les deux libellés sont compris sans explication orale et ne sont pas perçus comme un classement."
+    ]
+  }
+}

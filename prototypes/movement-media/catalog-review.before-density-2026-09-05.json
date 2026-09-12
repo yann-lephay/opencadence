@@ -1,0 +1,809 @@
+{
+  "schemaVersion": 1,
+  "scope": "Prototype review inventory only. File coverage and technical checks do not establish visual correctness, professional validation, product approval or release readiness.",
+  "movements": [
+    {
+      "movementId": "assisted_split_squat",
+      "title": "Fente statique assistée",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "assisted_split_squat/review-v02/assisted_split_squat_review_v02.mp4",
+      "poster": "assisted_split_squat/review-v02/assisted_split_squat_poster_review_v02.webp",
+      "fallback": "assisted_split_squat/review-v02/assisted_split_squat_fallback_review_v02.webp",
+      "board": "assisted_split_squat/stop-motion-v01-candidates/assisted_split_squat_contact_sheet_v01.png",
+      "uniquePoses": 4,
+      "notes": [
+        "Excluded frame 05: rear-knee floor contact is visually ambiguous.",
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Sélection contrôlée visuellement ; 4 images sources, 4 poses distinctes visibles, 7 étapes sur 4 secondes.",
+        "Aucune validation professionnelle ou promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 7
+    },
+    {
+      "movementId": "band_assisted_pull_up",
+      "title": "Tractions assistées par élastique",
+      "motionKind": "cycle",
+      "reviewStatus": "needs_fix",
+      "video": "band_assisted_pull_up/review-v03/band_assisted_pull_up_review_v03.mp4",
+      "poster": "band_assisted_pull_up/review-v03/band_assisted_pull_up_poster_review_v03.webp",
+      "fallback": "band_assisted_pull_up/review-v03/band_assisted_pull_up_fallback_review_v03.webp",
+      "board": "band_assisted_pull_up/rework-2026-09-05/assembly/board_1.png",
+      "uniquePoses": 6,
+      "notes": [
+        "All original 444-square board crops receive 40 pixels of top canvas. Corrected top is proportionally resized to 444x485 then translated upward 8 pixels by cropping background and adding bottom canvas; no body deformation.",
+        "Band remains under one knee. Corrected top has chin above bar but torso/neck proportions and top-border continuity differ subtly; assembly remains needs_fix pending independent visual arbitration.",
+        "Regenerate a high pose with fixed torso proportions and matching background, then review transition; do not promote current top solely for reaching chin height.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 8,
+      "displayedSteps": 9,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "band_good_morning",
+      "title": "Good morning à l’élastique",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "band_good_morning/review-v03/band_good_morning_review_v03.mp4",
+      "poster": "band_good_morning/review-v03/band_good_morning_poster_review_v03.webp",
+      "fallback": "band_good_morning/review-v03/band_good_morning_fallback_review_v03.webp",
+      "board": "band_good_morning/rework-2026-09-05/cycle-poses-v01.png",
+      "uniquePoses": 6,
+      "notes": [
+        "Six selected hinge levels; early two and deepest two levels are close. Explicit controlled return reuses poses; it is not an independently generated return.",
+        "Orange band remains on upper back and under feet. Large initial angular increment remains a cadence reservation.",
+        "Human cadence review: initial hinge angular step is larger than later steps.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 6,
+      "displayedSteps": 11,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "band_lat_pulldown_over_bar",
+      "title": "Tirage vertical à l’élastique",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "band_lat_pulldown_over_bar/review-v02/band_lat_pulldown_over_bar_review_v02.mp4",
+      "poster": "band_lat_pulldown_over_bar/review-v02/band_lat_pulldown_over_bar_poster_review_v02.webp",
+      "fallback": "band_lat_pulldown_over_bar/review-v02/band_lat_pulldown_over_bar_fallback_review_v02.webp",
+      "board": "band_lat_pulldown_over_bar/candidate-v01/band_lat_pulldown_over_bar_board.png",
+      "uniquePoses": 7,
+      "notes": [
+        "Sélection1–7 contrôlée indépendamment,13étapes en4secondes.",
+        "Validation professionnelle distincte, aucune promotion release."
+      ],
+      "displayedSteps": 13
+    },
+    {
+      "movementId": "band_overhead_press",
+      "title": "Développé épaules à l’élastique",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "band_overhead_press/review-v03/band_overhead_press_review_v03.mp4",
+      "poster": "band_overhead_press/review-v03/band_overhead_press_poster_review_v03.webp",
+      "fallback": "band_overhead_press/review-v03/band_overhead_press_fallback_review_v03.webp",
+      "board": "band_overhead_press/rework-2026-09-05/cycle-poses-v01.png",
+      "uniquePoses": 6,
+      "notes": [
+        "Actual board is 5 columns by 3 rows, not 4 by 4. Six selected elevation levels; early levels are subtle.",
+        "Full portrait cells fitted in square without anatomy crop. Explicit controlled return; no generated interpolation.",
+        "Human global visual review before any release approval.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 6,
+      "displayedSteps": 11,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "bent_over_dumbbell_row",
+      "title": "Rowing penché avec haltères",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "bent_over_dumbbell_row/review-v02/bent_over_dumbbell_row_review_v02.mp4",
+      "poster": "bent_over_dumbbell_row/review-v02/bent_over_dumbbell_row_poster_review_v02.webp",
+      "fallback": "bent_over_dumbbell_row/review-v02/bent_over_dumbbell_row_fallback_review_v02.webp",
+      "board": "bent_over_dumbbell_row/stop-motion-v01-candidates/bent_over_dumbbell_row_contact_sheet_v02.png",
+      "uniquePoses": 4,
+      "notes": [
+        "Nouvelle sélection récupérée dans une ancienne planche, contrôlée indépendamment puis rendue sur4secondes.",
+        "Explicit board-cell selections received after independent visual review. Cell boundaries follow the actual grid, not an assumed equal-height grid. Full cell fitted inside a square; no anatomical interpolation or body crop.",
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Pas de validation professionnelle ni promotion iOS."
+      ],
+      "displayedSteps": 7
+    },
+    {
+      "movementId": "chair_sit_to_stand",
+      "title": "Lever de chaise",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "chair_sit_to_stand/review-v02/chair_sit_to_stand_review_v02.mp4",
+      "poster": "chair_sit_to_stand/review-v02/chair_sit_to_stand_poster_review_v02.webp",
+      "fallback": "chair_sit_to_stand/review-v02/chair_sit_to_stand_fallback_review_v02.webp",
+      "board": "chair_sit_to_stand/stop-motion-v02-candidates/chair_sit_to_stand_contact_sheet_v02.png",
+      "uniquePoses": 5,
+      "notes": [
+        "Nouvelle sélection récupérée dans une ancienne planche, contrôlée indépendamment puis rendue sur4secondes.",
+        "Explicit board-cell selections received after independent visual review. Cell boundaries follow the actual grid, not an assumed equal-height grid. Full cell fitted inside a square; no anatomical interpolation or body crop.",
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Pas de validation professionnelle ni promotion iOS."
+      ],
+      "displayedSteps": 9
+    },
+    {
+      "movementId": "dead_bug",
+      "title": "Dead bug",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "dead_bug/review-v03/dead_bug_review_v03.mp4",
+      "poster": "dead_bug/review-v03/dead_bug_poster_review_v03.webp",
+      "fallback": "dead_bug/review-v03/dead_bug_fallback_review_v03.webp",
+      "board": "dead_bug/rework-2026-09-05/dead_bug_keyposes_v01.png",
+      "uniquePoses": 7,
+      "notes": [
+        "Seven selected source poses, 13 displayed steps. Controlled return reuses outward poses; no additional anatomical frames invented.",
+        "Contralateral far-arm/near-leg extension; only this side is demonstrated. End poses are close. Small source registration differences remain.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 7,
+      "displayedSteps": 13,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "dip_bar_inverted_row",
+      "title": "Rowing inversé aux barres de dips",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "dip_bar_inverted_row/review-v03/dip_bar_inverted_row_review_v03.mp4",
+      "poster": "dip_bar_inverted_row/review-v03/dip_bar_inverted_row_poster_review_v03.webp",
+      "fallback": "dip_bar_inverted_row/review-v03/dip_bar_inverted_row_fallback_review_v03.webp",
+      "board": "dip_bar_inverted_row/rework-2026-09-05/cycle-poses-v01.png",
+      "uniquePoses": 8,
+      "notes": [
+        "Crop removes numeric labels only; bars, heels and head remain in frame. Selected forward and return poses, reusing high positions to bridge a missing return phase.",
+        "Small equipment and foot-position drift remains visible; prototype only.",
+        "Human global visual review before any release approval.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 10,
+      "displayedSteps": 13,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "double_dumbbell_front_squat",
+      "title": "Squat avec haltères aux épaules",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "double_dumbbell_front_squat/review-v04/double_dumbbell_front_squat_review_v04.mp4",
+      "poster": "double_dumbbell_front_squat/review-v04/double_dumbbell_front_squat_poster_review_v04.webp",
+      "fallback": "double_dumbbell_front_squat/review-v04/double_dumbbell_front_squat_fallback_review_v04.webp",
+      "board": "double_dumbbell_front_squat/rework-2026-09-05/aligned-cells/pose_01.png",
+      "uniquePoses": 8,
+      "notes": [
+        "Correction v04 contrôlée : chaussure initialement coupée par le crop v03 entièrement visible après extraction des vraies cellules et padding commun.",
+        "Charge en rack conservée, squat lisible. Épaisseur de marge papier varie selon les cellules ; réserve graphique non anatomique.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 11,
+      "displayedSteps": 13,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "dumbbell_biceps_curl",
+      "title": "Curl biceps avec haltères",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "dumbbell_biceps_curl/review-v02/dumbbell_biceps_curl_review_v02.mp4",
+      "poster": "dumbbell_biceps_curl/review-v02/dumbbell_biceps_curl_poster_review_v02.webp",
+      "fallback": "dumbbell_biceps_curl/review-v02/dumbbell_biceps_curl_fallback_review_v02.webp",
+      "board": "dumbbell_biceps_curl/candidate-v01/dumbbell_biceps_curl_board.png",
+      "uniquePoses": 6,
+      "notes": [
+        "Explicit board-cell selections received after independent visual review. Cell boundaries follow the actual grid, not an assumed equal-height grid. Full cell fitted inside a square; no anatomical interpolation or body crop.",
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Sélection contrôlée visuellement ; 6 images sources, 6 poses distinctes visibles, 11 étapes sur 4 secondes.",
+        "Aucune validation professionnelle ou promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 11
+    },
+    {
+      "movementId": "dumbbell_floor_press",
+      "title": "Développé au sol avec haltères",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "dumbbell_floor_press/review-v04/dumbbell_floor_press_review_v04.mp4",
+      "poster": "dumbbell_floor_press/review-v04/dumbbell_floor_press_poster_review_v04.webp",
+      "fallback": "dumbbell_floor_press/review-v04/dumbbell_floor_press_fallback_review_v04.webp",
+      "board": "dumbbell_floor_press/rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "uniquePoses": 8,
+      "notes": [
+        "Correction v04 contrôlée : descente1–8 puis retour7–1, supprime les trois quasi-doublons de retour et le saut final v03.",
+        "Deux haltères, tête et pieds gardés au sol, appui du coude proche lisible. Faible dérive du tapis entre poses, à vérifier sur appareil.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 15,
+      "sourceFrames": 8,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "dumbbell_hip_thrust",
+      "title": "Hip thrust avec haltère",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "dumbbell_hip_thrust/review-v04/dumbbell_hip_thrust_review_v04.mp4",
+      "poster": "dumbbell_hip_thrust/review-v04/dumbbell_hip_thrust_poster_review_v04.webp",
+      "fallback": "dumbbell_hip_thrust/review-v04/dumbbell_hip_thrust_fallback_review_v04.webp",
+      "board": "dumbbell_hip_thrust/rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+      "uniquePoses": 7,
+      "notes": [
+        "Montage v04 contrôlé : pose8 exclue ; poses1–7 puis retour6–1. Contact dos/banc lisible au dernier état retenu7.",
+        "Poids vu de bout et seconde main partiellement occultée restent plausibles, pas preuve d'un haltère manquant.",
+        "Petite variation de cadrage entre les deux rangées et marques visibles sur les chaussures : réserves graphiques avant publication, pas motif de fausse correction anatomique.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 7,
+      "displayedSteps": 13,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "dumbbell_lateral_raise",
+      "title": "Élévations latérales",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "dumbbell_lateral_raise/review-v02/dumbbell_lateral_raise_review_v02.mp4",
+      "poster": "dumbbell_lateral_raise/review-v02/dumbbell_lateral_raise_poster_review_v02.webp",
+      "fallback": "dumbbell_lateral_raise/review-v02/dumbbell_lateral_raise_fallback_review_v02.webp",
+      "board": "dumbbell_lateral_raise/candidate-v01/dumbbell_lateral_raise_board.png",
+      "uniquePoses": 7,
+      "notes": [
+        "Explicit board-cell selections received after independent visual review. Cell boundaries follow the actual grid, not an assumed equal-height grid. Full cell fitted inside a square; no anatomical interpolation or body crop.",
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Sélection contrôlée visuellement ; 7 images sources, 7 poses distinctes visibles, 13 étapes sur 4 secondes.",
+        "Aucune validation professionnelle ou promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 13
+    },
+    {
+      "movementId": "dumbbell_romanian_deadlift",
+      "title": "Soulevé de terre roumain avec haltères",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "dumbbell_romanian_deadlift/review-v03/dumbbell_romanian_deadlift_review_v03.mp4",
+      "poster": "dumbbell_romanian_deadlift/review-v03/dumbbell_romanian_deadlift_poster_review_v03.webp",
+      "fallback": "dumbbell_romanian_deadlift/review-v03/dumbbell_romanian_deadlift_fallback_review_v03.webp",
+      "board": "dumbbell_romanian_deadlift/rework-2026-09-05/dumbbell_romanian_deadlift_cycle_v01.png",
+      "uniquePoses": 10,
+      "notes": [
+        "Charnière avec deux haltères cohérente, matériel conservé, corps complet, ordre de descente/remontée lisible.",
+        "Quelques poses basses très proches, première descente plus ample et dérive modérée de cadrage/tapis ; ne pas présenter 15 étapes comme 15 positions distinctes.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 15,
+      "displayedSteps": 15,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "easy_rower_intervals",
+      "title": "Intervalles faciles au rameur",
+      "motionKind": "rowing",
+      "reviewStatus": "needs_fix",
+      "video": "easy_rower_intervals/review-v03/easy_rower_intervals_review_v03.mp4",
+      "poster": "easy_rower_intervals/review-v03/easy_rower_intervals_poster_review_v03.webp",
+      "fallback": "easy_rower_intervals/review-v03/easy_rower_intervals_fallback_review_v03.webp",
+      "board": "easy_rower_intervals/rework-2026-09-05/easy_rower_intervals_fourkeys_fixed_v01.png",
+      "uniquePoses": 4,
+      "notes": [
+        "New four-key attempt still moves footplate assembly relative to flywheel and rail.",
+        "No review-v04 rendered and no acceptance. Previous review-v03 remains diagnostic only. Requires corrected machine reference/capture rather than accepting this source.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 4,
+      "displayedSteps": 4,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "eccentric_pull_up",
+      "title": "Descente contrôlée de traction",
+      "motionKind": "one_way",
+      "reviewStatus": "visual_candidate",
+      "video": "eccentric_pull_up/review-v03/eccentric_pull_up_review_v03.mp4",
+      "poster": "eccentric_pull_up/review-v03/eccentric_pull_up_poster_review_v03.webp",
+      "fallback": "eccentric_pull_up/review-v03/eccentric_pull_up_fallback_review_v03.webp",
+      "board": "eccentric_pull_up/rework-2026-09-05/descent-poses-v01.png",
+      "uniquePoses": 5,
+      "notes": [
+        "Single four-second descent only. No automatic loop, reversed ascent or concealed teleport to the starting position.",
+        "Small support stool remains visible, but access to starting position is not demonstrated. Replay must be an explicit separate action. Five distinct poses is below normal cycle-density target.",
+        "Single descent only; require explicit replay and separate safe starting-position explanation.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 5,
+      "displayedSteps": 5,
+      "playback": "single_pass"
+    },
+    {
+      "movementId": "elevated_front_plank",
+      "title": "Planche inclinée",
+      "motionKind": "isometric",
+      "reviewStatus": "visual_candidate",
+      "video": "elevated_front_plank/review-v02/elevated_front_plank_review_v02.mp4",
+      "poster": "elevated_front_plank/review-v02/elevated_front_plank_poster_review_v02.webp",
+      "fallback": "elevated_front_plank/review-v02/elevated_front_plank_fallback_review_v02.webp",
+      "board": "elevated_front_plank/candidate-v01/elevated_front_plank_hold.png",
+      "uniquePoses": 1,
+      "notes": [
+        "Static hold demonstration, not a repetition or breathing animation.",
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Sélection contrôlée visuellement ; 1 images sources, 1 poses distinctes visibles, 1 étapes sur 4 secondes.",
+        "Aucune validation professionnelle ou promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 1
+    },
+    {
+      "movementId": "farmer_carry",
+      "title": "Marche du fermier",
+      "motionKind": "gait",
+      "reviewStatus": "visual_candidate",
+      "video": "farmer_carry/review-v03/farmer_carry_review_v03.mp4",
+      "poster": "farmer_carry/review-v03/farmer_carry_poster_review_v03.webp",
+      "fallback": "farmer_carry/review-v03/farmer_carry_fallback_review_v03.webp",
+      "board": "farmer_carry/rework-2026-09-05/farmer_carry_keyposes_v03.png",
+      "uniquePoses": 4,
+      "notes": [
+        "Natural alternating gait: right lead, right support/left swing, left lead, left support/right swing.",
+        "No reversed or mirrored gait. Four key poses only; one second per pose at four seconds, visibly stepped preview. Slight framing variation remains.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 4,
+      "displayedSteps": 4,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "front_plank",
+      "title": "Planche avant",
+      "motionKind": "isometric",
+      "reviewStatus": "visual_candidate",
+      "video": "front_plank/review-v02/front_plank_review_v02.mp4",
+      "poster": "front_plank/review-v02/front_plank_poster_review_v02.webp",
+      "fallback": "front_plank/review-v02/front_plank_fallback_review_v02.webp",
+      "board": "front_plank/candidate-v01/front_plank_hold.png",
+      "uniquePoses": 1,
+      "notes": [
+        "Static hold demonstration, not a repetition or breathing animation.",
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Sélection contrôlée visuellement ; 1 images sources, 1 poses distinctes visibles, 1 étapes sur 4 secondes.",
+        "Aucune validation professionnelle ou promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 1
+    },
+    {
+      "movementId": "glute_bridge",
+      "title": "Pont fessier",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "glute_bridge/review-v02/glute_bridge_review_v02.mp4",
+      "poster": "glute_bridge/review-v02/glute_bridge_poster_review_v02.webp",
+      "fallback": "glute_bridge/review-v02/glute_bridge_fallback_review_v02.webp",
+      "board": "glute_bridge/stop-motion-v01-candidates/glute_bridge_contact_sheet_v01.png",
+      "uniquePoses": 6,
+      "notes": [
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Sélection contrôlée visuellement ; 6 images sources, 6 poses distinctes visibles, 11 étapes sur 4 secondes.",
+        "Aucune validation professionnelle ou promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 11
+    },
+    {
+      "movementId": "goblet_squat",
+      "title": "Goblet squat",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "goblet_squat/review-v03/goblet_squat_review_v03.mp4",
+      "poster": "goblet_squat/review-v03/goblet_squat_poster_review_v03.webp",
+      "fallback": "goblet_squat/review-v03/goblet_squat_fallback_review_v03.webp",
+      "board": "goblet_squat/rework-2026-09-05/goblet_squat_cycle_v01.png",
+      "uniquePoses": 11,
+      "notes": [
+        "Squat charge centrale lisible, une kettlebell et deux mains cohérentes, appuis non coupés.",
+        "Légère dérive de décor/cadrage et variations de visage au raccord ; acceptable pour revue utilisateur, pas boucle photographique parfaitement fixe.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 12,
+      "sourceFrames": 12,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "incline_push_up",
+      "title": "Pompes inclinées",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "incline_push_up/review-v02/incline_push_up_review_v02.mp4",
+      "poster": "incline_push_up/review-v02/incline_push_up_poster_review_v02.webp",
+      "fallback": "incline_push_up/review-v02/incline_push_up_fallback_review_v02.webp",
+      "board": "incline_push_up/stop-motion-v01-candidates/incline_push_up_contact_sheet_v01.png",
+      "uniquePoses": 6,
+      "notes": [
+        "Excluded frames 07 and 08 following visual review.",
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Sélection contrôlée visuellement ; 6 images sources, 6 poses distinctes visibles, 11 étapes sur 4 secondes.",
+        "Aucune validation professionnelle ou promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 11
+    },
+    {
+      "movementId": "kettlebell_deadlift",
+      "title": "Soulevé de terre avec kettlebell",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "kettlebell_deadlift/review-v04/kettlebell_deadlift_review_v04.mp4",
+      "poster": "kettlebell_deadlift/review-v04/kettlebell_deadlift_poster_review_v04.webp",
+      "fallback": "kettlebell_deadlift/review-v04/kettlebell_deadlift_fallback_review_v04.webp",
+      "board": "kettlebell_deadlift/rework-2026-09-05/low-floor-v02.png",
+      "uniquePoses": 7,
+      "notes": [
+        "Montage v04 contrôlé : deux poses basses régénérées sur le cadrage stable des solos. Les sauts d'appuis1→2→3 du v03 sont corrigés.",
+        "Levée sol→debout en sept positions cohérentes, une kettlebell et deux mains constantes ; pieds et tapis sensiblement stables.",
+        "Images basses et hautes proviennent de plusieurs générations ; maintenir revue humaine finale de continuité et ne pas confondre treize étapes avec treize poses distinctes.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 7,
+      "displayedSteps": 13,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "kickstand_romanian_deadlift",
+      "title": "Soulevé de terre roumain décalé",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "kickstand_romanian_deadlift/review-v03/kickstand_romanian_deadlift_review_v03.mp4",
+      "poster": "kickstand_romanian_deadlift/review-v03/kickstand_romanian_deadlift_poster_review_v03.webp",
+      "fallback": "kickstand_romanian_deadlift/review-v03/kickstand_romanian_deadlift_fallback_review_v03.webp",
+      "board": "kickstand_romanian_deadlift/rework-2026-09-05/kickstand_romanian_deadlift_cycle_v01.png",
+      "uniquePoses": 9,
+      "notes": [
+        "Une charge, jambe avant et appui arrière cohérents, angle de charnière évolutif. Les occultations partielles de la charge par la jambe restent plausibles.",
+        "Légère dérive des appuis/décor et retour plus échantillonné grossièrement que descente ; réserve de rythme.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 13,
+      "displayedSteps": 13,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "low_step_up",
+      "title": "Montée sur banc bas",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "low_step_up/review-v03/low_step_up_review_v03.mp4",
+      "poster": "low_step_up/review-v03/low_step_up_poster_review_v03.webp",
+      "fallback": "low_step_up/review-v03/low_step_up_fallback_review_v03.webp",
+      "board": "low_step_up/rework-2026-09-05/low_step_up_keyposes_v02.png",
+      "uniquePoses": 4,
+      "notes": [
+        "Four clear key poses, seven displayed steps. Sparse stop-motion exception, not 12 unique poses.",
+        "Support foot flat on a low stable step. Full ascent then controlled descent illustrated using reversed selected stills; no added heel raise.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 4,
+      "displayedSteps": 7,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "pull_up",
+      "title": "Tractions en pronation",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "pull_up/review-v04/pull_up_review_v04.mp4",
+      "poster": "pull_up/review-v04/pull_up_poster_review_v04.webp",
+      "fallback": "pull_up/review-v04/pull_up_fallback_review_v04.webp",
+      "board": "pull_up/rework-2026-09-05/assembly/board_1.png",
+      "uniquePoses": 7,
+      "notes": [
+        "Board crop uses actual panel coordinates x=14+440*column, y=14 or450, size424 square. This removes gutter-induced drift from the initial equal-grid preview.",
+        "Corrected top proportionally resized to424 square, translated +9px horizontally and -12px vertically on the complete image, without body deformation. All nine images receive identical24px cream border so head and equipment retain margins.",
+        "Chin-above-bar top retained. Slight width of wall brackets and knee arrangement still varies; prototype, not biomechanical or release validation.",
+        "Human global visual review before any release approval.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 9,
+      "displayedSteps": 10,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "push_up",
+      "title": "Pompes",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "push_up/review-v02/push_up_review_v02.mp4",
+      "poster": "push_up/review-v02/push_up_poster_review_v02.webp",
+      "fallback": "push_up/review-v02/push_up_fallback_review_v02.webp",
+      "board": "push_up/stop-motion-v01-candidates/push_up_contact_sheet_v01.png",
+      "uniquePoses": 5,
+      "notes": [
+        "Excluded frame 06 following visual review.",
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Sélection contrôlée visuellement ; 5 images sources, 5 poses distinctes visibles, 9 étapes sur 4 secondes.",
+        "Aucune validation professionnelle ou promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 9
+    },
+    {
+      "movementId": "reverse_lunge",
+      "title": "Fente arrière",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "reverse_lunge/review-v04/reverse_lunge_review_v04.mp4",
+      "poster": "reverse_lunge/review-v04/reverse_lunge_poster_review_v04.webp",
+      "fallback": "reverse_lunge/review-v04/reverse_lunge_fallback_review_v04.webp",
+      "board": "reverse_lunge/rework-2026-09-05/aligned-fourkeys-v01/crop_1.png",
+      "uniquePoses": 4,
+      "notes": [
+        "New four-key source replaces sliding-marker source. Blank background allows whole-frame translation and common crop without warping anatomy.",
+        "Front-foot toe/sole registered; rear foot naturally steps backward. Knee remains visibly above floor. Sparse four-pose candidate only.",
+        "Small floor-line displacement remains (~10px in 618px source); head margin tight but no anatomy clipped. Final fallback and all aligned source frames visually inspected. No live playback or professional validation.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 4,
+      "displayedSteps": 7,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "seated_band_row",
+      "title": "Tirage assis à l’élastique",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "seated_band_row/review-v03/seated_band_row_review_v03.mp4",
+      "poster": "seated_band_row/review-v03/seated_band_row_poster_review_v03.webp",
+      "fallback": "seated_band_row/review-v03/seated_band_row_fallback_review_v03.webp",
+      "board": "seated_band_row/rework-2026-09-05/key-poses-v02.png",
+      "uniquePoses": 4,
+      "notes": [
+        "Only four readable arm positions; seven displayed steps is a low-density exception, not twelve distinct poses.",
+        "Reordered cells 1,3,2,4. Orange band stays around feet; small shoe and torso framing drift remains.",
+        "Four-pose low-density exception requires user acceptance; no twelve-pose claim.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 7,
+      "sourceFrames": 4,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "seated_dumbbell_overhead_press",
+      "title": "Développé épaules assis",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "seated_dumbbell_overhead_press/review-v02/seated_dumbbell_overhead_press_review_v02.mp4",
+      "poster": "seated_dumbbell_overhead_press/review-v02/seated_dumbbell_overhead_press_poster_review_v02.webp",
+      "fallback": "seated_dumbbell_overhead_press/review-v02/seated_dumbbell_overhead_press_fallback_review_v02.webp",
+      "board": "seated_dumbbell_overhead_press/stop-motion-v01-candidates/seated_dumbbell_overhead_press_contact_sheet_v01.png",
+      "uniquePoses": 6,
+      "notes": [
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Sélection contrôlée visuellement ; 6 images sources, 6 poses distinctes visibles, 11 étapes sur 4 secondes.",
+        "Aucune validation professionnelle ou promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 11
+    },
+    {
+      "movementId": "side_plank",
+      "title": "Planche latérale",
+      "motionKind": "isometric",
+      "reviewStatus": "visual_candidate",
+      "video": "side_plank/review-v02/side_plank_review_v02.mp4",
+      "poster": "side_plank/review-v02/side_plank_poster_review_v02.webp",
+      "fallback": "side_plank/review-v02/side_plank_fallback_review_v02.webp",
+      "board": "side_plank/candidate-v01/side_plank_hold.png",
+      "uniquePoses": 1,
+      "notes": [
+        "Static hold demonstration, not a repetition or breathing animation.",
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Sélection contrôlée visuellement ; 1 images sources, 1 poses distinctes visibles, 1 étapes sur 4 secondes.",
+        "Aucune validation professionnelle ou promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 1
+    },
+    {
+      "movementId": "single_arm_dumbbell_floor_press",
+      "title": "Développé au sol à un bras",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "single_arm_dumbbell_floor_press/review-v03/single_arm_dumbbell_floor_press_review_v03.mp4",
+      "poster": "single_arm_dumbbell_floor_press/review-v03/single_arm_dumbbell_floor_press_poster_review_v03.webp",
+      "fallback": "single_arm_dumbbell_floor_press/review-v03/single_arm_dumbbell_floor_press_fallback_review_v03.webp",
+      "board": "single_arm_dumbbell_floor_press/rework-2026-09-05/single_arm_dumbbell_floor_press_phases_v04.png",
+      "uniquePoses": 6,
+      "notes": [
+        "Six poses sélectionnées1–6 de phases_v04, retour5–1 ; poses7/8 exclues pour bascule de l'avant-bras vers le torse et doublon.",
+        "Même bras proche chargé et un seul haltère ; bras libre éloigné occulté par le torse, pas de membre inventé.",
+        "Description de l'installation du bras libre requise : le visuel seul ne démontre pas cet appui. Légère dérive basse du cadrage, faible densité déclarée.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 6,
+      "displayedSteps": 11,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "single_arm_overhead_press",
+      "title": "Développé au-dessus de la tête à un bras",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "single_arm_overhead_press/review-v02/single_arm_overhead_press_review_v02.mp4",
+      "poster": "single_arm_overhead_press/review-v02/single_arm_overhead_press_poster_review_v02.webp",
+      "fallback": "single_arm_overhead_press/review-v02/single_arm_overhead_press_fallback_review_v02.webp",
+      "board": "single_arm_overhead_press/stop-motion-v01-candidates/single_arm_overhead_press_contact_sheet_v02.png",
+      "uniquePoses": 4,
+      "notes": [
+        "Pose intermédiaire générée depuis la source puis contrôlée indépendamment ; sélection1,6,nouvelle,9.",
+        "Quatre poses distinctes, sept étapes sur quatre secondes. Léger bout de chaussure déjà absent dans les sources ; non bloquant pour la lecture de ce développé.",
+        "Rendu contrôlé, pas de validation professionnelle ni promotion iOS."
+      ],
+      "displayedSteps": 7
+    },
+    {
+      "movementId": "split_squat",
+      "title": "Fente statique",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "split_squat/review-v02/split_squat_review_v02.mp4",
+      "poster": "split_squat/review-v02/split_squat_poster_review_v02.webp",
+      "fallback": "split_squat/review-v02/split_squat_fallback_review_v02.webp",
+      "board": "split_squat/stop-motion-v01-candidates/split_squat_contact_sheet_v01.png",
+      "uniquePoses": 4,
+      "notes": [
+        "Excluded frame 04: rear knee appears at mat level. Frame 05 is used after 03; source numbering is not motion order.",
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Sélection contrôlée visuellement ; 4 images sources, 4 poses distinctes visibles, 7 étapes sur 4 secondes.",
+        "Aucune validation professionnelle ou promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 7
+    },
+    {
+      "movementId": "squat",
+      "title": "Squat libre",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "squat/review-v02/squat_review_v02.mp4",
+      "poster": "squat/review-v02/squat_poster_review_v02.webp",
+      "fallback": "squat/review-v02/squat_fallback_review_v02.webp",
+      "board": "squat/stop-motion-v01-candidates/squat_contact_sheet_v01.png",
+      "uniquePoses": 6,
+      "notes": [
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Sélection contrôlée visuellement ; 6 images sources, 6 poses distinctes visibles, 11 étapes sur 4 secondes.",
+        "Aucune validation professionnelle ou promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 11
+    },
+    {
+      "movementId": "suitcase_carry",
+      "title": "Marche chargée unilatérale",
+      "motionKind": "gait",
+      "reviewStatus": "visual_candidate",
+      "video": "suitcase_carry/review-v03/suitcase_carry_review_v03.mp4",
+      "poster": "suitcase_carry/review-v03/suitcase_carry_poster_review_v03.webp",
+      "fallback": "suitcase_carry/review-v03/suitcase_carry_fallback_review_v03.webp",
+      "board": "suitcase_carry/rework-2026-09-05/suitcase_carry_keyposes_v03.png",
+      "uniquePoses": 4,
+      "notes": [
+        "Natural alternating gait. Single dumbbell remains in anatomical left hand (viewer right).",
+        "No reversed or mirrored gait. Four key poses only; one second per pose at four seconds, visibly stepped preview. Slight framing variation remains.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 4,
+      "displayedSteps": 4,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "suitcase_march",
+      "title": "Marche sur place chargée",
+      "motionKind": "gait",
+      "reviewStatus": "visual_candidate",
+      "video": "suitcase_march/review-v03/suitcase_march_review_v03.mp4",
+      "poster": "suitcase_march/review-v03/suitcase_march_poster_review_v03.webp",
+      "fallback": "suitcase_march/review-v03/suitcase_march_fallback_review_v03.webp",
+      "board": "suitcase_march/rework-2026-09-05/suitcase_march_keyposes_v03.png",
+      "uniquePoses": 4,
+      "notes": [
+        "Alternating knee lifts with neutral pose between sides. Single dumbbell remains anatomical right hand (viewer left).",
+        "Four unique poses and five displayed steps, not a dense animation. No mirrored or reversed gait.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "sourceFrames": 4,
+      "displayedSteps": 5,
+      "playback": "loop_review"
+    },
+    {
+      "movementId": "supported_calf_raise",
+      "title": "Élévations de mollets avec appui",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "supported_calf_raise/review-v02/supported_calf_raise_review_v02.mp4",
+      "poster": "supported_calf_raise/review-v02/supported_calf_raise_poster_review_v02.webp",
+      "fallback": "supported_calf_raise/review-v02/supported_calf_raise_fallback_review_v02.webp",
+      "board": "supported_calf_raise/stop-motion-v01-candidates/supported_calf_raise_contact_sheet_v02.png",
+      "uniquePoses": 2,
+      "notes": [
+        "Three source snapshots, but only two clearly distinct states: heels down and raised. The intermediate/high snapshots are close; do not advertise three distinct heights.",
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Sélection contrôlée visuellement ; 3 images sources, 2 poses distinctes visibles, 5 étapes sur 4 secondes.",
+        "Aucune validation professionnelle ou promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 5
+    },
+    {
+      "movementId": "supported_one_arm_row",
+      "title": "Rowing unilatéral avec appui",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "supported_one_arm_row/review-v02/supported_one_arm_row_review_v02.mp4",
+      "poster": "supported_one_arm_row/review-v02/supported_one_arm_row_poster_review_v02.webp",
+      "fallback": "supported_one_arm_row/review-v02/supported_one_arm_row_fallback_review_v02.webp",
+      "board": "supported_one_arm_row/stop-motion-v02-candidate-matrix/supported_one_arm_row_candidate_matrix_v02.png",
+      "uniquePoses": 4,
+      "notes": [
+        "Four readable selected poses; no synthetic intermediates.",
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Sélection contrôlée visuellement ; 4 images sources, 4 poses distinctes visibles, 7 étapes sur 4 secondes.",
+        "Aucune validation professionnelle ou promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 7
+    },
+    {
+      "movementId": "supported_single_leg_calf_raise",
+      "title": "Élévation de mollet sur une jambe",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "supported_single_leg_calf_raise/review-v02/supported_single_leg_calf_raise_review_v02.mp4",
+      "poster": "supported_single_leg_calf_raise/review-v02/supported_single_leg_calf_raise_poster_review_v02.webp",
+      "fallback": "supported_single_leg_calf_raise/review-v02/supported_single_leg_calf_raise_fallback_review_v02.webp",
+      "board": "supported_single_leg_calf_raise/candidate-v01/supported_single_leg_calf_raise_board.png",
+      "uniquePoses": 4,
+      "notes": [
+        "Explicit board-cell selections received after independent visual review. Cell boundaries follow the actual grid, not an assumed equal-height grid. Full cell fitted inside a square; no anatomical interpolation or body crop.",
+        "Timing holds repeat encoded pixels, not unique anatomical poses.",
+        "Technical render only. Requires final visual review; not professional validation or product approval.",
+        "Sélection contrôlée visuellement ; 4 images sources, 4 poses distinctes visibles, 7 étapes sur 4 secondes.",
+        "Aucune validation professionnelle ou promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 7
+    },
+    {
+      "movementId": "wall_hip_hinge",
+      "title": "Charnière de hanche vers le mur",
+      "motionKind": "cycle",
+      "reviewStatus": "visual_candidate",
+      "video": "wall_hip_hinge/review-v04/wall_hip_hinge_review_v04.mp4",
+      "poster": "wall_hip_hinge/review-v04/wall_hip_hinge_poster_review_v04.webp",
+      "fallback": "wall_hip_hinge/review-v04/wall_hip_hinge_fallback_review_v04.webp",
+      "board": "wall_hip_hinge/rework-2026-09-05/wall_hip_hinge_keyposes_v02.png",
+      "uniquePoses": 4,
+      "notes": [
+        "Montage v04 contrôlé : secours quatre clésV02 puis retour3–1. Distance projetée pied/mur beaucoup plus stable que les huit poses rejetées.",
+        "Charnière et contact final bassin/mur lisibles ; aucune transformation locale du corps.",
+        "Exception de faible densité : quatre poses distinctes/sept étapes seulement. Petits décalages globaux de cadrage restent visibles et doivent être appréciés lors de la revue utilisateur.",
+        "Nouvel essai et assemblage contrôlés ; prototype généré, sans validation professionnelle ni promotion dans le manifeste iOS."
+      ],
+      "displayedSteps": 7,
+      "sourceFrames": 4,
+      "playback": "loop_review"
+    }
+  ]
+}

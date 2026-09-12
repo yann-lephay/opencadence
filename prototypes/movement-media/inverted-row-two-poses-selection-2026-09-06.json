@@ -1,0 +1,23 @@
+[
+  {
+    "id": "dip_bar_inverted_row",
+    "kind": "cycle",
+    "outputDirectory": "review-reference-two-poses-v01",
+    "sources": [
+      "real-reference-2026-09-06/loop-work/low.png",
+      "real-reference-2026-09-06/loop-work/high-aligned.png"
+    ],
+    "crops": ["746x746+52+70", "746x746+52+70"],
+    "sequence": [0, 1],
+    "fallbackIndices": [0, 1],
+    "durationSeconds": 4,
+    "visiblyDistinctPoses": 2,
+    "reversePoseReuse": false,
+    "status": "two_pose_comparison_pending_user_review",
+    "notes": [
+      "User explicitly requested the two accepted endpoint photos only. Two seconds per photo, four seconds total; loop reset returns to the low pose.",
+      "Same globally registered endpoints and common crop as review-reference-loop-v02. No new image generation, crossfade, optical flow or anatomical deformation.",
+      "Shows two positions, not the continuous trajectory. Residual equipment and heel shifts remain. No app, catalog or release-manifest change; source rights and professional validation not cleared."
+    ]
+  }
+]

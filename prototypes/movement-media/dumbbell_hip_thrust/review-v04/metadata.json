@@ -1,0 +1,74 @@
+{
+  "movementId": "dumbbell_hip_thrust",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+    "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+    "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+    "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+    "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+    "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+    "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png"
+  ],
+  "boardCellIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "boardCellCrops": [
+    "424x424+11+11",
+    "424x424+454+11",
+    "424x424+897+11",
+    "424x424+1340+11",
+    "424x424+11+454",
+    "424x424+454+454",
+    "424x424+897+454"
+  ],
+  "uniqueSourceFrames": 7,
+  "visiblyDistinctPoses": 7,
+  "displayedSteps": 13,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    6,
+    5,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "dumbbell_hip_thrust_review_v04.mp4",
+  "poster": "dumbbell_hip_thrust_poster_review_v04.webp",
+  "fallback": "dumbbell_hip_thrust_fallback_review_v04.webp",
+  "fallbackSourceIndices": [
+    1,
+    4,
+    7
+  ],
+  "notes": [
+    "Excluded source pose 8: bench contact becomes visually ambiguous. Selected first seven poses and reversed still-image return.",
+    "One dumbbell viewed end-on; far head is occluded, not evidence of a missing dumbbell.",
+    "Professional validation remains required; not a release asset.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

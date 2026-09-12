@@ -1,0 +1,58 @@
+[
+  {
+    "id": "glute_bridge",
+    "kind": "cycle",
+    "outputDirectory": "review-images25-bulk-v01",
+    "sources": ["images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png"],
+    "boardCellIndices": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "crops": ["408x408+5+5", "408x408+423+5", "408x408+841+5", "408x408+5+423", "408x408+423+423", "408x408+841+423", "408x408+5+841", "408x408+423+841", "408x408+841+841"],
+    "visiblyDistinctPoses": 9,
+    "durationSeconds": 4,
+    "sequence": [0, 1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1],
+    "fallbackIndices": [0, 4, 8],
+    "status": "visual_candidate_not_release",
+    "notes": ["Nine progressive hip heights extracted from one bulk board.", "Feet, shoulders, head and palms remain stable to visual inspection; top-position spinal control still requires explicit human review.", "Return reuses the exact outbound poses in reverse; no anatomical interpolation."]
+  },
+  {
+    "id": "incline_push_up",
+    "kind": "cycle",
+    "outputDirectory": "review-images25-bulk-v01",
+    "sources": ["images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png"],
+    "boardCellIndices": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "crops": ["408x408+5+5", "408x408+423+5", "408x408+841+5", "408x408+5+423", "408x408+423+423", "408x408+841+423", "408x408+5+841", "408x408+423+841", "408x408+841+841"],
+    "visiblyDistinctPoses": 9,
+    "durationSeconds": 4,
+    "sequence": [0, 1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1],
+    "fallbackIndices": [0, 4, 8],
+    "status": "visual_candidate_not_release",
+    "notes": ["Nine progressive elbow angles extracted from one bulk board.", "Hands, feet and bench remain stable and the body line remains coherent to visual inspection; final elbow and shoulder position still require explicit human review.", "Return reuses the exact outbound poses in reverse; no anatomical interpolation."]
+  },
+  {
+    "id": "seated_dumbbell_overhead_press",
+    "kind": "cycle",
+    "outputDirectory": "review-images25-bulk-v01",
+    "sources": ["images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png"],
+    "boardCellIndices": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "crops": ["408x408+5+5", "408x408+423+5", "408x408+841+5", "408x408+5+423", "408x408+423+423", "408x408+841+423", "408x408+5+841", "408x408+423+841", "408x408+841+841"],
+    "visiblyDistinctPoses": 9,
+    "durationSeconds": 4,
+    "sequence": [0, 1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1],
+    "fallbackIndices": [0, 4, 8],
+    "status": "visual_candidate_not_release",
+    "notes": ["Nine progressive dumbbell heights extracted from one bulk board.", "Seat, feet and torso remain stable and both arms move symmetrically to visual inspection; final wrist and shoulder alignment still require explicit human review.", "Return reuses the exact outbound poses in reverse; no anatomical interpolation."]
+  },
+  {
+    "id": "squat",
+    "kind": "cycle",
+    "outputDirectory": "review-images25-bulk-v01",
+    "sources": ["images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png", "images-2.5-bulk-v01/contact-sheet-3x3.png"],
+    "boardCellIndices": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "crops": ["408x408+5+5", "408x408+423+5", "408x408+841+5", "408x408+5+423", "408x408+423+423", "408x408+841+423", "408x408+5+841", "408x408+423+841", "408x408+841+841"],
+    "visiblyDistinctPoses": 9,
+    "durationSeconds": 4,
+    "sequence": [0, 1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1],
+    "fallbackIndices": [0, 4, 8],
+    "status": "visual_candidate_not_release",
+    "notes": ["Nine progressive squat depths extracted from one bulk board.", "Feet and hand position remain stable and knee tracking appears coherent to visual inspection; final depth and spinal alignment still require explicit human review.", "Return reuses the exact outbound poses in reverse; no anatomical interpolation."]
+  }
+]

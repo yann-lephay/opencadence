@@ -1,0 +1,27 @@
+import CadenceEngine
+import Foundation
+import Testing
+struct PullupAuditTests { @Test func trace() throws {
+ let now=Date(timeIntervalSince1970: 1_800_000_000)
+        let configuration = V2EngineConfiguration.productPreview
+        let inventory = [V2InventoryItem(category: "bodyweight", units: 1), V2InventoryItem(category: "pullup_bar", units: 1)]
+        for reps in [0, 1, 2, 3, 5] {
+            let history = V2HistoryEntry(endedAt: now.addingTimeInterval(-86400).ISO8601Format(),
+                completedExerciseIds: ["pull_up"],
+                references: [.init(exerciseId: "pull_up", targetReps: reps, progressionContext: "pull_up")],
+                catalogVersion: configuration.catalogVersion, decisionPolicyVersion: configuration.decisionPolicyVersion)
+            let result = CadenceEngine.decideV2(request: .sessionDecision(.init(
+                request: .init(durationMinutes: 30), persistentInventory: inventory, todayInventory: inventory,
+                todaySupports: ["pullup_clearance"], history: [history]), now: now), configuration: configuration)
+            guard case let .sessionDecision(session) = result else { Issue.record("Expected session decision"); continue }
+            print("PULLUP_AUDIT supplied_reference=\(reps) pull=\(session.plan.filter { $0.exerciseId == "pull_up" }.map { "\($0.sets)x\($0.targetReps):\($0.referenceStatus)" })")
+        }
+        for supports in [[], ["pullup_clearance"], ["pullup_clearance", "pullup_top_start_support"]] {
+            let result = CadenceEngine.decideV2(request: .sessionDecision(.init(
+                request: .init(durationMinutes: 30), persistentInventory: inventory, todayInventory: inventory,
+                todaySupports: supports), now: now), configuration: configuration)
+            guard case let .sessionDecision(session) = result else { continue }
+            print("PULLUP_AUDIT supports=\(supports) pull=\(session.plan.filter { configuration.catalog[$0.exerciseId]?.anchor == "pull" }.map { "\($0.exerciseId):\($0.sets)x\($0.targetReps)" })")
+        }
+
+}}

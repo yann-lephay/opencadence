@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-05",
+  "scope": "Independent visual QC of nine reworked prototypes; no app, registry or release changes.",
+  "method": [
+    "Actual source boards, selected rendered PNG frames, fallback WebP and sequence metadata inspected.",
+    "ffprobe confirms the nine retained versions: 4.000s, H264,612x612,30fps,120 encoded frames. Selected pose counts remain separate.",
+    "No physical execution, no professional validation, no claim of realtime playback or 120 distinct poses."
+  ],
+  "branding": "Cream, orange floor accents and ink-green clothing/mat remain coherent; treatment is softer photographic retro than early heavily printed prototypes. No texture masks the main movement.",
+  "reviews": [
+    {
+      "movementId": "goblet_squat",
+      "reviewedDirectory": "review-v03",
+      "verdict": "PASS PROTOTYPE",
+      "visiblyDistinctPoses": 11,
+      "displayedSteps": 12,
+      "durationSeconds": 4,
+      "professionalValidation": false,
+      "releaseApproved": false,
+      "notes": [
+        "Squat charge centrale lisible, une kettlebell et deux mains cohérentes, appuis non coupés.",
+        "Légère dérive de décor/cadrage et variations de visage au raccord ; acceptable pour revue utilisateur, pas boucle photographique parfaitement fixe."
+      ]
+    },
+    {
+      "movementId": "dumbbell_floor_press",
+      "reviewedDirectory": "review-v04",
+      "verdict": "PASS PROTOTYPE",
+      "visiblyDistinctPoses": 8,
+      "displayedSteps": 15,
+      "durationSeconds": 4,
+      "professionalValidation": false,
+      "releaseApproved": false,
+      "notes": [
+        "Correction v04 contrôlée : descente1–8 puis retour7–1, supprime les trois quasi-doublons de retour et le saut final v03.",
+        "Deux haltères, tête et pieds gardés au sol, appui du coude proche lisible. Faible dérive du tapis entre poses, à vérifier sur appareil."
+      ]
+    },
+    {
+      "movementId": "double_dumbbell_front_squat",
+      "reviewedDirectory": "review-v04",
+      "verdict": "PASS PROTOTYPE",
+      "visiblyDistinctPoses": 8,
+      "displayedSteps": 13,
+      "durationSeconds": 4,
+      "professionalValidation": false,
+      "releaseApproved": false,
+      "notes": [
+        "Correction v04 contrôlée : chaussure initialement coupée par le crop v03 entièrement visible après extraction des vraies cellules et padding commun.",
+        "Charge en rack conservée, squat lisible. Épaisseur de marge papier varie selon les cellules ; réserve graphique non anatomique."
+      ]
+    },
+    {
+      "movementId": "dumbbell_romanian_deadlift",
+      "reviewedDirectory": "review-v03",
+      "verdict": "PASS PROTOTYPE",
+      "visiblyDistinctPoses": 10,
+      "displayedSteps": 15,
+      "durationSeconds": 4,
+      "professionalValidation": false,
+      "releaseApproved": false,
+      "notes": [
+        "Charnière avec deux haltères cohérente, matériel conservé, corps complet, ordre de descente/remontée lisible.",
+        "Quelques poses basses très proches, première descente plus ample et dérive modérée de cadrage/tapis ; ne pas présenter 15 étapes comme 15 positions distinctes."
+      ]
+    },
+    {
+      "movementId": "kickstand_romanian_deadlift",
+      "reviewedDirectory": "review-v03",
+      "verdict": "PASS PROTOTYPE",
+      "visiblyDistinctPoses": 9,
+      "displayedSteps": 13,
+      "durationSeconds": 4,
+      "professionalValidation": false,
+      "releaseApproved": false,
+      "notes": [
+        "Une charge, jambe avant et appui arrière cohérents, angle de charnière évolutif. Les occultations partielles de la charge par la jambe restent plausibles.",
+        "Légère dérive des appuis/décor et retour plus échantillonné grossièrement que descente ; réserve de rythme."
+      ]
+    },
+    {
+      "movementId": "wall_hip_hinge",
+      "reviewedDirectory": "review-v04",
+      "verdict": "PASS PROTOTYPE",
+      "visiblyDistinctPoses": 4,
+      "displayedSteps": 7,
+      "durationSeconds": 4,
+      "professionalValidation": false,
+      "releaseApproved": false,
+      "notes": [
+        "Montage v04 contrôlé : secours quatre clésV02 puis retour3–1. Distance projetée pied/mur beaucoup plus stable que les huit poses rejetées.",
+        "Charnière et contact final bassin/mur lisibles ; aucune transformation locale du corps.",
+        "Exception de faible densité : quatre poses distinctes/sept étapes seulement. Petits décalages globaux de cadrage restent visibles et doivent être appréciés lors de la revue utilisateur."
+      ]
+    },
+    {
+      "movementId": "dumbbell_hip_thrust",
+      "reviewedDirectory": "review-v04",
+      "verdict": "PASS PROTOTYPE",
+      "visiblyDistinctPoses": 7,
+      "displayedSteps": 13,
+      "durationSeconds": 4,
+      "professionalValidation": false,
+      "releaseApproved": false,
+      "notes": [
+        "Montage v04 contrôlé : pose8 exclue ; poses1–7 puis retour6–1. Contact dos/banc lisible au dernier état retenu7.",
+        "Poids vu de bout et seconde main partiellement occultée restent plausibles, pas preuve d'un haltère manquant.",
+        "Petite variation de cadrage entre les deux rangées et marques visibles sur les chaussures : réserves graphiques avant publication, pas motif de fausse correction anatomique."
+      ]
+    },
+    {
+      "movementId": "kettlebell_deadlift",
+      "reviewedDirectory": "review-v04",
+      "verdict": "PASS PROTOTYPE",
+      "visiblyDistinctPoses": 7,
+      "displayedSteps": 13,
+      "durationSeconds": 4,
+      "professionalValidation": false,
+      "releaseApproved": false,
+      "notes": [
+        "Montage v04 contrôlé : deux poses basses régénérées sur le cadrage stable des solos. Les sauts d'appuis1→2→3 du v03 sont corrigés.",
+        "Levée sol→debout en sept positions cohérentes, une kettlebell et deux mains constantes ; pieds et tapis sensiblement stables.",
+        "Images basses et hautes proviennent de plusieurs générations ; maintenir revue humaine finale de continuité et ne pas confondre treize étapes avec treize poses distinctes."
+      ]
+    },
+    {
+      "movementId": "single_arm_dumbbell_floor_press",
+      "reviewedDirectory": "review-v03",
+      "verdict": "PASS PROTOTYPE",
+      "visiblyDistinctPoses": 6,
+      "displayedSteps": 11,
+      "durationSeconds": 4,
+      "professionalValidation": false,
+      "releaseApproved": false,
+      "notes": [
+        "Six poses sélectionnées1–6 de phases_v04, retour5–1 ; poses7/8 exclues pour bascule de l'avant-bras vers le torse et doublon.",
+        "Même bras proche chargé et un seul haltère ; bras libre éloigné occulté par le torse, pas de membre inventé.",
+        "Description de l'installation du bras libre requise : le visuel seul ne démontre pas cet appui. Légère dérive basse du cadrage, faible densité déclarée."
+      ]
+    }
+  ],
+  "summary": {
+    "reviewed": 9,
+    "passPrototype": 9,
+    "needsFix": 0,
+    "releaseApproved": 0,
+    "lowDensityExceptions": [
+      "wall_hip_hinge"
+    ]
+  }
+}

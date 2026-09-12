@@ -1,0 +1,53 @@
+{
+  "movementId": "easy_rower_intervals",
+  "status": "review_candidate_not_release",
+  "motionKind": "rowing",
+  "playback": "loop_review",
+  "sources": [
+    "density-2026-09-05/catch-v01.png",
+    "density-2026-09-05/drive-v01.png",
+    "density-2026-09-05/transitions-v02/drive-open.png",
+    "density-2026-09-05/finish-v01.png",
+    "density-2026-09-05/transitions-v02/arms-away-final.png",
+    "density-2026-09-05/recovery-v01.png",
+    "density-2026-09-05/transitions-v02/recovery-middle.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": null,
+  "uniqueSourceFrames": 7,
+  "visiblyDistinctPoses": 7,
+  "displayedSteps": 7,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": false,
+  "interpolatedFrames": 0,
+  "video": "easy_rower_intervals_review_density_v02.mp4",
+  "poster": "easy_rower_intervals_poster_review_density_v02.webp",
+  "fallback": "easy_rower_intervals_fallback_review_density_v02.webp",
+  "fallbackSourceIndices": [
+    1,
+    4,
+    6
+  ],
+  "notes": [
+    "Seven separately selected source poses; arms-away is now explicit before knee recovery. No reverse-pose reuse.",
+    "Rejected early drive and body-over additions shift fixed equipment or the seat despite extended legs; not used to pad density.",
+    "Catch-to-drive and isolated torso recovery remain sparsely sampled; seven poses on four seconds do not meet the twelve-pose target.",
+    "Independent image QC only; generated prototype, not professional validation or release approval.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

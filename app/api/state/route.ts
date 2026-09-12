@@ -71,7 +71,8 @@ export async function PATCH(request: Request) {
         startedAt: new Date().toISOString(),
         itemIndex: 0,
         setIndex: 0,
-        progress: {}
+        progress: {},
+        skippedItemIds: [],
       };
     }
   }
@@ -80,6 +81,7 @@ export async function PATCH(request: Request) {
     state.activeSession.progress = payload.progress;
     state.activeSession.itemIndex = payload.itemIndex;
     state.activeSession.setIndex = payload.setIndex;
+    state.activeSession.skippedItemIds = payload.skippedItemIds ?? [];
   }
 
   if (payload.action === "completeSession" && state.activeSession) {
@@ -92,6 +94,7 @@ export async function PATCH(request: Request) {
       completedAt: completedAt.toISOString(),
       durationMinutes: Math.max(1, Math.round((completedAt.getTime() - startedAt.getTime()) / 60000)),
       progress: payload.progress,
+      skippedItemIds: payload.skippedItemIds ?? state.activeSession.skippedItemIds ?? [],
       effort: payload.effort,
       pain: payload.pain,
       painLocation: payload.painLocation,

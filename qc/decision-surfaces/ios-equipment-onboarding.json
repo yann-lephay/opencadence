@@ -1,0 +1,277 @@
+{
+  "version": "0.1",
+  "objective": {
+    "requestedOutcome": "Permettre à une personne de décrire exactement le matériel utilisable chez elle afin que le moteur ne propose que des mouvements et charges réellement faisables.",
+    "nonGoals": [
+      "Évaluer le niveau physique ou choisir le programme pendant cette surface.",
+      "Demander des données de santé, des mensurations ou des photos.",
+      "Demander si la personne peut utiliser le sol, un mur, une assise stable, lever les bras ou faire quelques pas.",
+      "Afficher un choix grossesse ou post-partum dans le parcours matériel.",
+      "Afficher une catégorie dont les configurations, mouvements, illustrations et fixtures ne sont pas validés.",
+      "Transformer une saisie libre en équipement supporté sans confirmation explicite."
+    ],
+    "changeType": "surface"
+  },
+  "surface": {
+    "id": "ios:onboarding/equipment",
+    "mode": "guided",
+    "scope": {
+      "kind": "page",
+      "parentId": "ios:onboarding"
+    },
+    "episode": {
+      "trigger": "La personne atteint l’étape matériel du premier démarrage ou choisit de modifier son inventaire depuis le profil.",
+      "userJob": "Décrire ce que je peux réellement utiliser chez moi sans devoir connaître le vocabulaire d’une salle de sport.",
+      "completionEvidence": "L’inventaire enregistré contient des unités et configurations valides, le résumé correspond à la saisie et un calcul déterministe confirme que le moteur n’utilisera aucune charge absente."
+    }
+  },
+  "truth": {
+    "mustBeTrue": [
+      "Poids du corps reste toujours une configuration disponible et n’exige aucun équipement déclaré.",
+      "Chaque charge fixe conserve le poids par unité et le nombre d’unités possédées.",
+      "Chaque charge réglable conserve les charges réalisables par poignée, le nombre de poignées et l’incrément réel.",
+      "Le moteur distingue une paire, une charge centrale et un usage unilatéral.",
+      "Une catégorie visible dans l’onboarding public possède au moins un mouvement utile, une illustration validée et une fixture positive.",
+      "Une saisie libre peut être conservée comme note mais ne devient jamais une capacité moteur implicite.",
+      "Retirer un équipement régénère les recommandations futures sans réécrire l’historique des séances passées."
+    ],
+    "canonicalTerms": [
+      {
+        "canonical": "Poids par unité",
+        "userFacing": "Poids de chaque haltère ou kettlebell",
+        "precisionMoment": "Au moment d’ajouter une charge fixe.",
+        "source": "docs/IOS-ENGINE-BEHAVIOR-CONTRACT.md#inventaire-structuré"
+      },
+      {
+        "canonical": "Configuration de charge",
+        "userFacing": "Ce que tu peux réellement tenir : une paire, une charge au centre ou un seul côté",
+        "precisionMoment": "Dans le résumé de chaque équipement et lorsqu’une séance propose une charge.",
+        "source": "docs/IOS-ENGINE-BEHAVIOR-CONTRACT.md#inventaire-structuré"
+      },
+      {
+        "canonical": "Incrément",
+        "userFacing": "Le plus petit saut possible entre deux réglages",
+        "precisionMoment": "Pendant la configuration d’un haltère réglable.",
+        "source": "docs/IOS-ENGINE-BEHAVIOR-CONTRACT.md#inventaire-structuré"
+      },
+      {
+        "canonical": "Catégorie validée",
+        "userFacing": "Matériel utilisable par OpenCadence aujourd’hui",
+        "precisionMoment": "Lors d’un import historique ou lorsqu’un équipement cible n’est pas encore publié.",
+        "source": "fixtures/ios-engine-v1/cases.json#equipmentConfigurationGates"
+      }
+    ]
+  },
+  "decision": {
+    "currentState": "Les catégories sélectionnées, leurs unités, leurs réglages réalisables, leur statut de support et les éventuelles informations incomplètes.",
+    "dominantAction": {
+      "id": "save-equipment-inventory",
+      "label": "Enregistrer mon matériel",
+      "expectedResult": "L’inventaire structuré est persisté, validé et utilisé pour recalculer uniquement les séances futures.",
+      "reversibility": "reversible",
+      "guard": "direct"
+    },
+    "constraints": [
+      {
+        "id": "fixed-load-needs-count",
+        "mustBeTrue": "Une charge fixe possède un poids strictement positif et un nombre entier d’unités strictement positif.",
+        "detectability": "immediate",
+        "consequence": "Le moteur pourrait inventer une paire ou calculer une charge totale fausse.",
+        "recovery": "Conserver la saisie, mettre en évidence le champ incomplet et proposer un exemple concret."
+      },
+      {
+        "id": "adjustable-load-needs-reachable-values",
+        "mustBeTrue": "Une charge réglable possède au moins une valeur réalisable et un nombre de poignées.",
+        "detectability": "immediate",
+        "consequence": "Une progression pourrait viser un poids impossible à composer.",
+        "recovery": "Permettre de corriger les valeurs réalisables ou de conserver l’équipement comme note non utilisable."
+      },
+      {
+        "id": "unsupported-category-stays-hidden",
+        "mustBeTrue": "Une catégorie non validée n’est pas proposée comme capacité active.",
+        "detectability": "immediate",
+        "consequence": "L’utilisateur peut croire qu’OpenCadence sait programmer un matériel qu’il ne sait pas encore traiter correctement.",
+        "recovery": "Conserver l’information importée comme note, expliquer la limite et continuer avec les catégories validées."
+      },
+      {
+        "id": "no-equipment-is-valid",
+        "mustBeTrue": "L’absence d’équipement additionnel reste une configuration valide de poids du corps.",
+        "detectability": "immediate",
+        "consequence": "Une personne sans matériel serait bloquée sans raison.",
+        "recovery": "Afficher le résumé Poids du corps et permettre de continuer."
+      },
+      {
+        "id": "history-is-immutable",
+        "mustBeTrue": "Une modification d’inventaire ne modifie jamais le matériel réellement utilisé dans l’historique.",
+        "detectability": "delayed",
+        "consequence": "Les performances passées et les décisions de progression deviendraient fausses.",
+        "recovery": "Restaurer les snapshots historiques et recalculer seulement la file de séances futures."
+      },
+      {
+        "id": "save-is-idempotent-and-visible",
+        "mustBeTrue": "Un double appui ne crée pas deux inventaires et la sortie n’est proposée qu’après confirmation de la persistance locale.",
+        "detectability": "immediate",
+        "consequence": "La personne pourrait quitter avec une configuration incomplète ou croire que son matériel a été enregistré.",
+        "recovery": "Désactiver seulement l’action pendant l’écriture, conserver toute la saisie, réessayer et revenir au dernier inventaire valide si l’écriture échoue."
+      }
+    ]
+  },
+  "languageAndTrust": {
+    "complexityAbsorbed": [
+      "Hypothèse que les appuis et déplacements ordinaires sont disponibles.",
+      "Calcul des configurations paire, centrale et unilatérale.",
+      "Déduction des charges totales et de la prochaine valeur réalisable.",
+      "Validation du catalogue publié contre les mouvements, illustrations et fixtures."
+    ],
+    "consequencesNeverHidden": [
+      "Un équipement non validé ne sera pas utilisé par le moteur.",
+      "Retirer un équipement peut changer la prochaine séance.",
+      "Une charge proposée reste une recommandation que la personne confirme pendant la séance."
+    ],
+    "reassurance": [
+      {
+        "claim": "OpenCadence n’utilisera que les charges enregistrées ici.",
+        "evidence": "La fixture ENG-EQUIP-001 interdit toute charge absente et le moteur sélectionne dans les configurations calculées.",
+        "placement": "Sous le résumé final, avant Enregistrer mon matériel."
+      },
+      {
+        "claim": "Tu pourras modifier ce matériel plus tard sans perdre ton historique.",
+        "evidence": "L’inventaire courant et les snapshots historiques sont deux données distinctes.",
+        "placement": "Sous l’action dominante et lors d’une modification depuis le profil."
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "ordinary-space-questionnaire",
+      "purpose": "orientation",
+      "visibility": "never",
+      "hierarchy": 3,
+      "verdict": "remove",
+      "reason": "Ces conditions ordinaires ne doivent pas alourdir l’entrée dans l’app."
+    },
+    {
+      "id": "equipment-category-picker",
+      "purpose": "decision",
+      "visibility": "persistent",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Point d’entrée de la décision : ce que la personne possède réellement."
+    },
+    {
+      "id": "equipment-configuration-editor",
+      "purpose": "constraint",
+      "visibility": "contextual",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Rend les poids, quantités et réglages suffisamment précis pour le moteur."
+    },
+    {
+      "id": "equipment-summary",
+      "purpose": "state",
+      "visibility": "persistent",
+      "hierarchy": 2,
+      "verdict": "keep",
+      "reason": "Permet de vérifier l’interprétation avant enregistrement."
+    },
+    {
+      "id": "unsupported-import-note",
+      "purpose": "constraint",
+      "visibility": "contextual",
+      "hierarchy": 2,
+      "verdict": "keep",
+      "reason": "Préserve une information historique sans simuler une capacité moteur."
+    },
+    {
+      "id": "freeform-equipment-field",
+      "purpose": "orientation",
+      "visibility": "on_demand",
+      "hierarchy": 3,
+      "verdict": "defer",
+      "reason": "Utile seulement pour conserver une note ; ne doit pas concurrencer la saisie structurée."
+    },
+    {
+      "id": "equipment-save-status",
+      "purpose": "recovery",
+      "visibility": "contextual",
+      "hierarchy": 2,
+      "verdict": "keep",
+      "reason": "Rend l’écriture locale, sa réussite ou son échec explicites sans effacer la saisie."
+    }
+  ],
+  "states": [
+    {
+      "id": "bodyweight-only",
+      "kind": "empty",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Continuer avec Poids du corps.",
+      "recovery": "Ajouter un équipement maintenant ou plus tard depuis le profil."
+    },
+    {
+      "id": "configuration-error",
+      "kind": "error",
+      "blocking": true,
+      "preserveInput": true,
+      "nextStep": "Corriger le poids, la quantité ou les valeurs réalisables signalées.",
+      "recovery": "Revalider seulement l’équipement concerné puis enregistrer l’inventaire."
+    },
+    {
+      "id": "legacy-import-partial",
+      "kind": "partial_success",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Confirmer les équipements reconnus et revoir les notes non structurées.",
+      "recovery": "Modifier chaque correspondance avant de finaliser l’import."
+    },
+    {
+      "id": "catalog-unavailable",
+      "kind": "unavailable",
+      "blocking": true,
+      "preserveInput": true,
+      "nextStep": "Réessayer depuis la copie locale du catalogue validé.",
+      "recovery": "Revenir à l’inventaire précédemment enregistré sans l’écraser."
+    },
+    {
+      "id": "inventory-saving",
+      "kind": "loading",
+      "blocking": true,
+      "preserveInput": true,
+      "nextStep": "Attendre la confirmation locale sans pouvoir relancer une seconde écriture.",
+      "recovery": "Conserver l’éditeur et revenir à l’état prêt si l’écriture n’aboutit pas."
+    },
+    {
+      "id": "inventory-saved",
+      "kind": "partial_success",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Continuer vers la calibration ou revenir au profil avec le résumé enregistré.",
+      "recovery": "Rouvrir immédiatement l’inventaire pour corriger une unité sans recommencer."
+    },
+    {
+      "id": "inventory-save-failed",
+      "kind": "error",
+      "blocking": true,
+      "preserveInput": true,
+      "nextStep": "Réessayer l’enregistrement après un message local explicite.",
+      "recovery": "Garder toute la saisie et permettre de revenir au dernier inventaire valide sans l’écraser."
+    }
+  ],
+  "motion": [],
+  "review": {
+    "risk": "R2",
+    "domains": [
+      "saas",
+      "personal_data"
+    ],
+    "requiredJudges": [
+      "product",
+      "experience",
+      "risk"
+    ],
+    "humanGate": [
+      "Yann confirme les catégories réellement publiées dans la première bêta.",
+      "Tout matériel de support ou d’ancrage reçoit une revue de sécurité avant publication."
+    ]
+  }
+}

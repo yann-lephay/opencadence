@@ -1,0 +1,46 @@
+{
+  "movementId": "easy_rower_intervals",
+  "status": "review_candidate_not_release",
+  "motionKind": "rowing",
+  "playback": "loop_review",
+  "sources": [
+    "density-2026-09-05/catch-v01.png",
+    "density-2026-09-05/drive-v01.png",
+    "density-2026-09-05/finish-v01.png",
+    "density-2026-09-05/recovery-v01.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": null,
+  "uniqueSourceFrames": 4,
+  "visiblyDistinctPoses": 4,
+  "displayedSteps": 4,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": false,
+  "interpolatedFrames": 0,
+  "video": "easy_rower_intervals_review_density_v01.mp4",
+  "poster": "easy_rower_intervals_poster_review_density_v01.webp",
+  "fallback": "easy_rower_intervals_fallback_review_density_v01.webp",
+  "fallbackSourceIndices": [
+    1,
+    3,
+    4
+  ],
+  "notes": [
+    "Rigid footplate and frame now remain at matching locations; seat clearly slides independently.",
+    "Only four key phases, not a dense animation. Further intermediates would need a new authorized generation round beyond the two-iteration cap.",
+    "No reverse playback of drive to fake recovery.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "movementId": "wall_hip_hinge",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "review-v04/frames/pose_01.png",
+    "density-2026-09-05/between-01-02.png",
+    "review-v04/frames/pose_02.png",
+    "density-2026-09-05/between-02-03.png",
+    "review-v04/frames/pose_03.png",
+    "density-2026-09-05/between-03-04.png",
+    "review-v04/frames/pose_04.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": null,
+  "uniqueSourceFrames": 7,
+  "visiblyDistinctPoses": 7,
+  "displayedSteps": 13,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    6,
+    5,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "wall_hip_hinge_review_density_v01.mp4",
+  "poster": "wall_hip_hinge_poster_review_density_v01.webp",
+  "fallback": "wall_hip_hinge_fallback_review_density_v01.webp",
+  "fallbackSourceIndices": [
+    1,
+    4,
+    7
+  ],
+  "notes": [
+    "Diagnostic density assembly: three generated single intermediate images inserted among the four old key poses. Pose count pending independent final review.",
+    "Return explicitly reuses static hinge poses, not generated motion or reverse video.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

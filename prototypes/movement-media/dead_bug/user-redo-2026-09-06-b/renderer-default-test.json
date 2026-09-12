@@ -1,0 +1,1 @@
+[{"id":"dead_bug","kind":"isometric","outputDirectory":"review-rendercheck4","sources":["user-redo-2026-09-06-b/center.png"],"sequence":[0],"visiblyDistinctPoses":1,"status":"technical_test_only","notes":["Renderer default-duration regression test, not a demonstration."]}]

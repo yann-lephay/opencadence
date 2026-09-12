@@ -1,0 +1,59 @@
+{
+  "movementId": "eccentric_pull_up",
+  "status": "review_candidate_not_release",
+  "motionKind": "one_way",
+  "playback": "single_pass",
+  "sources": [
+    "rework-2026-09-05/descent-poses-v01.png",
+    "rework-2026-09-05/descent-poses-v01.png",
+    "rework-2026-09-05/descent-poses-v01.png",
+    "rework-2026-09-05/descent-poses-v01.png",
+    "rework-2026-09-05/descent-poses-v01.png"
+  ],
+  "boardCellIndices": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "boardCellCrops": [
+    "305x615+6+5",
+    "305x615+319+5",
+    "305x615+632+5",
+    "305x615+945+5",
+    "305x615+6+629"
+  ],
+  "uniqueSourceFrames": 5,
+  "visiblyDistinctPoses": 5,
+  "displayedSteps": 5,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": false,
+  "interpolatedFrames": 0,
+  "video": "eccentric_pull_up_review_v03.mp4",
+  "poster": "eccentric_pull_up_poster_review_v03.webp",
+  "fallback": "eccentric_pull_up_fallback_review_v03.webp",
+  "fallbackSourceIndices": [
+    1,
+    3,
+    5
+  ],
+  "notes": [
+    "Single four-second descent only. No automatic loop, reversed ascent or concealed teleport to the starting position.",
+    "Small support stool remains visible, but access to starting position is not demonstrated. Replay must be an explicit separate action. Five distinct poses is below normal cycle-density target.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

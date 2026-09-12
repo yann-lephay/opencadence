@@ -1,0 +1,53 @@
+{
+  "movementId": "low_step_up",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "rework-2026-09-05/low_step_up_keyposes_v02.png",
+    "rework-2026-09-05/low_step_up_keyposes_v02.png",
+    "rework-2026-09-05/low_step_up_keyposes_v02.png",
+    "rework-2026-09-05/low_step_up_keyposes_v02.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": [
+    "618x618+5+5",
+    "618x618+632+5",
+    "618x618+5+632",
+    "618x618+632+632"
+  ],
+  "uniqueSourceFrames": 4,
+  "visiblyDistinctPoses": 4,
+  "displayedSteps": 7,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "low_step_up_review_v03.mp4",
+  "poster": "low_step_up_poster_review_v03.webp",
+  "fallback": "low_step_up_fallback_review_v03.webp",
+  "fallbackSourceIndices": [
+    1,
+    2,
+    4
+  ],
+  "notes": [
+    "Four clear key poses, seven displayed steps. Sparse stop-motion exception, not 12 unique poses.",
+    "Support foot flat on a low stable step. Full ascent then controlled descent illustrated using reversed selected stills; no added heel raise.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

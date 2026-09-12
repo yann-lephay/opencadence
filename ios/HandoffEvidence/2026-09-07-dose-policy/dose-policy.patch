@@ -1,0 +1,1197 @@
+--- before/ios/CadenceEngine/Sources/CadenceEngine/CadenceEngineV2.swift
++++ after/ios/CadenceEngine/Sources/CadenceEngine/CadenceEngineV2.swift
+@@ -22,6 +22,16 @@
+         }
+     }
+ 
++    /// Candidate policy under a separate SPI; never selected by the app.
++    @_spi(AutomaticPolicyExperiment)
++    static func decideDoseExperiment(
++        input: V2SessionDecisionInput, now: Date, configuration: V2EngineConfiguration,
++        memory: [V2DoseMemory] = [], feedback: [V2DoseFeedback] = []
++    ) -> V2DoseExperimentResult {
++        CadenceEngineV2.decideDoseExperiment(input: input, now: now, configuration: configuration,
++                                             memory: memory, feedback: feedback)
++    }
++
+     static func decideV2(
+         request: V2EngineRequest,
+         configuration: V2EngineConfiguration
+@@ -137,6 +147,156 @@
+         )
+         guard mode == .light, normal.decision == .generateSession else { return normal }
+         return lighten(normal, input: input, configuration: configuration)
++    }
++
++    static func decideDoseExperiment(
++        input: V2SessionDecisionInput, now: Date, configuration: V2EngineConfiguration,
++        memory: [V2DoseMemory], feedback: [V2DoseFeedback]
++    ) -> V2DoseExperimentResult {
++        let requestedMode = input.request.mode ?? .normal
++        let normalInput = V2SessionDecisionInput(
++            request: .init(durationMinutes: input.request.durationMinutes,
++                           mode: requestedMode == .light ? .normal : requestedMode,
++                           remainingSeconds: input.request.remainingSeconds),
++            persistentInventory: input.persistentInventory, todayInventory: input.todayInventory,
++            todaySupports: input.todaySupports, history: input.history, refusals: input.refusals,
++            activeSession: input.activeSession, declaredCurrentHealthSignal: input.declaredCurrentHealthSignal,
++            declaredScope: input.declaredScope)
++        let base = decideNextSession(input: normalInput, now: now, configuration: configuration, experimentalSizing: .capAtTwo)
++        guard base.decision == .generateSession, input.activeSession == nil else {
++            return V2DoseExperimentResult(decision: base, memory: memory)
++        }
++        var reasons = base.reasons
++        func note(_ code: String, _ context: String, source: String = "user") {
++            reasons.append(V2Reason(code: code, scope: "configuration", source: source,
++                message: "\(context): \(code)", decisionPolicyVersion: "dose-choice-v1"))
++        }
++        let validMemory = memory.filter { record in
++            guard record.at <= now, record.catalogVersion == configuration.catalogVersion,
++                  record.decisionPolicyVersion == configuration.decisionPolicyVersion,
++                  record.experimentVersion == "dose-choice-v1",
++                  let exercise = configuration.catalog[record.lastPlan.exerciseId],
++                  exercise.progressionContext == record.lastPlan.progressionContext,
++                  (exercise.sets.min...exercise.sets.max).contains(record.ordinarySets),
++                  (exercise.sets.min...exercise.sets.max).contains(record.lastPlan.sets),
++                  record.ordinarySets == 2 || record.preferenceSource != nil else { return false }
++            // Non-selected contexts retain their decision record; no temporary inventory loss erases a preference.
++            guard base.plan.contains(where: { $0.progressionContext == record.lastPlan.progressionContext }) else { return true }
++            return dosePlanAvailable(record.lastPlan, exercise: exercise, input: input, configuration: configuration)
++        }
++        var nextMemory = validMemory
++        var plan: [V2PlanItem] = []
++        for item in base.plan {
++            guard let exercise = configuration.catalog[item.exerciseId] else { continue }
++            let context = item.progressionContext
++            let prior = validMemory.filter { $0.lastPlan.progressionContext == context }
++                .sorted { $0.at > $1.at }.first
++            let ordinary = max(exercise.sets.min, min(exercise.sets.max, prior?.ordinarySets ?? 2))
++            var chosen = ordinary
++            var preferenceSource = prior?.preferenceSource
++            var sets = ordinary
++            var reps = item.targetReps
++            var load = item.load
++            let responses = feedback.filter { $0.progressionContext == context }
++            let response = responses.count == 1 ? responses.first : nil
++            let validResponse = response.flatMap {
++                $0.at == now && $0.catalogVersion == configuration.catalogVersion
++                    && $0.decisionPolicyVersion == configuration.decisionPolicyVersion ? $0 : nil
++            }
++            if !responses.isEmpty && validResponse == nil { note("dose_feedback_ignored", context) }
++            let history = doseHistory(context: context, input: input, now: now, configuration: configuration)
++            if history.contains(where: { $0.confirmedSets.count != ordinary }) {
++                note("dose_historical_not_adopted", context, source: "history")
++            }
++            if let response = validResponse {
++                note("dose_feedback_" + response.action.rawValue, context)
++                switch response.action {
++                case .discover:
++                    sets = exercise.sets.min
++                    note("dose_discovery_selected", context)
++                case .preferOrdinary:
++                    chosen = max(exercise.sets.min, min(exercise.sets.max, 2)); sets = chosen
++                    preferenceSource = response.source
++                case .preferHistorical:
++                    let matching = history.filter {
++                        $0.confirmedSets.count == response.historicalSets
++                            && $0.source == (response.source == .syntheticScenario ? .syntheticScenario : .nativeConfirmed)
++                    }
++                    if let requested = response.historicalSets,
++                       (exercise.sets.min...exercise.sets.max).contains(requested), matching.count >= 2,
++                       matching[0].confirmedSets.map(\.repetitions) == matching[1].confirmedSets.map(\.repetitions),
++                       matching[0].confirmedSets.map(\.loadKg) == matching[1].confirmedSets.map(\.loadKg),
++                       matching[0].confirmedSets.map(\.loadOptionID) == matching[1].confirmedSets.map(\.loadOptionID) {
++                        chosen = requested
++                        sets = chosen; preferenceSource = response.source
++                        note("dose_historical_preference_confirmed", context)
++                    } else { note("dose_historical_preference_unavailable", context, source: "history") }
++                case .volumeTooHigh:
++                    chosen = max(exercise.sets.min, ordinary - 1); sets = chosen
++                    preferenceSource = response.source
++                case .difficultyTooHigh:
++                    let reference = latestReferences(input.history, configuration: configuration)[context]
++                    reps = exercise.repRange.min
++                    load = recalibrationLoad(exercise, reference: reference, inventory: input.todayInventory)
++                case .difficultyTooLow:
++                    if item.targetReps >= exercise.repRange.max,
++                       nextLoad(after: item.load, for: exercise, inventory: input.todayInventory) == nil {
++                        note("dose_equipment_limit", context, source: "equipment")
++                    }
++                case .trainedElsewhere, .noTrainingElsewhere:
++                    note("dose_external_training_unknown_performance", context)
++                }
++            }
++            if requestedMode == .recalibration {
++                sets = exercise.sets.min
++                note(item.referenceStatus == "new" ? "dose_discovery_selected" : "dose_return_selected", context)
++            }
++            // The previous prescription is a decision record, never inferred from completed volume.
++            if sets > (prior?.lastPlan.sets ?? ordinary) {
++                if let old = prior?.lastPlan,
++                   old.exerciseId == item.exerciseId, old.progressionContext == context,
++                   dosePlanAvailable(old, exercise: exercise, input: input, configuration: configuration) {
++                    reps = old.targetReps; load = old.load
++                    note("dose_increase_only", context)
++                } else {
++                    sets = prior?.lastPlan.sets ?? ordinary
++                    chosen = ordinary
++                    note("dose_increase_deferred", context)
++                }
++            }
++            let updated = V2PlanItem(exerciseId: item.exerciseId, sourceExerciseId: item.sourceExerciseId,
++                sets: sets, targetReps: reps, restSeconds: item.restSeconds, load: load,
++                referenceStatus: item.referenceStatus, progressionContext: context, targetUnit: item.targetUnit)
++            plan.append(updated)
++            nextMemory.removeAll { $0.lastPlan.progressionContext == context }
++            nextMemory.append(V2DoseMemory(ordinarySets: chosen, lastPlan: updated, at: now,
++                preferenceSource: preferenceSource, catalogVersion: configuration.catalogVersion,
++                decisionPolicyVersion: configuration.decisionPolicyVersion))
++        }
++        let estimated = plan.reduce(0) { total, item in
++            guard let exercise = configuration.catalog[item.exerciseId] else { return total }
++            return total + cost(row: MutableRow(candidate: Candidate(exerciseId: item.exerciseId,
++                sourceExerciseId: item.sourceExerciseId, substitutionType: nil), sets: item.sets,
++                targetReps: item.targetReps, restSeconds: item.restSeconds, load: item.load,
++                referenceStatus: item.referenceStatus, progressionContext: item.progressionContext),
++                sets: item.sets, exercise: exercise)
++        }
++        let normal = V2SessionDecision(catalogVersion: base.catalogVersion, decisionPolicyVersion: base.decisionPolicyVersion,
++            decision: base.decision, mode: base.mode, estimatedSeconds: estimated, plan: plan,
++            coveredAnchors: base.coveredAnchors, omittedAnchors: base.omittedAnchors, reasons: reasons)
++        let decision = requestedMode == .light ? lighten(normal, input: input, configuration: configuration) : normal
++        // A light session affects the last proposed plan, not the ordinary preference.
++        if decision.decision == .generateSession {
++            for item in decision.plan {
++                if let index = nextMemory.firstIndex(where: { $0.lastPlan.progressionContext == item.progressionContext }) {
++                    let old = nextMemory[index]
++                    nextMemory[index] = V2DoseMemory(ordinarySets: old.ordinarySets, lastPlan: item, at: now,
++                        preferenceSource: old.preferenceSource, catalogVersion: old.catalogVersion,
++                        decisionPolicyVersion: old.decisionPolicyVersion)
++                }
++            }
++        } else { nextMemory = validMemory }
++        return V2DoseExperimentResult(decision: decision, memory: nextMemory.sorted { $0.lastPlan.progressionContext < $1.lastPlan.progressionContext })
+     }
+ 
+     static func progressPrescription(
+@@ -355,6 +515,7 @@
+         let references = latestReferences(input.history, configuration: configuration)
+         var rows: [MutableRow] = []
+         var usedSeconds = 0
++        var heldUnconfirmedProgression = false
+         for candidate in selected {
+             guard let exercise = configuration.catalog[candidate.exerciseId] else { continue }
+             let preserved = preservedWork[candidate.exerciseId]
+@@ -366,8 +527,14 @@
+                 inventory: input.todayInventory,
+                 now: now,
+                 history: input.history,
+-                configuration: configuration
+-            )
++                configuration: configuration,
++                suspendUnconfirmedOnReturn: experimentalSizing != nil
++            )
++            if generated.referenceStatus == "reconfirmation_pending",
++               let reference = references[exercise.progressionContext],
++               generated.targetReps != reference.targetReps || generated.load != load(from: reference, mode: exercise.loadMode) {
++                heldUnconfirmedProgression = true
++            }
+             let prescription = (
+                 targetReps: preserved?.targetReps ?? generated.targetReps,
+                 load: preserved?.load ?? generated.load,
+@@ -462,7 +629,8 @@
+                     inventory: input.todayInventory,
+                     now: now,
+                     history: input.history,
+-                    configuration: configuration
++                    configuration: configuration,
++                suspendUnconfirmedOnReturn: experimentalSizing != nil
+                 )
+                 guard exercise.loadMode == .bodyweight || generated.load != nil else { continue }
+                 let row = MutableRow(
+@@ -544,6 +712,9 @@
+         let plan = rows.map { planItem($0, configuration: configuration) }
+         let covered = rows.compactMap { configuration.catalog[$0.candidate.exerciseId]?.anchor }
+         var reasons: [V2Reason] = []
++        if heldUnconfirmedProgression {
++            reasons.append(reason("stale_unconfirmed_progression_held", scope: "configuration", source: "history", configuration: configuration))
++        }
+         if inventoriesDiffer(input.persistentInventory, input.todayInventory) {
+             reasons.append(reason("equipment_temporarily_unavailable", scope: "session", source: "equipment", configuration: configuration))
+         }
+@@ -808,7 +979,8 @@
+         inventory: [V2InventoryItem],
+         now: Date,
+         history: [V2HistoryEntry],
+-        configuration: V2EngineConfiguration
++        configuration: V2EngineConfiguration,
++        suspendUnconfirmedOnReturn: Bool = false
+     ) -> (targetReps: Int, load: V2Load?, referenceStatus: String) {
+         let reference = references[exercise.progressionContext]
+         if candidate.substitutionType == "partial" {
+@@ -849,6 +1021,11 @@
+             ).map {
+                 now.timeIntervalSince($0) >= Double(configuration.policy.returnQuestionAfterDaysWithoutComparableExposure * 86_400)
+             } ?? false
++            if oldEnoughForQuestion && suspendUnconfirmedOnReturn,
++               let anchor = confirmedReturnAnchor(exercise: exercise, reference: reference, history: history,
++                                                  inventory: inventory, now: now, configuration: configuration) {
++                return (anchor.targetReps, load(from: anchor, mode: exercise.loadMode), "reconfirmation_pending")
++            }
+             let status = oldEnoughForQuestion ? "reconfirmation_pending" : "kept"
+             return (
+                 min(max(reference.targetReps, exercise.repRange.min), exercise.repRange.max),
+@@ -967,6 +1144,85 @@
+                 + exercise.timingSeconds.transition
+                 + item.sets * (exercise.timingSeconds.execution + exercise.timingSeconds.secondSide)
+                 + max(0, item.sets - 1) * item.restSeconds
++        }
++    }
++
++    static func confirmedReturnAnchor(exercise: V2ExerciseDefinition, reference: V2Reference,
++                                      history: [V2HistoryEntry], inventory: [V2InventoryItem], now: Date,
++                                      configuration: V2EngineConfiguration) -> V2Reference? {
++        let facts: [V2Reference] = history.sorted { (parseDate($0.endedAt) ?? .distantPast) > (parseDate($1.endedAt) ?? .distantPast) }.compactMap { entry in
++            guard entry.catalogVersion == configuration.catalogVersion,
++                  entry.decisionPolicyVersion == configuration.decisionPolicyVersion,
++                  let end = parseDate(entry.endedAt), end <= now,
++                  let work = entry.confirmedWorkEvidence?.first(where: { $0.progressionContext == exercise.progressionContext }),
++                  work.exerciseId == reference.exerciseId, work.targetUnit == exercise.resolvedTargetUnit,
++                  !work.wasSkipped, !work.interruptedBySafetySignal,
++                  work.plannedSets > 0, work.confirmedSets.count == work.plannedSets,
++                  let first = work.confirmedSets.first,
++                  work.confirmedSets.allSatisfy({
++                      $0.repetitions > 0 && $0.loadKg == first.loadKg && $0.loadOptionID == first.loadOptionID
++                          && parseDate($0.completedAt).map { $0 <= end } == true
++                  }) else { return nil }
++            let usable: Bool
++            if exercise.loadMode == .bodyweight { usable = first.loadKg == nil && first.loadOptionID == nil }
++            else if exercise.loadMode == .bandOption { usable = first.loadOptionID.map { availableOptions(for: exercise, inventory: inventory).contains($0) } ?? false }
++            else { usable = first.loadKg.map { availableWeights(for: exercise, inventory: inventory).contains($0) } ?? false }
++            guard usable else { return nil }
++            let reps = min(work.confirmedSets.map(\.repetitions).min() ?? 0, exercise.repRange.max)
++            guard reps >= exercise.repRange.min else { return nil }
++            return V2Reference(exerciseId: work.exerciseId, loadKg: first.loadKg, loadOptionID: first.loadOptionID,
++                targetReps: reps, progressionContext: work.progressionContext)
++        }
++        // A reference already performed is not reduced merely because time has passed.
++        if facts.contains(where: { $0.loadKg == reference.loadKg && $0.loadOptionID == reference.loadOptionID && $0.targetReps >= reference.targetReps }) { return nil }
++        return facts.first
++    }
++
++    static func dosePlanAvailable(_ item: V2PlanItem, exercise: V2ExerciseDefinition,
++                                  input: V2SessionDecisionInput, configuration: V2EngineConfiguration) -> Bool {
++        guard item.resolvedTargetUnit == exercise.resolvedTargetUnit,
++              (exercise.repRange.min...exercise.repRange.max).contains(item.targetReps),
++              exerciseIsAvailable(exercise, inventory: input.todayInventory, supports: input.todaySupports, configuration: configuration) else { return false }
++        if exercise.loadMode == .bodyweight { return item.load == nil }
++        if exercise.loadMode == .bandOption {
++            return item.load?.optionID.map { availableOptions(for: exercise, inventory: input.todayInventory).contains($0) } ?? false
++        }
++        return item.load?.kg.map { availableWeights(for: exercise, inventory: input.todayInventory).contains($0) } ?? false
++    }
++
++    static func doseHistory(context: String, input: V2SessionDecisionInput, now: Date,
++                            configuration: V2EngineConfiguration) -> [V2ConfirmedWorkEvidence] {
++        var seenDates = Set<Date>()
++        var seenEvents = Set<String>()
++        return input.history.sorted { (parseDate($0.endedAt) ?? .distantPast) > (parseDate($1.endedAt) ?? .distantPast) }.compactMap { entry in
++            guard entry.catalogVersion == configuration.catalogVersion,
++                  entry.decisionPolicyVersion == configuration.decisionPolicyVersion,
++                  let date = parseDate(entry.endedAt), date <= now,
++                  now.timeIntervalSince(date) < Double(configuration.policy.returnQuestionAfterDaysWithoutComparableExposure * 86_400),
++                  seenDates.insert(date).inserted,
++                  let work = entry.confirmedWorkEvidence?.first(where: { $0.progressionContext == context }),
++                  let exercise = configuration.catalog[work.exerciseId],
++                  exercise.progressionContext == context, work.targetUnit == exercise.resolvedTargetUnit,
++                  !work.wasSkipped, !work.interruptedBySafetySignal,
++                  work.plannedSets > 0, work.confirmedSets.count == work.plannedSets,
++                  work.confirmedSets.allSatisfy({ set in
++                      set.repetitions > 0 && parseDate(set.completedAt).map {
++                          $0 <= date && now.timeIntervalSince($0) < Double(configuration.policy.returnQuestionAfterDaysWithoutComparableExposure * 86_400)
++                      } == true
++                  }) else { return nil }
++            let eventIDs = work.confirmedSets.compactMap(\.eventID)
++            guard eventIDs.count == work.confirmedSets.count,
++                  Set(eventIDs).count == eventIDs.count,
++                  Set(eventIDs).isDisjoint(with: seenEvents) else { return nil }
++            seenEvents.formUnion(eventIDs)
++            let kg = work.confirmedSets.first?.loadKg
++            let option = work.confirmedSets.first?.loadOptionID
++            guard work.confirmedSets.allSatisfy({ $0.loadKg == kg && $0.loadOptionID == option }) else { return nil }
++            let load = kg.map { V2Load(mode: exercise.loadMode, kg: $0) } ?? option.map(V2Load.init(optionID:))
++            let comparable = V2PlanItem(exerciseId: work.exerciseId, sets: work.plannedSets,
++                targetReps: exercise.repRange.entry, restSeconds: exercise.timingSeconds.rest, load: load,
++                referenceStatus: "kept", progressionContext: context, targetUnit: work.targetUnit)
++            return dosePlanAvailable(comparable, exercise: exercise, input: input, configuration: configuration) ? work : nil
+         }
+     }
+ 
+@@ -1368,6 +1624,7 @@
+         configuration: V2EngineConfiguration
+     ) -> V2Reason {
+         let messages: [String: String] = [
++            "stale_unconfirmed_progression_held": "La progression proposée avant l’interruption n’a pas été exécutée ; les derniers repères confirmés sont conservés.",
+             "invalid_duration": "La durée demandée n'est pas prise en charge.",
+             "invalid_input": "Une donnée critique est illisible ou incohérente.",
+             "active_session_version_incompatible": "La séance active utilise une version incompatible et ne peut pas être réinterprétée.",
+--- before/ios/CadenceEngine/Sources/CadenceEngine/DoseExperiment.swift
++++ after/ios/CadenceEngine/Sources/CadenceEngine/DoseExperiment.swift
+@@ -0,0 +1,43 @@
++import Foundation
++
++// Local experiment only. No application persistence or default dispatcher consumes these types.
++@_spi(AutomaticPolicyExperiment) public enum V2DoseAction: String, Codable, Sendable {
++    case discover, preferOrdinary, preferHistorical, volumeTooHigh, difficultyTooHigh, difficultyTooLow
++    case trainedElsewhere, noTrainingElsewhere
++}
++@_spi(AutomaticPolicyExperiment) public enum V2DoseSource: String, Codable, Sendable {
++    case userDeclared, syntheticScenario
++}
++@_spi(AutomaticPolicyExperiment) public struct V2DoseFeedback: Codable, Equatable, Sendable {
++    public let progressionContext: String
++    public let action: V2DoseAction
++    public let historicalSets: Int?
++    public let at: Date
++    public let source: V2DoseSource
++    public let catalogVersion: String
++    public let decisionPolicyVersion: String
++    public init(progressionContext: String, action: V2DoseAction, at: Date, source: V2DoseSource,
++                catalogVersion: String, decisionPolicyVersion: String, historicalSets: Int? = nil) {
++        self.progressionContext = progressionContext; self.action = action; self.historicalSets = historicalSets; self.at = at; self.source = source
++        self.catalogVersion = catalogVersion; self.decisionPolicyVersion = decisionPolicyVersion
++    }
++}
++@_spi(AutomaticPolicyExperiment) public struct V2DoseMemory: Codable, Equatable, Sendable {
++    public let ordinarySets: Int
++    public let lastPlan: V2PlanItem
++    public let at: Date
++    public let preferenceSource: V2DoseSource?
++    public let catalogVersion: String
++    public let decisionPolicyVersion: String
++    public let experimentVersion: String
++    public init(ordinarySets: Int, lastPlan: V2PlanItem, at: Date, preferenceSource: V2DoseSource?,
++                catalogVersion: String, decisionPolicyVersion: String, experimentVersion: String = "dose-choice-v1") {
++        self.ordinarySets = ordinarySets; self.lastPlan = lastPlan; self.at = at; self.preferenceSource = preferenceSource
++        self.catalogVersion = catalogVersion; self.decisionPolicyVersion = decisionPolicyVersion
++        self.experimentVersion = experimentVersion
++    }
++}
++@_spi(AutomaticPolicyExperiment) public struct V2DoseExperimentResult: Sendable {
++    public let decision: V2SessionDecision
++    public let memory: [V2DoseMemory]
++}
+--- before/ios/CadenceEngine/Sources/CadenceSimulator/main.swift
++++ after/ios/CadenceEngine/Sources/CadenceSimulator/main.swift
+@@ -8,12 +8,13 @@
+     case autoMax = "auto_max"
+     case autoMin = "auto_min"
+     case autoTwo = "auto_two"
++    case doseCandidate = "dose_candidate"
+ 
+     var automaticSizing: V2AutomaticSizingExperiment? {
+         switch self {
+         case .autoMax: .catalogMaximum
+         case .autoMin: .catalogMinimum
+-        case .autoTwo: .capAtTwo
++        case .autoTwo, .doseCandidate: .capAtTwo
+         default: nil
+         }
+     }
+@@ -65,6 +66,7 @@
+     var outputJSON: String? = nil
+     var contrasts = false
+     var automatic = false
++    var dosePolicy = false
+     var legacyHistoryProjection = false
+     var tracePersonas: Set<String> = []
+     var traceSeeds = 1
+@@ -92,6 +94,9 @@
+     var comparableSessionPairs = 0
+     var retainedMovements = 0
+     var previousMovementCount = 0
++    var questionsConsumed = 0
++    var doseChanges = 0
++    var equipmentLimits = 0
+     var invariantViolations: [String: Int] = [:]
+ 
+     mutating func recordViolation(_ code: String) {
+@@ -99,6 +104,9 @@
+     }
+ 
+     mutating func merge(_ other: Metrics) {
++        questionsConsumed += other.questionsConsumed
++        doseChanges += other.doseChanges
++        equipmentLimits += other.equipmentLimits
+         opportunities += other.opportunities
+         sessionsStarted += other.sessionsStarted
+         sessionsGenerated += other.sessionsGenerated
+@@ -127,6 +135,8 @@
+ 
+ struct SimulationState {
+     var history: [V2HistoryEntry] = []
++    var doseMemory: [V2DoseMemory] = []
++    var previousDosePlan: [V2PlanItem] = []
+     var exposures: [String: [V2Exposure]] = [:]
+     var previousMovementIds: Set<String> = []
+ }
+@@ -171,6 +181,10 @@
+     let actualSeconds: Int?
+     let interruptionCause: String?
+     let todayInventory: [V2InventoryItem]
++    var exogenousFeedback: [V2DoseFeedback] = []
++    var doseQuestionOffered = false
++    var doseMemoryBefore: [V2DoseMemory] = []
++    var doseMemoryAfter: [V2DoseMemory] = []
+ }
+ 
+ struct SimulationReport: Codable {
+@@ -182,6 +196,7 @@
+     let seedStart: Int
+     let seeds: Int
+     let automatic: Bool
++    let dosePolicy: Bool
+     let legacyHistoryProjection: Bool
+     let tracePersonas: [String]
+     let traceSeeds: Int
+@@ -194,8 +209,8 @@
+ 
+ let configuration = V2EngineConfiguration.productPreview
+ let options = parseOptions(CommandLine.arguments)
+-let personas = referencePersonas() + (options.contrasts ? contrastPersonas() : [])
+-let policies = RhythmPolicy.allCases.filter { ($0.automaticSizing != nil) == options.automatic }
++let personas = options.dosePolicy ? dosePersonas() : referencePersonas() + (options.contrasts ? contrastPersonas() : [])
++let policies: [RhythmPolicy] = options.dosePolicy ? [.autoTwo, .doseCandidate] : RhythmPolicy.allCases.filter { $0 != .doseCandidate && ($0.automaticSizing != nil) == options.automatic }
+ let wallStart = ContinuousClock.now
+ var totals = Dictionary(uniqueKeysWithValues: policies.map { ($0, Metrics()) })
+ var guidedByPersona: [String: Metrics] = [:]
+@@ -215,6 +230,7 @@
+                 seed: UInt64(seed),
+                 configuration: configuration,
+                 legacyHistoryProjection: options.legacyHistoryProjection,
++                dosePolicy: options.dosePolicy,
+                 traceLimit: traceSelected ? options.traceLimit : 0,
+                 traces: &traces
+             )
+@@ -234,7 +250,7 @@
+     let report = SimulationReport(
+         schemaVersion: 1, evidenceSource: "syntheticScenario", catalogVersion: configuration.catalogVersion,
+         decisionPolicyVersion: configuration.decisionPolicyVersion, weeks: options.weeks,
+-        seedStart: options.seedStart, seeds: options.seeds, automatic: options.automatic,
++        seedStart: options.seedStart, seeds: options.seeds, automatic: options.automatic, dosePolicy: options.dosePolicy,
+         legacyHistoryProjection: options.legacyHistoryProjection, tracePersonas: options.tracePersonas.sorted(), traceSeeds: options.traceSeeds,
+         contrasts: options.contrasts, traceLimit: options.traceLimit,
+         traceLimitReached: traces.count >= options.traceLimit, runs: runs, traces: traces
+@@ -265,17 +281,21 @@
+     seed: UInt64,
+     configuration: V2EngineConfiguration,
+     legacyHistoryProjection: Bool,
++    dosePolicy: Bool,
+     traceLimit: Int,
+     traces: inout [SessionTrace]
+ ) -> Metrics {
+     var metrics = Metrics()
+     var state = SimulationState()
+     let baseDate = Date(timeIntervalSince1970: 1_800_000_000)
++    if dosePolicy { state.history = doseInitialHistory(persona: persona, now: baseDate, configuration: configuration) }
+     let totalDays = weeks * 7
+ 
+     for day in 0..<totalDays {
+         let weekday = day % 7
+-        guard persona.opportunityWeekdays.contains(weekday) else { continue }
++        let weekdays: Set<Int> = dosePolicy && persona.id == "variable_frequency"
++            ? (day < 56 ? [0] : (day < 112 ? [0, 1, 2, 3, 4, 5] : [0, 3])) : persona.opportunityWeekdays
++        guard weekdays.contains(weekday) else { continue }
+         metrics.opportunities += 1
+         let week = day / 7
+         if persona.hiatusDays?.contains(day) == true { continue }
+@@ -314,13 +334,15 @@
+         var supports = ["wall_or_stable_plane", "stable_hand_support"]
+         if !floorUnavailable { supports.append("floor_allowed") }
+ 
+-        let mode: V2SessionMode = deterministicUnit(
++        let randomMode: V2SessionMode = deterministicUnit(
+             seed: seed,
+             persona: persona.id,
+             day: day,
+             channel: 5
+         ) < persona.lightModeProbability ? .light : .normal
+ 
++        let mode: V2SessionMode = dosePolicy && persona.id == "return_chosen" && day >= 118 && day <= 124
++            ? .recalibration : randomMode
+         let transientRefusal = deterministicUnit(
+             seed: seed,
+             persona: persona.id,
+@@ -349,15 +371,26 @@
+             refusals: refusals,
+             declaredCurrentHealthSignal: preSessionStop
+         )
+-        guard case let .sessionDecision(initialDecision) = decide(
+-            .sessionDecision(input, now: now), policy: policy,
+-            configuration: configuration
+-        ) else {
+-            metrics.recordViolation("unexpected_engine_result")
+-            continue
++        let feedback = dosePolicy ? doseFeedback(persona: persona, now: now, day: day, configuration: configuration) : []
++        let questionOffered = dosePolicy && (!feedback.isEmpty ||
++            (["absent_response", "historical_three_unanswered"].contains(persona.id) && day == 14) ||
++            (["return_no_answer", "return_external_unknown"].contains(persona.id) && day == 119))
++        let memoryBefore = state.doseMemory
++        let initialDecision: V2SessionDecision
++        if policy == .doseCandidate {
++            let result = CadenceEngine.decideDoseExperiment(input: input, now: now,
++                configuration: configuration, memory: state.doseMemory, feedback: feedback)
++            initialDecision = result.decision
++            state.doseMemory = result.memory
++        } else {
++            guard case let .sessionDecision(value) = decide(.sessionDecision(input, now: now),
++                policy: policy, configuration: configuration) else {
++                metrics.recordViolation("unexpected_engine_result"); continue
++            }
++            initialDecision = value
+         }
+         var decision = initialDecision
+-        if mode == .normal,
++        if !dosePolicy, mode == .normal,
+            initialDecision.plan.contains(where: { $0.referenceStatus == "reconfirmation_pending" }),
+            deterministicUnit(seed: seed, persona: persona.id, day: day, channel: 6) < 0.75 {
+             let recalibrationInput = V2SessionDecisionInput(
+@@ -378,6 +411,18 @@
+             }
+             decision = recalibrationDecision
+         }
++        if dosePolicy {
++            metrics.questionsConsumed += decision.reasons.filter { $0.code.hasPrefix("dose_feedback_") && $0.code != "dose_feedback_ignored" && $0.code != "dose_feedback_not_applicable" }.count
++            metrics.equipmentLimits += decision.reasons.filter { $0.code == "dose_equipment_limit" }.count
++            for item in decision.plan {
++                guard let prior = state.previousDosePlan.first(where: { $0.progressionContext == item.progressionContext }) else { continue }
++                if item.sets != prior.sets { metrics.doseChanges += 1 }
++                if item.sets > prior.sets && (item.targetReps != prior.targetReps || item.load != prior.load) {
++                    metrics.recordViolation("dose_and_difficulty_increased_together")
++                }
++            }
++        }
++        state.previousDosePlan = decision.plan
+         let historyBefore = Array(state.history.suffix(configuration.policy.historyDepthCompletedSessions))
+         let observationReferenceSeconds = policy.automaticSizing == nil ? duration * 60 : decision.estimatedSeconds
+         if decision.decision != .generateSession, traces.count < traceLimit {
+@@ -386,7 +431,8 @@
+                 reasons: decision.reasons, estimatedSeconds: decision.estimatedSeconds,
+                 observationReferenceSeconds: observationReferenceSeconds, plan: decision.plan,
+                 historyBefore: historyBefore, historyWritten: nil, progressionReasons: [:], actualSeconds: nil,
+-                interruptionCause: preSessionStop ? "explicit_safety_signal" : nil, todayInventory: todayInventory))
++                interruptionCause: preSessionStop ? "explicit_safety_signal" : nil, todayInventory: todayInventory,
++                exogenousFeedback: feedback, doseQuestionOffered: questionOffered, doseMemoryBefore: memoryBefore, doseMemoryAfter: state.doseMemory))
+         }
+         if decision.createsDebt { metrics.recordViolation("session_created_debt") }
+         if decision.automaticProgression { metrics.recordViolation("session_progressed_automatically") }
+@@ -427,7 +473,7 @@
+             durationSeconds: observationReferenceSeconds,
+             day: day,
+             seed: seed,
+-            configuration: configuration
++            configuration: configuration, dosePolicy: dosePolicy
+         )
+         metrics.confirmedSets += execution.confirmedByExercise.values.reduce(0, +)
+         metrics.engineRemovedSets += execution.engineRemovedSets
+@@ -452,7 +498,7 @@
+             let confirmedSets = execution.confirmedByExercise[item.exerciseId, default: 0]
+             guard confirmedSets > 0 else { continue }
+             let allSetsConfirmed = confirmedSets == finalPrescribedSets
+-            if allSetsConfirmed { completedExerciseIds.append(item.exerciseId) }
++            if allSetsConfirmed && (!dosePolicy || execution.safetyStoppedExerciseID != item.exerciseId) { completedExerciseIds.append(item.exerciseId) }
+             let exposure = V2Exposure(
+                 confirmedReps: execution.repetitionsByExercise[item.exerciseId, default: []],
+             loadKg: item.load?.kg,
+@@ -461,7 +507,7 @@
+                 progressionContext: item.progressionContext,
+                 catalogVersion: configuration.catalogVersion,
+                 decisionPolicyVersion: configuration.decisionPolicyVersion,
+-                interruptedBySafetySignal: execution.safetyStopped
++                interruptedBySafetySignal: dosePolicy ? execution.safetyStoppedExerciseID == item.exerciseId : execution.safetyStopped
+             )
+             state.exposures[item.progressionContext, default: []].append(exposure)
+             let current = V2Prescription(
+@@ -492,7 +538,7 @@
+                 configuration: configuration,
+                 metrics: &metrics
+             )
+-            if allSetsConfirmed {
++            if allSetsConfirmed && (!dosePolicy || execution.safetyStoppedExerciseID != item.exerciseId) {
+                 completedReferences.append(V2Reference(
+                     exerciseId: progression.nextPrescription.exerciseId,
+                     loadKg: progression.nextPrescription.load?.kg,
+@@ -537,7 +583,7 @@
+                 ($0.exerciseId, $0.progressionContext) < ($1.exerciseId, $1.progressionContext)
+             },
+             restObservations: execution.restObservations,
+-            confirmedWorkEvidence: legacyHistoryProjection ? nil : confirmedWork,
++            confirmedWorkEvidence: legacyHistoryProjection || (dosePolicy && persona.id == "missing_facts") ? nil : confirmedWork,
+             catalogVersion: configuration.catalogVersion,
+             decisionPolicyVersion: configuration.decisionPolicyVersion
+         )
+@@ -549,7 +595,8 @@
+                 observationReferenceSeconds: observationReferenceSeconds, plan: decision.plan,
+                 historyBefore: historyBefore, historyWritten: historyEntry, progressionReasons: progressionReasons, actualSeconds: execution.actualSeconds,
+                 interruptionCause: execution.safetyStopped ? "explicit_safety_signal" : (execution.strictAbandonedSets > 0 ? "strict_time_limit" : (execution.interrupted ? "unknown" : nil)),
+-                todayInventory: todayInventory))
++                todayInventory: todayInventory,
++                exogenousFeedback: feedback, doseQuestionOffered: questionOffered, doseMemoryBefore: memoryBefore, doseMemoryAfter: state.doseMemory))
+         }
+ 
+     }
+@@ -563,7 +610,8 @@
+     durationSeconds: Int,
+     day: Int,
+     seed: UInt64,
+-    configuration: V2EngineConfiguration
++    configuration: V2EngineConfiguration,
++    dosePolicy: Bool = false
+ ) -> ExecutionResult {
+     var remaining = plan
+     var confirmedByExercise: [String: Int] = [:]
+@@ -585,7 +633,7 @@
+         < persona.interruptionProbability
+     let plannedSetCount = max(1, plan.reduce(0) { $0 + $1.sets })
+     let interruptionIndex = interruption
+-        ? deterministicIndex(count: plannedSetCount, seed: seed, persona: persona.id, day: day, channel: 21)
++        ? deterministicIndex(count: dosePolicy ? 8 : plannedSetCount, seed: seed, persona: persona.id, day: day, channel: 21)
+         : nil
+     let healthStopIndex = deterministicUnit(seed: seed, persona: persona.id, day: day, channel: 22)
+         < persona.duringSessionStopProbability ? 0 : nil
+@@ -1064,6 +1112,106 @@
+     ]
+ }
+ 
++// Dedicated scenario cohort: no values below are fitted to either result branch.
++func dosePersonas() -> [Persona] {
++    let base = referencePersonas()[0]
++    let names: [(String, String)] = [
++        ("regular", "Régulier"), ("stagnation", "Répétitions stagnantes"),
++        ("unknown_interruptions", "Interruptions sans cause déclarée"),
++        ("target_attained_no_effort", "Cible atteinte, effort inconnu"),
++        ("too_easy", "Difficulté trop faible déclarée"),
++        ("equipment_ceiling", "Plafond de matériel déclaré"),
++        ("variable_frequency", "Fréquence observée variable"),
++        ("return_chosen", "Reprise explicitement choisie"),
++        ("return_no_answer", "Retour sans réponse"),
++        ("return_external_declared", "Entraînement ailleurs déclaré"),
++        ("return_external_unknown", "Entraînement ailleurs inconnu"),
++        ("missing_facts", "Séries historiques inconnues"),
++        ("stale_reference", "Référence ancienne"),
++        ("context_change", "Changement de matériel et contexte"),
++        ("explicit_volume_excess", "Volume excessif déclaré"),
++        ("initial_too_hard", "Difficulté excessive dès le départ"),
++        ("discovery", "Découverte explicitement choisie"),
++        ("historical_three_unanswered", "Trois séries historiques sans réponse"),
++        ("historical_three_explicit", "Préférence historique explicitement choisie"),
++        ("absent_response", "Question sans réponse"),
++        ("explicit_stop", "Arrêt de sécurité explicite")
++    ]
++    return names.map { id, title in
++        let returning = id.hasPrefix("return_")
++        let inventory = id == "equipment_ceiling"
++            ? [V2InventoryItem(category: "bodyweight", units: 1),
++               V2InventoryItem(category: "adjustable_dumbbell", units: 2, perUnitWeightsKg: [4])]
++            : base.inventory
++        return Persona(id: id, title: title, opportunityWeekdays: [0, 2, 4],
++            adherence: .stable(1), durations: [20, 30, 45], inventory: inventory,
++            paceMultiplier: base.paceMultiplier, restMultiplier: base.restMultiplier,
++            interruptionProbability: id == "unknown_interruptions" ? 0.45 : 0,
++            equipmentAbsenceProbability: 0, floorUnavailableProbability: 0, lightModeProbability: 0,
++            successfulSetProbability: id == "stagnation" || id == "initial_too_hard" ? 0 : (id == "regular" ? 0.76 : 1),
++            preSessionStopProbability: 0, duringSessionStopProbability: id == "explicit_stop" ? 0.12 : 0, persistentRefusals: [],
++            hiatusDays: returning ? 28..<118 : nil,
++            inventoryChangeDay: id == "context_change" ? 56 : nil,
++            changedInventory: id == "context_change" ? [V2InventoryItem(category: "bodyweight", units: 1),
++                V2InventoryItem(category: "kettlebell", units: 1, perUnitWeightsKg: [8, 12])] : nil)
++    }
++}
++
++func doseFeedback(persona: Persona, now: Date, day: Int,
++                  configuration: V2EngineConfiguration) -> [V2DoseFeedback] {
++    // This fixed context never follows a policy-dependent plan or completion.
++    let context = "supported_one_arm_row__adjustable"
++    let action: V2DoseAction?
++    switch persona.id {
++    case "too_easy", "equipment_ceiling": action = day % 14 == 0 ? .difficultyTooLow : nil
++    case "explicit_volume_excess": action = day == 14 ? .volumeTooHigh : nil
++    case "initial_too_hard": action = day == 0 ? .difficultyTooHigh : nil
++    case "discovery": action = day == 0 ? .discover : nil
++    case "historical_three_explicit": action = day == 2 ? .preferHistorical : nil
++    case "return_external_declared": action = day == 119 ? .trainedElsewhere : nil
++    case "return_chosen": action = day == 119 ? .noTrainingElsewhere : nil
++    default: action = nil
++    }
++    guard let action else { return [] }
++    return [V2DoseFeedback(progressionContext: context, action: action, at: now,
++        source: .syntheticScenario, catalogVersion: configuration.catalogVersion,
++        decisionPolicyVersion: configuration.decisionPolicyVersion,
++        historicalSets: action == .preferHistorical ? 3 : nil)]
++}
++
++func doseInitialHistory(persona: Persona, now: Date,
++                        configuration: V2EngineConfiguration) -> [V2HistoryEntry] {
++    let historical = persona.id.hasPrefix("historical_three")
++    guard historical || persona.id == "stale_reference" || persona.id == "equipment_ceiling" || persona.id == "initial_too_hard" else { return [] }
++    let input = V2SessionDecisionInput(request: V2SessionRequest(durationMinutes: 30, mode: .normal),
++        persistentInventory: persona.inventory, todayInventory: persona.inventory,
++        todaySupports: ["wall_or_stable_plane", "stable_hand_support", "floor_allowed"], history: [])
++    guard case let .sessionDecision(decision) = decide(.sessionDecision(input, now: now),
++        policy: .autoTwo, configuration: configuration) else { return [] }
++    let offsets = persona.id == "stale_reference" ? [-127, -123] : [-7, -3]
++    return offsets.map { offset in
++        let start = now.addingTimeInterval(Double(offset * 86_400))
++        let references = decision.plan.map { item in
++            V2Reference(exerciseId: item.exerciseId, loadKg: persona.id == "initial_too_hard" && item.load?.kg != nil ? 8 : item.load?.kg, loadOptionID: item.load?.optionID,
++                targetReps: ["equipment_ceiling", "initial_too_hard"].contains(persona.id) ? configuration.catalog[item.exerciseId]!.repRange.max : item.targetReps,
++                progressionContext: item.progressionContext)
++        }
++        let evidence = zip(decision.plan, references).map { item, reference in
++            V2ConfirmedWorkEvidence(exerciseId: item.exerciseId, progressionContext: item.progressionContext,
++                plannedSets: historical ? 3 : 2, targetUnit: item.resolvedTargetUnit,
++                confirmedSets: (0..<(historical ? 3 : 2)).map { index in
++                    V2ConfirmedSetEvidence(eventID: "synthetic:prior:\(persona.id):\(offset):\(item.exerciseId):\(index)",
++                        repetitions: reference.targetReps, loadKg: reference.loadKg, loadOptionID: reference.loadOptionID,
++                        completedAt: isoDate(start.addingTimeInterval(Double(60 + index * 120))))
++                }, wasSkipped: false, interruptedBySafetySignal: false, source: .syntheticScenario)
++        }
++        return V2HistoryEntry(endedAt: isoDate(start.addingTimeInterval(600)),
++            completedExerciseIds: decision.plan.map(\.exerciseId), references: references,
++            confirmedWorkEvidence: evidence, catalogVersion: configuration.catalogVersion,
++            decisionPolicyVersion: configuration.decisionPolicyVersion)
++    }
++}
++
+ func parseOptions(_ arguments: [String]) -> Options {
+     var options = Options()
+     var index = 1
+@@ -1090,6 +1238,8 @@
+         } else if argument == "--trace-limit", arguments.indices.contains(index + 1),
+                   let value = Int(arguments[index + 1]), (1...10_000).contains(value) {
+             options.traceLimit = value; index += 2
++        } else if argument == "--dose-policy" {
++            options.dosePolicy = true; options.automatic = true; index += 1
+         } else if argument == "--automatic" {
+             options.automatic = true; index += 1
+         } else if argument == "--legacy-history-projection" {
+@@ -1104,7 +1254,8 @@
+     guard options.weeks <= 104, options.seeds <= 1_000 else {
+         fputs("Bornes de simulation : 104 semaines et 1 000 graines maximum.\n", stderr); exit(2)
+     }
+-    let validIDs = Set((referencePersonas() + (options.contrasts ? contrastPersonas() : [])).map(\.id))
++    if options.dosePolicy && !arguments.contains("--weeks") { options.weeks = 24 }
++    let validIDs = Set((options.dosePolicy ? dosePersonas() : referencePersonas() + (options.contrasts ? contrastPersonas() : [])).map(\.id))
+     guard options.tracePersonas.isSubset(of: validIDs) else {
+         fputs("Profil de trace inconnu pour ce lot.\n", stderr); exit(2)
+     }
+@@ -1165,10 +1316,10 @@
+     guidedByPersona: [String: Metrics],
+     wallElapsed: Duration
+ ) {
+-    let projectedYears = Double(options.weeks * options.seeds * personas.count * 3) / 52
++    let projectedYears = Double(options.weeks * options.seeds * personas.count * totals.count) / 52
+     print("# Simulation accélérée La Bonne Séance V2")
+     print("")
+-    print("Projection : \(personas.count) profils × \(options.seeds) graines × \(options.weeks) semaines × 3 politiques")
++    print("Projection : \(personas.count) profils × \(options.seeds) graines × \(options.weeks) semaines × \(totals.count) politiques")
+     print("Graines : \(options.seedStart)...\(options.seedStart + options.seeds - 1) ; contrastes : \(options.contrasts) ; automatique : \(options.automatic)")
+     print("Temps virtuel cumulé : \(decimal(projectedYears)) années-personnes-politiques")
+     print("Temps de calcul réel : \(wallElapsed)")
+@@ -1203,7 +1354,9 @@
+     let strict = totals[.strictTimer, default: Metrics()]
+     let free = totals[.fullyFree, default: Metrics()]
+     let guided = totals[.guidedUserControlled, default: Metrics()]
+-    if options.automatic {
++    if options.dosePolicy {
++        print("Comparaison locale auto_two / dose_candidate : événements déclaratifs communs, aucune victoire physiologique déduite des métriques.")
++    } else if options.automatic {
+         print("Trois volumes automatiques expérimentaux : aucun volume retenu par défaut. La durée estimée est une observation, jamais un quota de retrait.")
+     } else if guided.invariantViolations.isEmpty,
+        guided.rushedStarts == 0,
+--- before/ios/CadenceEngine/Tests/CadenceEngineTests/DoseExperimentTests.swift
++++ after/ios/CadenceEngine/Tests/CadenceEngineTests/DoseExperimentTests.swift
+@@ -0,0 +1,211 @@
++import Foundation
++import Testing
++@_spi(AutomaticPolicyExperiment) @testable import CadenceEngine
++
++/// Product-policy experiments on synthetic facts, not physiological validation.
++struct DoseExperimentTests {
++    let bench = AutomaticPolicyBenchTests()
++    var configuration: V2EngineConfiguration { bench.configuration }
++    var now: Date { bench.now }
++    var empty: AutomaticPolicyBenchTests.Scenario { bench.scenarios()[0] }
++
++    func run(_ scenario: AutomaticPolicyBenchTests.Scenario? = nil, memory: [V2DoseMemory] = [],
++             feedback: [V2DoseFeedback] = [], mode: V2SessionMode = .normal, duration: Int = 30) -> V2DoseExperimentResult {
++        CadenceEngine.decideDoseExperiment(input: bench.input(scenario ?? empty, duration: duration, mode: mode),
++            now: now, configuration: configuration, memory: memory, feedback: feedback)
++    }
++    func response(_ item: V2PlanItem, _ action: V2DoseAction, at: Date? = nil, version: String? = nil) -> V2DoseFeedback {
++        .init(progressionContext: item.progressionContext, action: action, at: at ?? now, source: .syntheticScenario,
++              catalogVersion: version ?? configuration.catalogVersion, decisionPolicyVersion: configuration.decisionPolicyVersion,
++              historicalSets: action == .preferHistorical ? 3 : nil)
++    }
++    func stored(_ item: V2PlanItem, ordinary: Int, version: String? = nil) -> V2DoseMemory {
++        .init(ordinarySets: ordinary, lastPlan: item, at: now.addingTimeInterval(-86400), preferenceSource: .syntheticScenario,
++              catalogVersion: version ?? configuration.catalogVersion, decisionPolicyVersion: configuration.decisionPolicyVersion)
++    }
++    func history(_ item: V2PlanItem, sets: Int, days: [Int] = [6, 3], complete: Bool = true,
++                 version: String? = nil, differentLoad: Bool = false, differentReps: Bool = false,
++                 evidenceSource: V2HistoryEvidenceSource = .syntheticScenario, staleSets: Bool = false, duplicateIDs: Bool = false) -> AutomaticPolicyBenchTests.Scenario {
++        let entries = days.enumerated().map { index, day in
++            let date = ISO8601DateFormatter().string(from: now.addingTimeInterval(Double(-day * 86400)))
++            let evidence = V2ConfirmedWorkEvidence(exerciseId: item.exerciseId, progressionContext: item.progressionContext,
++                plannedSets: sets, targetUnit: item.resolvedTargetUnit,
++                confirmedSets: (0..<(complete ? sets : max(0, sets - 1))).map { n in
++                    .init(eventID: "synthetic-\(duplicateIDs ? 0 : index)-\(n)", repetitions: item.targetReps + (differentReps && index == 1 ? 1 : 0),
++                          loadKg: differentLoad && index == 1 ? 999 : item.load?.kg,
++                          loadOptionID: item.load?.optionID, completedAt: staleSets ? "2026-06-01T12:00:00Z" : date)
++                }, wasSkipped: false, interruptedBySafetySignal: false, source: evidenceSource)
++            return V2HistoryEntry(endedAt: date, completedExerciseIds: complete ? [item.exerciseId] : [],
++                references: [.init(exerciseId: item.exerciseId, loadKg: item.load?.kg, targetReps: item.targetReps,
++                                  progressionContext: item.progressionContext)], confirmedWorkEvidence: [evidence],
++                catalogVersion: version ?? configuration.catalogVersion, decisionPolicyVersion: configuration.decisionPolicyVersion)
++        }
++        return .init(id: "dose-facts", label: "Synthetic completed volume", inventory: empty.inventory, supports: empty.supports, history: entries)
++    }
++    func selected(_ result: V2DoseExperimentResult, _ item: V2PlanItem) throws -> V2PlanItem {
++        try #require(result.decision.plan.first { $0.progressionContext == item.progressionContext })
++    }
++
++    @Test func factsDoNotSilentlyBecomePreferences() throws {
++        let base = run()
++        #expect(!base.decision.plan.isEmpty)
++        #expect(base.decision.plan.allSatisfy { $0.sets == 2 })
++        let item = try #require(base.decision.plan.first)
++        for sets in [1, 3] {
++            let result = run(history(item, sets: sets))
++            #expect(try selected(result, item).sets == 2)
++        }
++        let unproven = V2DoseMemory(ordinarySets: 3, lastPlan: item, at: now.addingTimeInterval(-86400),
++            preferenceSource: nil, catalogVersion: configuration.catalogVersion, decisionPolicyVersion: configuration.decisionPolicyVersion)
++        #expect(try selected(run(memory: [unproven]), item).sets == 2)
++        for (sets, load) in [(0, item.load), (3, Optional(V2Load(mode: item.load?.mode ?? .singleTotalKg, kg: 999)))] {
++            let invalid = V2PlanItem(exerciseId: item.exerciseId, sets: sets, targetReps: item.targetReps,
++                restSeconds: item.restSeconds, load: load, referenceStatus: item.referenceStatus,
++                progressionContext: item.progressionContext, targetUnit: item.targetUnit)
++            #expect(try selected(run(memory: [stored(invalid, ordinary: 3)]), item).sets == 2)
++        }
++    }
++
++    @Test func historicalAdoptionNeedsCurrentChoiceAndTwoComparableCompleteExposures() throws {
++        let item = try #require(run().decision.plan.first)
++        let previous = stored(item, ordinary: 2)
++        let choice = response(item, .preferHistorical)
++        let accepted = run(history(item, sets: 3), memory: [previous], feedback: [choice])
++        let plan = try selected(accepted, item)
++        #expect(plan.sets == 3)
++        #expect(plan.targetReps == item.targetReps && plan.load == item.load && plan.exerciseId == item.exerciseId)
++        #expect(accepted.memory.first { $0.lastPlan.progressionContext == item.progressionContext }?.ordinarySets == 3)
++        for invalid in [history(item, sets: 3, days: [3]), history(item, sets: 3, days: [40, 35]),
++                        history(item, sets: 3, complete: false), history(item, sets: 3, version: "old"),
++                        history(item, sets: 3, differentLoad: true), history(item, sets: 3, differentReps: true),
++                        history(item, sets: 3, evidenceSource: .nativeConfirmed), history(item, sets: 3, staleSets: true), history(item, sets: 3, duplicateIDs: true)] {
++            #expect(try selected(run(invalid, memory: [previous], feedback: [choice]), item).sets == 2)
++        }
++        for bad in [response(item, .preferHistorical, at: now.addingTimeInterval(-1)),
++                    response(item, .preferHistorical, at: now.addingTimeInterval(1)),
++                    response(item, .preferHistorical, version: "old")] {
++            #expect(try selected(run(history(item, sets: 3), memory: [previous], feedback: [bad]), item).sets == 2)
++        }
++        let deferred = run(history(item, sets: 3), feedback: [choice])
++        #expect(try selected(deferred, item).sets == 2)
++    }
++
++    @Test func discoveryIsTemporaryAndReturningWithoutChoiceIsNotDiscovery() throws {
++        let base = run()
++        let item = try #require(base.decision.plan.first)
++        let discovery = run(memory: base.memory, feedback: [response(item, .discover)])
++        #expect(try selected(discovery, item).sets == 1)
++        #expect(discovery.memory.first { $0.lastPlan.progressionContext == item.progressionContext }?.ordinarySets == 2)
++        let next = run(memory: discovery.memory)
++        let resumed = try selected(next, item)
++        #expect(resumed.sets == 2)
++        #expect(resumed.targetReps == item.targetReps && resumed.load == item.load)
++        let old = history(item, sets: 3, days: [90])
++        #expect(try selected(run(old), item).sets == 2)
++        #expect(try selected(run(old, mode: .recalibration), item).sets == 1)
++    }
++
++    @Test func volumeAndInitialDifficultyHaveDifferentConsequences() throws {
++        let base = run(bench.scenarios()[1])
++        let item = try #require(base.decision.plan.first)
++        let reduced = run(bench.scenarios()[1], memory: base.memory, feedback: [response(item, .volumeTooHigh)])
++        #expect(try selected(reduced, item).sets == max(1, item.sets - 1))
++        #expect(try selected(run(bench.scenarios()[1], memory: reduced.memory), item).sets == 1)
++        for other in base.decision.plan where other.progressionContext != item.progressionContext {
++            #expect(try selected(reduced, other).sets == other.sets)
++        }
++        let difficult = run(bench.scenarios()[1], memory: base.memory, feedback: [response(item, .difficultyTooHigh)])
++        let eased = try selected(difficult, item)
++        #expect(eased.sets == item.sets)
++        #expect(eased.targetReps < item.targetReps || (eased.load?.kg ?? 0) < (item.load?.kg ?? 0))
++        let easy = run(bench.scenarios()[1], memory: base.memory, feedback: [response(item, .difficultyTooLow)])
++        #expect(try selected(easy, item).sets == item.sets)
++    }
++
++    @Test func explicitOrdinaryIncreasePreservesDifficultyOrDefers() throws {
++        let item = try #require(run().decision.plan.first)
++        let one = V2PlanItem(exerciseId: item.exerciseId, sourceExerciseId: item.sourceExerciseId, sets: 1,
++            targetReps: item.targetReps, restSeconds: item.restSeconds, load: item.load,
++            referenceStatus: item.referenceStatus, progressionContext: item.progressionContext, targetUnit: item.targetUnit)
++        let increased = run(memory: [stored(one, ordinary: 1)], feedback: [response(item, .preferOrdinary)])
++        let result = try selected(increased, item)
++        #expect(result.sets == 2 && result.targetReps == one.targetReps && result.load == one.load)
++        let invalid = run(memory: [stored(one, ordinary: 1, version: "old")], feedback: [response(item, .preferHistorical)])
++        #expect(try selected(invalid, item).sets == 2)
++    }
++
++    @Test func staleReturnDoesNotActivateAnUnperformedNextLoad() throws {
++        let id = "supported_one_arm_row__adjustable"
++        let date = "2026-06-09T12:00:00Z"
++        func scenario(confirmedKg: Double?) -> AutomaticPolicyBenchTests.Scenario {
++            let evidence = confirmedKg.map { kg in
++                V2ConfirmedWorkEvidence(exerciseId: id, progressionContext: id, plannedSets: 2, targetUnit: .repetitions,
++                    confirmedSets: (0..<2).map { .init(eventID: "old-return-\($0)", repetitions: kg == 6 ? 12 : 8,
++                                                    loadKg: kg, completedAt: date) },
++                    wasSkipped: false, interruptedBySafetySignal: false, source: .syntheticScenario)
++            }
++            return .init(id: "stale-unperformed-load", label: "Synthetic old work and prospective reference", inventory: empty.inventory,
++                supports: empty.supports, history: [.init(endedAt: date, completedExerciseIds: [id],
++                    references: [.init(exerciseId: id, loadKg: 8, targetReps: 8, progressionContext: id)],
++                    confirmedWorkEvidence: evidence.map { [$0] }, catalogVersion: configuration.catalogVersion,
++                    decisionPolicyVersion: configuration.decisionPolicyVersion)])
++        }
++        // Lexicographic 12:00+02 sorts after 11:00Z, but is one hour older.
++        let offsetHistory = [("2026-06-09T12:00:00+02:00", 6.0), ("2026-06-09T11:00:00Z", 8.0)].map { date, kg in
++            V2HistoryEntry(endedAt: date, completedExerciseIds: [id],
++                references: [.init(exerciseId: id, loadKg: 10, targetReps: 8, progressionContext: id)],
++                confirmedWorkEvidence: [.init(exerciseId: id, progressionContext: id, plannedSets: 2, targetUnit: .repetitions,
++                    confirmedSets: (0..<2).map { .init(eventID: "offset-\(kg)-\($0)", repetitions: 12, loadKg: kg, completedAt: date) },
++                    wasSkipped: false, interruptedBySafetySignal: false, source: .syntheticScenario)],
++                catalogVersion: configuration.catalogVersion, decisionPolicyVersion: configuration.decisionPolicyVersion)
++        }
++        let offsets = AutomaticPolicyBenchTests.Scenario(id: "offset-order", label: "Chronological order across offsets",
++            inventory: empty.inventory, supports: empty.supports, history: offsetHistory)
++        let offsetInput = bench.input(offsets)
++        let offsetDecisions = [run(offsets).decision,
++            CadenceEngineV2.decideNextSession(input: offsetInput, now: now, configuration: configuration, experimentalSizing: .capAtTwo)]
++        for decision in offsetDecisions {
++            let plan = try #require(decision.plan.first { $0.progressionContext == id })
++            #expect(plan.load?.kg == 8 && plan.targetReps == 12)
++            #expect(plan.referenceStatus == "reconfirmation_pending")
++        }
++        for (confirmedKg, expectedKg, expectedReps) in [(Optional(6.0), 6.0, 12), (Optional(8.0), 8.0, 8), (nil, 8.0, 8)] {
++            let input = bench.input(scenario(confirmedKg: confirmedKg))
++            let candidate = CadenceEngine.decideDoseExperiment(input: input, now: now, configuration: configuration).decision
++            let baseline = CadenceEngineV2.decideNextSession(input: input, now: now, configuration: configuration, experimentalSizing: .capAtTwo)
++            for result in [candidate, baseline] {
++                let plan = try #require(result.plan.first { $0.progressionContext == id })
++                #expect(plan.load?.kg == expectedKg && plan.targetReps == expectedReps)
++                #expect(plan.referenceStatus == "reconfirmation_pending")
++                #expect(plan.sets == 2)
++            }
++            let legacy = try #require(bench.publicDecision(input).plan.first { $0.progressionContext == id })
++            #expect(legacy.load?.kg == 8 && legacy.targetReps == 8)
++        }
++    }
++
++    @Test func durationDeterminismAndSafetyRemainIndependentOfDoseChoices() throws {
++        let base = run()
++        let item = try #require(base.decision.plan.first)
++        let feedback = [response(item, .volumeTooHigh)]
++        let a = run(memory: base.memory, feedback: feedback, duration: 20)
++        let b = run(memory: base.memory, feedback: feedback, duration: 45)
++        #expect(a.decision == b.decision && a.memory == b.memory)
++        #expect(a.decision == run(memory: base.memory, feedback: feedback, duration: 20).decision)
++        for request in [bench.input(empty, health: true), bench.input(empty, scope: .pregnancy), bench.input(empty, remaining: -1)] {
++            let experimental = CadenceEngine.decideDoseExperiment(input: request, now: now, configuration: configuration,
++                memory: base.memory, feedback: feedback)
++            #expect(experimental.decision.decision == bench.publicDecision(request).decision)
++            #expect(experimental.decision.plan.isEmpty)
++        }
++        let confirmed = [V2ConfirmedWork(exerciseId: item.exerciseId, sets: 1, targetReps: item.targetReps,
++                                        load: item.load, progressionContext: item.progressionContext)]
++        let work = base.decision.plan.map { bench.work($0) }
++        let active = V2ActiveSession(sessionId: "synthetic-dose-active", mode: .normal, catalogVersion: configuration.catalogVersion,
++            decisionPolicyVersion: configuration.decisionPolicyVersion, confirmed: confirmed, unstarted: work)
++        let resumed = CadenceEngine.decideDoseExperiment(input: bench.input(empty, remaining: 0, active: active),
++            now: now, configuration: configuration, memory: base.memory, feedback: feedback)
++        #expect(resumed.decision.confirmed == confirmed)
++        #expect(resumed.decision.plan.map { bench.work($0) } == work)
++    }
++}
+--- before/docs/80-20-DECISION-CONTRACT.md
++++ after/docs/80-20-DECISION-CONTRACT.md
+@@ -1,6 +1,12 @@
+ # Contrat canonique de décision 80/20 V2
+ 
+ Statut : `DRAFT EXÉCUTABLE — À VALIDER AVANT MIGRATION`
++
++Expérience locale du 7 septembre : [contrat de dose automatique](80-20-DOSE-EXPERIMENT.md).
++Dans cette expérience uniquement, la durée est estimée après construction, sans
++choix obligatoire de temps ni réduction au dépassement ; les anciennes règles
++de budget ci-dessous restent la baseline, pas une nouvelle instruction produit.
++Le dispatcher de l’app et ses snapshots ne sont pas migrés par cette expérience.
+ 
+ Ce document transforme la doctrine 80/20 en décisions observables. Il ne fixe
+ ni l’interface, ni l’architecture Swift, ni une vérité physiologique.
+--- before/docs/80-20-SIMULATION.md
++++ after/docs/80-20-SIMULATION.md
+@@ -205,3 +205,84 @@
+ traces sont bornées. Une plage principale est limitée à 104 semaines et 1 000
+ graines. Ces bornes protègent l’exécution locale, elles ne sont pas des règles du
+ produit. Ne pas utiliser ces sorties comme validation scientifique ou clinique.
++
++## Comparaison de dose locale `--dose-policy`
++
++Le contrat et les critères d'acceptation ont été fixés dans
++[80-20-DOSE-EXPERIMENT.md](80-20-DOSE-EXPERIMENT.md) avant lecture des résultats.
++Cette option compare seulement `auto_two` et `dose_candidate`, pendant 24 semaines
++par défaut, sur 21 profils dédiés. Elle n'active aucune politique dans l'app.
++Les trois politiques de rythme et les trois tailles automatiques antérieures
++restent disponibles avec leurs profils et comportements précédents.
++
++```bash
++swift run --package-path ios/CadenceEngine CadenceSimulator \
++  --dose-policy --weeks 24 --seed-start 1 --seeds 5 \
++  --trace-personas explicit_volume_excess,initial_too_hard,discovery,historical_three_explicit \
++  --trace-seeds 1 --trace-limit 10000 --output-json /tmp/lbs-dose-exploration.json
++
++swift run --package-path ios/CadenceEngine CadenceSimulator \
++  --dose-policy --weeks 24 --seed-start 6 --seeds 5 \
++  --trace-personas equipment_ceiling,return_chosen,return_external_unknown,unknown_interruptions \
++  --trace-seeds 1 --trace-limit 10000 --output-json /tmp/lbs-dose-control.json
++```
++
++Les graines 1–5 servent à explorer ; 6–10 constituent le contrôle distinct, sans
++réglage après consultation. Chaque lot contient 210 trajectoires. Les métriques
++restent descriptives : davantage de séries, une durée moindre ou un meilleur
++taux de complétion ne désignent aucun gagnant physiologique.
++
++### Événements et couverture
++
++Les profils couvrent régularité, stagnation, interruption inconnue, cible atteinte
++sans effort connu, difficulté faible, plafond matériel, fréquence variable,
++reprise choisie, retour sans réponse, entraînement ailleurs déclaré ou inconnu,
++faits de séries absents, référence ancienne, changement de contexte, volume
++excessif, difficulté excessive initiale, découverte, historique de trois séries
++avec ou sans choix explicite, question sans réponse et arrêt de sécurité explicite.
++
++Les réponses sont synthétiques, datées de la décision et ciblent le contexte
++fixe `supported_one_arm_row__adjustable`. Leur génération ne consulte jamais le
++plan de la candidate. Le comparateur reçoit les mêmes événements dans ses traces
++mais ignore les réponses locales. Un contexte indisponible ne fait pas router
++la réponse vers un autre mouvement. Le mode global de reprise est choisi par
++le scénario dans les deux branches ; sa réduction temporaire à une série est
++une différence intentionnelle de la candidate. Le tirage historique de 75 % pour
++recalibrer une référence ancienne n'est pas utilisé dans cette comparaison.
++
++Les tirages de réussite par mouvement/série, rythme et repos sont communs aux
++deux branches. L'interruption inconnue est placée à un ordinal de série tiré
++parmi huit positions fixes, indépendamment du volume prescrit ; une séance
++terminée avant cet événement ne le rencontre pas. Les autres voies gardent leur
++ancien placement dépendant du nombre de séries planifiées.
++
++Les historiques initiaux sont des scénarios explicites : deux séances avec dates,
++charges, répétitions et séries confirmées synthétiques. L'historique de trois
++séries est injecté à J−7 et J−3 ; le choix de trois séries est donné à J2 après
++une première prescription mémorisée. Ces faits ne prouvent aucune tolérance.
++Le profil ancien utilise J−127/J−123. Le cas de difficulté initiale excessive
++possède deux expositions synthétiques antérieures à huit kilogrammes lorsque le
++matériel le permet et à la cible haute du catalogue ; sa déclaration à J0 permet
++d'observer une recalibration réelle plutôt qu'un appel déjà au plancher. Le profil plafond commence à la borne haute
++des répétitions du catalogue avec un seul palier de charge disponible. Le profil
++`missing_facts` conserve les références mais omet les preuves de séries ; il ne
++transforme pas l'inconnu en zéro série. La fréquence variable passe d'une à six,
++puis deux occasions hebdomadaires, sans dette.
++
++### Lecture des traces
++
++`exogenousFeedback` et `doseQuestionOffered` rendent visibles les réponses et les
++non-réponses. `doseMemoryBefore`/`doseMemoryAfter` séparent la préférence des faits
++confirmés contenus dans `historyWritten`. Les raisons `dose_*` explicitent la
++branche prise. `questionsConsumed` compte les réponses acceptées, `doseChanges`
++les mouvements dont la prescription de séries change depuis la séance précédente,
++et `equipmentLimits` les signaux de plafond ; ces compteurs valent zéro dans les
++voies qui n'exécutent pas ces branches. L'invariant supplémentaire détecte une
++hausse simultanée des séries et un changement de cible/charge dans le même contexte.
++Les données restent entièrement synthétiques.
++
++Dans cette voie uniquement, le signal de sécurité des expositions concerne le
++mouvement arrêté ; ce mouvement ne produit ni référence de progression ni
++identifiant de mouvement entièrement terminé. Ses séries confirmées restent
++conservées dans les faits. La baseline et la candidate utilisent cette même
++projection ; les anciennes voies restent reproductibles.
+--- before/docs/80-20-DOSE-EXPERIMENT.md
++++ after/docs/80-20-DOSE-EXPERIMENT.md
+@@ -0,0 +1,67 @@
++# Contrat expérimental de dose — 7 septembre 2026
++
++Statut : contrat de comparaison locale, aucune activation dans l’app. Priorité à l’autorisation actuelle sur les anciens budgets temporels de la doctrine, du contrat V2 et du rapport scientifique fourni. Le rapport joint a été lu intégralement ; il constitue une recherche à vérifier, pas une instruction produit.
++
++## Critères fixés avant les résultats
++
++Comparer référence stable deux séries et candidate sur les mêmes événements exogènes, 24 semaines, graines 1–5 exploration et 6–10 contrôle. Aucun réglage sur le contrôle. Les taux de complétion, durées et totaux de séries décrivent les trajectoires ; aucun ne désigne un gagnant physiologique.
++
++Acceptation : zéro travail confirmé perdu, aucun matériel inventé, aucun retrait temporel, aucune dette, aucune hausse de séries sur simple réussite/cible plafonnée, aucun signal de fatigue inventé, aucune reconduction automatique d’un volume seulement réalisé, aucune hausse simultanée de séries et difficulté. Les branches supplémentaires doivent changer une décision explicite et utile ; sinon conserver le comparateur simple.
++
++Les cas obligatoires couvrent : cible réussie sans effort connu, difficulté trop faible, difficulté initiale excessive distincte de volume excessif, matériel plafonné, fréquence changeante, reprise choisie ou sans réponse, entraînement ailleurs déclaré ou inconnu, séries partielles, références anciennes ou non comparables, données et réponses absentes.
++
++## Politique minimale à examiner
++
++Le socle ordinaire de deux séries est une convention expérimentale informée par les synthèses, jamais une dose optimale individuelle. Aucun ajout automatique d’une troisième série n’est implémenté : l’historique et les sources disponibles ne donnent pas de critère individuel défendable pour le déclencher.
++
++Le moteur continue à sélectionner les mouvements, filtrer les configurations, contrôler les versions/sécurité et progresser par ses fonctions existantes. La candidate ne crée ni moteur de sélection ni formule physiologique parallèle. Elle choisit localement le volume, puis utilise les coûts temporels existants pour estimer le plan obtenu.
++
++Un petit registre expérimental conserve une préférence de volume, séparée des séries confirmées, et la dernière prescription proposée avec date/contexte/versions. Une préférence ne représente pas une capacité. Les modes ponctuels de découverte, reprise ou allégé ne réécrivent pas cette préférence.
++
++| Règle | Faits requis, comparabilité, provenance et date | Décision et raison | Source / convention / limites | Sans donnée | Test attendu |
++|---|---|---|---|---|---|
++| D01 Temps | Plan final, coûts catalogue et repos réels comparables | Construire puis estimer ; aucun quota ni réduction au dépassement | Contrat produit validé, coûts à chronométrer | Coûts catalogue ; aucune durée demandée | Changer 20/30/45 ne change pas le plan ; reprise préserve le travail |
++| D02 Ordinaire | Préférence explicite compatible si présente ; contexte et versions identiques | Maintenir préférence, sinon deux séries | ACSM 2026, Discussion et tableau 6, intégral vérifié ; chiffre choisi pour le produit, pas optimum | Deux séries, ni profil débutant ni tolérance inférés | Historique1/3 et absence ne déclenchent pas adoption ou escalade |
++| D03 Découverte | Choix explicite pour ce mouvement et cette séance | Une série temporaire ; préférence ordinaire conservée | Convention d’expérience, pas seuil scientifique | Pas de découverte automatiquement inférée | Séance suivante retrouve préférence sans hausse simultanée de difficulté |
++| D04 Reprise | Mode recalibration explicitement choisi ; référence ancienne conservée | Une série temporaire, recalibration existante ; raison distincte nouveau/ancien contexte | Étude de reprise n’établit aucun pourcentage universel ; une série est convention | Absence app seule : maintien, progression en attente si référence ancienne | Avec/sans réponse et entraînement ailleurs, pas de remise à zéro ni dette |
++| D05 Autre dose passée | Séries confirmées exactes, contexte/unité/charge/versions comparables, dates ; choix explicite actuel | Ne l’adopter que comme préférence confirmée, jamais comme tolérance prouvée | Contrat produit, aucun seuil biologique | Conserver préférence existante ou socle2 | Référence3 conservée fait, non adoptée silencieusement |
++| D06 Volume excessif | Déclaration actuelle localisée, distincte d’une difficulté dès la première série | Réduire d’une série locale, plancher catalogue, préférence persistante | Convention prudente, pas diagnostic ni coefficient physiologique | Interruption sans cause : maintien | Partial inconnu inchangé ; déclaration volume modifie seulement ce contexte |
++| D07 Difficulté initiale excessive | Déclaration actuelle localisée | Recalibrer cible/charge par fonction existante, volume conservé | Convention, pas fatigue déduite | Maintien | Aucun retrait de série utilisé pour masquer une première série trop difficile |
++| D08 Trop facile/plafond | Déclaration actuelle ou confirmations réelles, plage et paliers réellement disponibles | Progression répétitions/charge existante ; signaler limite du matériel au plafond ; pas de série compensatoire | Chaves/Lopez, textes intégraux vérifiés ; +1rep et nombre de confirmations restent conventions | Pas de plateau déduit de la cible atteinte ; progression factuelle possible, pas de série ajoutée | Cible plafonnée et charge max sur plusieurs mois : volume stable |
++| D09 Changement de volume | Prescription avant la décision, contexte/charge disponibles et versions compatibles | Si hausse explicitement demandée, conserver exactement difficulté précédente ; différer sans base comparable | Invariant produit : une dimension à la fois | Hausse différée, aucune équivalence inventée | Hausse2→3 ne hausse ni charge ni cible ni variante |
++| D10 Fréquence et manque | Dates de séances observées, jamais calendrier supposé complet | Aucun rattrapage ni compensation de fréquence ; pas de récupération supposée | Volume/fréquence moyens ≠ dose du jour | L’entraînement hors app reste inconnu | Doubler opportunités n’augmente pas séries par mouvement |
++
++Les réponses simulées ciblent une séance et un contexte précis ; réponse périmée, future, de mauvaise version ou de provenance incorrecte = non utilisée avec raison explicite. La source synthétique reste distincte d’une déclaration réelle. Aucun nouvel écran ou stockage app n’est introduit.
++
++## Questions facultatives simulées
++
++- Préférence face à un volume historique différent : conserver la préférence actuelle ou choisir explicitement ce volume. Le libellé ne prétend pas qu’il était adapté.
++- Difficulté ambiguë : trop facile, trop difficile dès le départ, quantité excessive, ou réponse absente. Chaque réponse ouvre sa branche ; aucune réponse ne vaut permission d’ajouter.
++- Reprise : choix explicite de retrouver ses repères ; information sur la pratique ailleurs reste factuelle et ne transfère aucune performance absente.
++
++Ce lot mesure décisions changées et réponses consommées, pas le bénéfice de poser ces questions en conditions réelles. Leur fréquence de simulation n’est pas une fréquence validée pour l’interface.
++
++## Sources vérifiées et portée
++
++Les quatre sources décisives ci-dessous ont été vérifiées avant implémentation. Les sous-études de leurs synthèses et les suppléments OSF de Pelland n’ont pas été audités individuellement.
++
++| Source et accès réellement obtenu | Portée vérifiée et limite pour le contrat |
++|---|---|
++| [ACSM 2026, texte complet officiel Europe PMC](https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12965823/fullTextXML), Methods, Results, Discussion, tableau 6. Page PMC bloquée par CAPTCHA. | Recommande au moins deux séries par exercice ; 2–3 séries pour favoriser la force. Synthèse de résultats moyens, largement novices et études courtes. Ne fournit ni optimum individuel, ni déclencheur automatique 2→3. Le socle stable et les branches sont nos conventions. |
++| [Pelland, texte final intégral, PDF miroir 25 pages](https://www.fisiologiadelejercicio.com/wp-content/uploads/2025/12/The-Resistance-Training-Dose-Response.pdf), DOI10.1007/s40279-025-02344-w ; §§2–5, pp12–20. Springer : résumé seulement. | 67 études, surtout jeunes adultes, environ dix semaines. Rendements décroissants du volume hebdomadaire ; fréquence et résultats distincts force/hypertrophie. Aucun seuil individuel par séance. Le texte final dit absence de plateau clair en hypertrophie : ne pas reprendre comme plafond la mention ACSM18–20. Pondération indirecte0,5 heuristique, données rares à haut volume. |
++| [Chaves, PDF éditeur intégral](https://www.thieme-connect.de/products/ejournals/pdf/10.1055/a-2256-5857.pdf), Experimental design, Protocols, Discussion, pp505–509. | 39 adultes analysés, extension du genou, 23séances/10semaines, quatre séries à échec concentrique. Reps ou charge donnent des gains sans différence significative ; ce n’est pas une équivalence universelle ni validation de +1rép/deux confirmations ou de tous mouvements domestiques. |
++| [Halonen, HTML éditeur intégral](https://onlinelibrary.wiley.com/doi/10.1111/sms.14739), §§2.1–2.6,3.3–3.4,4.1. | 55 participants,42terminent ; dix semaines d’arrêt réel entre blocs supervisés. Conserver l’historique et réévaluer est défendable ; aucune réduction fixe ni délai90jours validé. Absence dans l’app n’équivaut pas à l’arrêt de l’étude. |
++| [Lopez, texte complet officiel Europe PMC](https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8126497/fullTextXML), Study selection, Results, Discussion. LWW direct inaccessible. [Corrigendum vérifié](https://pmc.ncbi.nlm.nih.gov/articles/PMC12479057/). | 28études/747adultes, séries à échec volontaire ; intérêt des charges élevées pour force1RM, hypertrophie sans différence significative entre catégories. Ne valide pas quelques répétitions faciles ni l’ajout de séries pour compenser un matériel plafonné. Le corrigendum corrige trois tailles d’effet sans changer les conclusions selon les auteurs. |
++
++Les références complémentaires du rapport fourni ne deviennent pas des règles : Robinson a été consulté au niveau résumé, sans lecture intégrale vérifiée ; la méta-analyse non-échec2026 a été consultée en HTML (méthodes, résultats, limites), sans audit indépendant de ses études. Aucune nouvelle prescription de RIR ou d’échec n’est implémentée. Les autres références annexes ne sont pas revendiquées comme lues intégralement dans ce lot.
++
++Deux expositions pour confirmer une préférence historique et la fenêtre de fraîcheur de30jours reprise de la politique existante sont des conventions de preuve/comparabilité. La préférence nomme explicitement le nombre demandé. Les deux preuves doivent appartenir à la même provenance que la réponse (réelle ou synthétique), sans signal de sécurité, dans le même contexte/unité/charge, avec dates de confirmations récentes. Ce filtre ne mesure pas la tolérance. Les dates de la séance et des séries sont conservées dans les traces.
++
++
++## Correction démontrée pendant la lecture des premières trajectoires
++
++Le premier contrôle a révélé, dans les deux bras, une référence prospective : jour25, deux séries de12 à6kg confirmées ; le moteur de progression proposait8kg×8 pour plus tard ; jour119 sans réponse, cette proposition jamais exécutée revenait comme référence. C’est un défaut de provenance de la prescription, pas une preuve de perte de capacité.
++
++D11 — Dans les deux voies automatiques expérimentales, une référence ancienne non étayée par les confirmations disponibles ne déclenche plus cette hausse en attente. Le moteur conserve ensemble charge et répétitions d’un même travail complet, comparable, daté, sans signal de sécurité et encore réalisable. Une référence déjà effectuée reste inchangée. Sans preuve admissible, l’état demeure explicitement à reconfirmer ; aucune performance n’est inventée. C’est un invariant produit, sans nouveau seuil physiologique. Le dispatcher public reste inchangé.
++
++La régression ciblée vérifie le cas6kg×12 versus8kg×8, une référence8kg déjà confirmée et l’absence de faits détaillés. Les premières matrices sont archivées comme preuve avant correction ; le même protocole/graines est rejoué après correction, sans ajuster de probabilité ou de seuil pour améliorer les résultats.

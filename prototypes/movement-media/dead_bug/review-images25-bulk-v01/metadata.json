@@ -1,0 +1,70 @@
+{
+  "movementId": "dead_bug",
+  "status": "visual_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png",
+    "images-2.5-bulk-v01/contact-sheet-3x3.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": [
+    "408x408+5+5",
+    "408x408+423+5",
+    "408x408+841+5",
+    "408x408+5+423",
+    "408x408+423+423",
+    "408x408+841+423",
+    "408x408+5+841",
+    "408x408+423+841",
+    "408x408+841+841"
+  ],
+  "uniqueSourceFrames": 9,
+  "visiblyDistinctPoses": 7,
+  "displayedSteps": 13,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    5,
+    6,
+    7,
+    8,
+    7,
+    6,
+    9
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "dead_bug_review_images25_bulk_v01.mp4",
+  "poster": "dead_bug_poster_review_images25_bulk_v01.webp",
+  "fallback": "dead_bug_fallback_review_images25_bulk_v01.webp",
+  "fallbackSourceIndices": [
+    1,
+    4,
+    8
+  ],
+  "notes": [
+    "One bulk board contains both contralateral sides and three neutral checkpoints.",
+    "The 13-step sequence returns through the same generated poses; it does not interpolate anatomy.",
+    "Torso and pelvis appear stable on board review; side identity and lumbar control still require explicit human review.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

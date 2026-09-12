@@ -1,0 +1,23 @@
+[
+  {
+    "id": "dip_bar_inverted_row",
+    "kind": "cycle",
+    "outputDirectory": "review-reference-two-cycles-v01",
+    "sources": [
+      "real-reference-2026-09-06/loop-work/low.png",
+      "real-reference-2026-09-06/loop-work/high-aligned.png"
+    ],
+    "crops": ["746x746+52+70", "746x746+52+70"],
+    "sequence": [0, 1, 0, 1],
+    "fallbackIndices": [0, 1],
+    "durationSeconds": 4,
+    "visiblyDistinctPoses": 2,
+    "reversePoseReuse": true,
+    "status": "two_cycle_comparison_pending_user_review",
+    "notes": [
+      "User requested twice the movement in the same preview. Two endpoint photos alternate twice: low, high, low, high, one second each, four seconds total.",
+      "Same sources, registration and common crop as review-reference-two-poses-v01. No new poses, interpolation, crossfade, camera motion or anatomical deformation.",
+      "Faster two-position alternation, not a continuous trajectory or prescribed exercise tempo. Residual equipment and heel shifts remain. Preview only; no app, catalog or release-manifest change."
+    ]
+  }
+]

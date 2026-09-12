@@ -1,0 +1,37 @@
+[
+  {
+    "id": "dead_bug",
+    "kind": "cycle",
+    "outputDirectory": "review-images25-bulk-v02",
+    "sources": [
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png"
+    ],
+    "boardCellIndices": [1, 2, 3, 4, 6, 7, 8],
+    "crops": [
+      "408x408+5+5",
+      "408x408+423+5",
+      "408x408+841+5",
+      "408x408+5+423",
+      "408x408+841+423",
+      "408x408+5+841",
+      "408x408+423+841"
+    ],
+    "visiblyDistinctPoses": 7,
+    "durationSeconds": 4,
+    "sequence": [0, 1, 2, 3, 2, 1, 0, 4, 5, 6, 5, 4, 0],
+    "fallbackIndices": [0, 3, 6],
+    "status": "visual_candidate_not_release",
+    "notes": [
+      "Seven semantically distinct poses: one neutral checkpoint and three progressive poses for each contralateral side.",
+      "The exact same neutral frame is reused at the side transition and loop closure to prevent generated neutral-frame jitter.",
+      "This bilateral cycle intentionally differs from the simple outbound-and-reverse pattern used by unilateral movements.",
+      "Torso, pelvis and lumbar control still require explicit human review."
+    ]
+  }
+]

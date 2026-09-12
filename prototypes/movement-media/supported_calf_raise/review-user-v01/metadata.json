@@ -1,0 +1,46 @@
+{
+  "movementId": "supported_calf_raise",
+  "status": "user_correction_pending_visual_review",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "user-redo-2026-09-06/two-poses-v02.png",
+    "user-redo-2026-09-06/two-poses-v02.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": [
+    "864x857+15+15",
+    "864x857+895+15"
+  ],
+  "uniqueSourceFrames": 2,
+  "visiblyDistinctPoses": 2,
+  "displayedSteps": 4,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    1,
+    2
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "supported_calf_raise_review_user_v01.mp4",
+  "poster": "supported_calf_raise_poster_review_user_v01.webp",
+  "fallback": "supported_calf_raise_fallback_review_user_v01.webp",
+  "fallbackSourceIndices": [
+    1,
+    2
+  ],
+  "notes": [
+    "Old source and first edit rejected: extra third arm. New setup has two arms raised toward wall, no hanging duplicated limb; far hand partly occluded by body.",
+    "Support changes from one hand to two hands at wall, not a software catalog prescription change. Both heels low/high; two poses twice over four seconds. Small hand/foot registration differences remain.",
+    "No professional or release approval, app/catalog/manifest unchanged.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

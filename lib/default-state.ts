@@ -12,6 +12,7 @@ export function defaultProfile(): Profile {
     equipment: [],
     otherEquipment: "",
     offerPublicContributions: false,
+    surpriseWorkouts: false,
     pushupLevel: "none",
     pullupLevel: "none",
     physiologicalContext: "not-specified",

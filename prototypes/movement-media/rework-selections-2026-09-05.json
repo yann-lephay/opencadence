@@ -1,0 +1,502 @@
+[
+  {
+    "id": "goblet_squat",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/goblet_squat_cycle_v01.png",
+      "rework-2026-09-05/goblet_squat_cycle_v01.png",
+      "rework-2026-09-05/goblet_squat_cycle_v01.png",
+      "rework-2026-09-05/goblet_squat_cycle_v01.png",
+      "rework-2026-09-05/goblet_squat_cycle_v01.png",
+      "rework-2026-09-05/goblet_squat_cycle_v01.png",
+      "rework-2026-09-05/goblet_squat_cycle_v01.png",
+      "rework-2026-09-05/goblet_squat_cycle_v01.png",
+      "rework-2026-09-05/goblet_squat_cycle_v01.png",
+      "rework-2026-09-05/goblet_squat_cycle_v01.png",
+      "rework-2026-09-05/goblet_squat_cycle_v01.png",
+      "rework-2026-09-05/goblet_squat_cycle_v01.png"
+    ],
+    "crops": [
+      "300x300+10+10",
+      "300x300+322+10",
+      "300x300+634+10",
+      "300x300+946+10",
+      "300x300+10+322",
+      "300x300+322+322",
+      "300x300+10+634",
+      "300x300+322+634",
+      "300x300+10+946",
+      "300x300+634+634",
+      "300x300+946+634",
+      "300x300+322+946"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      9,
+      10,
+      13,
+      11,
+      12,
+      14
+    ],
+    "visiblyDistinctPoses": 11,
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "fallbackIndices": [
+      0,
+      6,
+      11
+    ],
+    "notes": [
+      "Regenerated source, independently reviewed by floor_press_visual_qc; explicit useful phase selection, duplicates excluded.",
+      "Fixed 300px square cell windows with identical scale; no generated video interpolation.",
+      "12 selected snapshots do not necessarily represent 12 different joint-angle states."
+    ]
+  },
+  {
+    "id": "dumbbell_floor_press",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png"
+    ],
+    "crops": [
+      "300x300+10+10",
+      "300x300+322+10",
+      "300x300+634+10",
+      "300x300+946+10",
+      "300x300+10+322",
+      "300x300+322+322",
+      "300x300+634+322",
+      "300x300+946+322",
+      "300x300+10+946",
+      "300x300+322+946",
+      "300x300+634+946",
+      "300x300+946+946"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      13,
+      14,
+      15,
+      16
+    ],
+    "visiblyDistinctPoses": 8,
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "fallbackIndices": [
+      0,
+      7,
+      11
+    ],
+    "notes": [
+      "Regenerated source, independently reviewed by floor_press_visual_qc; explicit useful phase selection, duplicates excluded.",
+      "Fixed 300px square cell windows with identical scale; no generated video interpolation.",
+      "12 selected snapshots do not necessarily represent 12 different joint-angle states."
+    ]
+  },
+  {
+    "id": "double_dumbbell_front_squat",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/double_dumbbell_front_squat_cycle_v01.png",
+      "rework-2026-09-05/double_dumbbell_front_squat_cycle_v01.png",
+      "rework-2026-09-05/double_dumbbell_front_squat_cycle_v01.png",
+      "rework-2026-09-05/double_dumbbell_front_squat_cycle_v01.png",
+      "rework-2026-09-05/double_dumbbell_front_squat_cycle_v01.png",
+      "rework-2026-09-05/double_dumbbell_front_squat_cycle_v01.png",
+      "rework-2026-09-05/double_dumbbell_front_squat_cycle_v01.png",
+      "rework-2026-09-05/double_dumbbell_front_squat_cycle_v01.png",
+      "rework-2026-09-05/double_dumbbell_front_squat_cycle_v01.png",
+      "rework-2026-09-05/double_dumbbell_front_squat_cycle_v01.png",
+      "rework-2026-09-05/double_dumbbell_front_squat_cycle_v01.png"
+    ],
+    "crops": [
+      "300x300+10+10",
+      "300x300+322+10",
+      "300x300+634+10",
+      "300x300+946+10",
+      "300x300+10+322",
+      "300x300+322+322",
+      "300x300+634+322",
+      "300x300+946+322",
+      "300x300+10+634",
+      "300x300+322+634",
+      "300x300+634+634"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "visiblyDistinctPoses": 8,
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      6,
+      4,
+      8,
+      9,
+      10
+    ],
+    "fallbackIndices": [
+      0,
+      7,
+      10
+    ],
+    "notes": [
+      "New source reviewed independently by floor_press_visual_qc, explicit phase order selected.",
+      "Static poses assembled with fixed crop scale. Reused return poses are not additional unique poses.",
+      "No clinical approval or iOS manifest promotion."
+    ]
+  },
+  {
+    "id": "kickstand_romanian_deadlift",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/kickstand_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/kickstand_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/kickstand_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/kickstand_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/kickstand_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/kickstand_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/kickstand_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/kickstand_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/kickstand_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/kickstand_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/kickstand_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/kickstand_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/kickstand_romanian_deadlift_cycle_v01.png"
+    ],
+    "crops": [
+      "300x300+10+10",
+      "300x300+322+10",
+      "300x300+634+10",
+      "300x300+946+10",
+      "300x300+10+322",
+      "300x300+322+322",
+      "300x300+634+322",
+      "300x300+946+322",
+      "300x300+10+634",
+      "300x300+322+634",
+      "300x300+634+634",
+      "300x300+946+634",
+      "300x300+946+946"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      16
+    ],
+    "visiblyDistinctPoses": 9,
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "fallbackIndices": [
+      0,
+      8,
+      12
+    ],
+    "notes": [
+      "New source reviewed independently by floor_press_visual_qc, explicit phase order selected.",
+      "Static poses assembled with fixed crop scale. Reused return poses are not additional unique poses.",
+      "No clinical approval or iOS manifest promotion."
+    ]
+  },
+  {
+    "id": "dumbbell_romanian_deadlift",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/dumbbell_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_romanian_deadlift_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_romanian_deadlift_cycle_v01.png"
+    ],
+    "crops": [
+      "300x300+10+10",
+      "300x300+322+10",
+      "300x300+634+10",
+      "300x300+946+10",
+      "300x300+10+322",
+      "300x300+322+322",
+      "300x300+634+322",
+      "300x300+946+322",
+      "300x300+322+634",
+      "300x300+634+634",
+      "300x300+946+634",
+      "300x300+10+946",
+      "300x300+322+946",
+      "300x300+634+946",
+      "300x300+946+946"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "visiblyDistinctPoses": 10,
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "fallbackIndices": [
+      0,
+      7,
+      14
+    ],
+    "notes": [
+      "New source reviewed independently by floor_press_visual_qc, explicit phase order selected.",
+      "Static poses assembled with fixed crop scale. Reused return poses are not additional unique poses.",
+      "No clinical approval or iOS manifest promotion."
+    ]
+  },
+  {
+    "id": "wall_hip_hinge",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/wall_hip_hinge_phases_v02.png",
+      "rework-2026-09-05/wall_hip_hinge_phases_v02.png",
+      "rework-2026-09-05/wall_hip_hinge_phases_v02.png",
+      "rework-2026-09-05/wall_hip_hinge_phases_v02.png",
+      "rework-2026-09-05/wall_hip_hinge_phases_v02.png",
+      "rework-2026-09-05/wall_hip_hinge_phases_v02.png",
+      "rework-2026-09-05/wall_hip_hinge_phases_v02.png",
+      "rework-2026-09-05/wall_hip_hinge_phases_v02.png"
+    ],
+    "crops": [
+      "424x424+11+11",
+      "424x424+454+11",
+      "424x424+897+11",
+      "424x424+1340+11",
+      "424x424+11+454",
+      "424x424+454+454",
+      "424x424+897+454",
+      "424x424+1340+454"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "visiblyDistinctPoses": 8,
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      6,
+      5,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "fallbackIndices": [
+      0,
+      3,
+      7
+    ],
+    "notes": [
+      "New source reviewed independently by floor_press_visual_qc, explicit phase order selected.",
+      "Static poses assembled with fixed crop scale. Reused return poses are not additional unique poses.",
+      "No clinical approval or iOS manifest promotion."
+    ]
+  },
+  {
+    "id": "dumbbell_hip_thrust",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+      "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+      "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+      "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+      "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+      "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+      "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+      "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png"
+    ],
+    "crops": [
+      "424x424+11+11",
+      "424x424+454+11",
+      "424x424+897+11",
+      "424x424+1340+11",
+      "424x424+11+454",
+      "424x424+454+454",
+      "424x424+897+454",
+      "424x424+1340+454"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "visiblyDistinctPoses": 8,
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      6,
+      5,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "fallbackIndices": [
+      0,
+      3,
+      7
+    ],
+    "notes": [
+      "New source reviewed independently by floor_press_visual_qc, explicit phase order selected.",
+      "Static poses assembled with fixed crop scale. Reused return poses are not additional unique poses.",
+      "No clinical approval or iOS manifest promotion."
+    ]
+  }
+]

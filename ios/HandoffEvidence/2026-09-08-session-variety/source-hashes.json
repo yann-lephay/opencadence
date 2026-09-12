@@ -1,0 +1,13 @@
+{
+  "ios/CadenceEngine/Sources/CadenceEngine/PersonalizedSession.swift": "c8b9207ecba2ea50dac747605849b4e0f90a6e4c5a00093ecf9e242435bc174c",
+  "ios/CadenceEngine/Sources/CadenceEngine/PersonalizationModels.swift": "ffbc37ebaf347ba18297a1f59bbeb0c16a1a0cd7b9eb222852925dcdc0942afd",
+  "ios/OpenCadence/OpenCadence/Services/ActiveSessionCoordinator.swift": "8c578687dd1d1b2b537d449ed99dbb85c883af27d0b4a3a695b010ccce68eae9",
+  "ios/OpenCadence/OpenCadence/Services/NativePersonalization.swift": "6d7e8c245031d0c93c266ed24e7aa4c1cc2330bfe8cfda18ebbf2ff44873d354",
+  "ios/OpenCadence/OpenCadence/Views/ActiveWorkoutView.swift": "0213a65513772001d443d5de273be2efb139d1f89848bc3132071e47f7062475",
+  "ios/OpenCadence/OpenCadence/Views/PersonalizationProofView.swift": "d2fc22ea9784eb4f7923e330b8723d559c43f4727c5f2c275856cb3f2decddc8",
+  "ios/OpenCadence/OpenCadence/Localizable.xcstrings": "93646123e92b265470aafde42adff323e462383c7dd366d4264fb50c26144d65",
+  "ios/CadenceEngine/Tests/CadenceEngineTests/PersonalizedSessionTests.swift": "1f2ad20d6a2e9392e2d881817166c43c7843923641d0cc118a62718529caab79",
+  "ios/OpenCadence/OpenCadenceTests/PersonalizationNativeTests.swift": "9b3adf61d3242e4ecd716e6d1eefd3b954f71b16ae2ecd2a919a0e7d31cab234",
+  "ios/OpenCadence/OpenCadenceTests/PersonalizationCorrectionsTests.swift": "297e1ac8e59569a38715ae2978d1104d316367d29db292a9833c6eb8ec74dcd0",
+  "ios/OpenCadence/OpenCadenceTests/TenSessionPersonaTests.swift": "30c4f2145edd0caf93bc58dc6128383bf6fbf334d20360c76fa1eaf4d95f7fd8"
+}

@@ -1,0 +1,51 @@
+{
+  "movementId": "suitcase_march",
+  "status": "review_candidate_not_release",
+  "motionKind": "gait",
+  "playback": "loop_review",
+  "sources": [
+    "rework-2026-09-05/suitcase_march_keyposes_v03.png",
+    "rework-2026-09-05/suitcase_march_keyposes_v03.png",
+    "rework-2026-09-05/suitcase_march_keyposes_v03.png",
+    "rework-2026-09-05/march_opposite_mid_v01.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": [
+    "618x618+5+5",
+    "618x618+632+632",
+    "618x618+632+5",
+    null
+  ],
+  "uniqueSourceFrames": 4,
+  "visiblyDistinctPoses": 4,
+  "displayedSteps": 5,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    3
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": false,
+  "interpolatedFrames": 0,
+  "video": "suitcase_march_review_v03.mp4",
+  "poster": "suitcase_march_poster_review_v03.webp",
+  "fallback": "suitcase_march_fallback_review_v03.webp",
+  "fallbackSourceIndices": [
+    1,
+    2,
+    4
+  ],
+  "notes": [
+    "Alternating knee lifts with neutral pose between sides. Single dumbbell remains anatomical right hand (viewer left).",
+    "Four unique poses and five displayed steps, not a dense animation. No mirrored or reversed gait.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

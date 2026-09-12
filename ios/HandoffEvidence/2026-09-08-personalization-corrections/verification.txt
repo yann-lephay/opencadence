@@ -1,0 +1,7 @@
+lbs-corrections-native-verified.log
+✔ Test run with 115 tests in 13 suites passed after 10.313 seconds.
+** TEST SUCCEEDED **
+lbs-corrections-engine-verified.log
+✔ Test run with 46 tests in 7 suites passed after 0.101 seconds.
+lbs-corrections-final-build.log
+** BUILD SUCCEEDED **

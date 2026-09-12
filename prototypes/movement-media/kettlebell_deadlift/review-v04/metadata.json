@@ -1,0 +1,74 @@
+{
+  "movementId": "kettlebell_deadlift",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "rework-2026-09-05/low-floor-v02.png",
+    "rework-2026-09-05/low-lift-v02.png",
+    "rework-2026-09-05/intermediate-low.png",
+    "rework-2026-09-05/intermediate-mid.png",
+    "rework-2026-09-05/kettlebell_deadlift_keyposes_v01.png",
+    "rework-2026-09-05/intermediate-high.png",
+    "rework-2026-09-05/kettlebell_deadlift_keyposes_v01.png"
+  ],
+  "boardCellIndices": [
+    null,
+    null,
+    null,
+    null,
+    3,
+    null,
+    4
+  ],
+  "boardCellCrops": [
+    null,
+    null,
+    null,
+    null,
+    "614x614+8+632",
+    null,
+    "614x614+632+632"
+  ],
+  "uniqueSourceFrames": 7,
+  "visiblyDistinctPoses": 7,
+  "displayedSteps": 13,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    6,
+    5,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "kettlebell_deadlift_review_v04.mp4",
+  "poster": "kettlebell_deadlift_poster_review_v04.webp",
+  "fallback": "kettlebell_deadlift_fallback_review_v04.webp",
+  "fallbackSourceIndices": [
+    1,
+    4,
+    7
+  ],
+  "notes": [
+    "Two lowest poses regenerated from the stable solo reference to correct foot and framing displacement.",
+    "Seven source poses, thirteen displayed steps; reused return is not additional unique anatomy.",
+    "Final independent visual review required; not professional validation or release.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

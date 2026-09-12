@@ -1,0 +1,6 @@
+{
+  "ios/OpenCadence/OpenCadenceTests/TenSessionPersonaTests.swift": "52c48b9c6375fc5d3a12e55672adcdb953c041d41ac6bc449ed3091c0a416d55",
+  "ios/OpenCadence/OpenCadence/Services/NativePersonalization.swift": "5e54477cce0c0052fc8bb8ee720327801b7a7681a53eca743e8a8708ba6e74f2",
+  "ios/OpenCadence/OpenCadence/Services/WorkoutEngineBridge.swift": "520ded0077f499dbc83cea3b6cbaad96337a271e3aa48888f8dac76b789f9e42",
+  "ios/CadenceEngine/Sources/CadenceEngine/PersonalizedSession.swift": "08205e622f303a9cb896244feb58dce219243f0c969600e078cadf20468aaf76"
+}

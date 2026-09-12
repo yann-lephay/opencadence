@@ -1,0 +1,1609 @@
+{
+  "version": "2.0-draft.1",
+  "status": "engine_preview_bridge_not_product_activated",
+  "contract": "../../docs/80-20-DECISION-CONTRACT.md",
+  "catalogVersion": "fixture-v2.0.0",
+  "decisionPolicyVersion": "2.0.0",
+  "policy": {
+    "durationBudgetsSeconds": {
+      "20": 1200,
+      "30": 1800,
+      "45": 2700
+    },
+    "historyDepthCompletedSessions": 12,
+    "returnQuestionAfterDaysWithoutComparableExposure": 30,
+    "anchorTieOrder": [
+      "pull",
+      "push",
+      "knee",
+      "hinge"
+    ],
+    "rangeCeilingConfirmations": 2
+  },
+  "policyHypotheses": {
+    "assembly": {
+      "initialAllocation": "one_complete_minimum_block_per_eligible_anchor",
+      "extraAllocation": "one_set_per_anchor_per_pass",
+      "skipExtraThatDoesNotFit": true,
+      "stopAfterFullPassWithoutAddition": true,
+      "complementsEnabled": false,
+      "conditioningEnabled": false
+    },
+    "light": {
+      "reductionOrder": [
+        "remove_conditioning_and_complements",
+        "remove_one_extra_set_per_row",
+        "use_first_easier_partial_substitution_not_costlier"
+      ],
+      "minimumBlockPreserved": true,
+      "fallback": "no_clean_session"
+    },
+    "recalibration": {
+      "loadedReference": "previous_real_inventory_step_or_same_if_none",
+      "target": "bottom_of_range",
+      "bodyweight": "same_configuration_bottom_of_range",
+      "automaticProgression": false
+    },
+    "returnQuestion": {
+      "trigger": "threshold_or_explicit_user_request",
+      "unansweredFallback": "normal_keep_last_prescription_suspend_local_progression"
+    },
+    "progression": {
+      "admissibleExposure": "all_prescribed_sets_confirmed_with_known_reps_and_load",
+      "belowRangeCeiling": "one_admissible_exposure_increases_target_by_one_rep",
+      "atRangeCeiling": "next_real_inventory_load_then_bottom_of_range",
+      "noNextLoad": "hold",
+      "rirAffectsAutomaticProgression": false,
+      "globalEffortAffectsAutomaticProgression": false
+    },
+    "finishOnTimeRemovalOrder": [
+      "unstarted_complements_reverse_order",
+      "unstarted_extra_sets_reverse_anchor_order",
+      "fully_unstarted_minimum_blocks_reverse_anchor_order"
+    ]
+  },
+  "catalog": {
+    "incline_pushup": {
+      "anchor": "push",
+      "catalogStatus": "published_in_fixture_catalog",
+      "productPublicationStatus": "candidate_validation_required",
+      "loadMode": "bodyweight",
+      "equipment": [],
+      "supports": [
+        "wall_or_stable_plane"
+      ],
+      "repRange": {
+        "min": 6,
+        "max": 12,
+        "entry": 6
+      },
+      "sets": {
+        "min": 1,
+        "max": 4
+      },
+      "timingSeconds": {
+        "setup": 30,
+        "execution": 40,
+        "secondSide": 0,
+        "rest": 75,
+        "transition": 20
+      },
+      "difficultyRank": 1,
+      "selectionRank": 20,
+      "primaryContributions": [
+        "push"
+      ],
+      "secondaryContributions": [],
+      "progressionContext": "incline_pushup|bodyweight|bilateral|wall_or_stable_plane"
+    },
+    "bodyweight_squat": {
+      "anchor": "knee",
+      "catalogStatus": "published_in_fixture_catalog",
+      "productPublicationStatus": "candidate_validation_required",
+      "loadMode": "bodyweight",
+      "equipment": [],
+      "supports": [],
+      "repRange": {
+        "min": 8,
+        "max": 15,
+        "entry": 8
+      },
+      "sets": {
+        "min": 1,
+        "max": 4
+      },
+      "timingSeconds": {
+        "setup": 20,
+        "execution": 45,
+        "secondSide": 0,
+        "rest": 75,
+        "transition": 20
+      },
+      "difficultyRank": 1,
+      "selectionRank": 20,
+      "primaryContributions": [
+        "knee"
+      ],
+      "secondaryContributions": [],
+      "progressionContext": "bodyweight_squat|bodyweight|bilateral"
+    },
+    "bodyweight_hinge": {
+      "anchor": "hinge",
+      "catalogStatus": "published_in_fixture_catalog",
+      "productPublicationStatus": "validation_required_before_product",
+      "loadMode": "bodyweight",
+      "equipment": [],
+      "supports": [],
+      "repRange": {
+        "min": 8,
+        "max": 15,
+        "entry": 8
+      },
+      "sets": {
+        "min": 1,
+        "max": 4
+      },
+      "timingSeconds": {
+        "setup": 20,
+        "execution": 40,
+        "secondSide": 0,
+        "rest": 75,
+        "transition": 20
+      },
+      "difficultyRank": 1,
+      "selectionRank": 20,
+      "primaryContributions": [
+        "hinge"
+      ],
+      "secondaryContributions": [],
+      "progressionContext": "bodyweight_hinge|bodyweight|bilateral"
+    },
+    "one_arm_row": {
+      "anchor": "pull",
+      "catalogStatus": "published_in_fixture_catalog",
+      "productPublicationStatus": "candidate_validation_required",
+      "loadMode": "single_total_kg",
+      "equipment": [
+        {
+          "category": "adjustable_dumbbell",
+          "configuration": "single",
+          "units": 1
+        }
+      ],
+      "supports": [
+        "stable_hand_support"
+      ],
+      "repRange": {
+        "min": 8,
+        "max": 12,
+        "entry": 8
+      },
+      "sets": {
+        "min": 1,
+        "max": 4
+      },
+      "timingSeconds": {
+        "setup": 60,
+        "execution": 35,
+        "secondSide": 35,
+        "rest": 90,
+        "transition": 30
+      },
+      "difficultyRank": 2,
+      "selectionRank": 10,
+      "primaryContributions": [
+        "pull"
+      ],
+      "secondaryContributions": [],
+      "progressionContext": "one_arm_row|adjustable_dumbbell|single_total_kg|unilateral|stable_hand_support"
+    },
+    "floor_press": {
+      "anchor": "push",
+      "catalogStatus": "published_in_fixture_catalog",
+      "productPublicationStatus": "candidate_validation_required",
+      "loadMode": "pair_each_kg",
+      "equipment": [
+        {
+          "category": "adjustable_dumbbell",
+          "configuration": "pair",
+          "units": 2
+        }
+      ],
+      "supports": [
+        "floor_allowed"
+      ],
+      "repRange": {
+        "min": 6,
+        "max": 12,
+        "entry": 6
+      },
+      "sets": {
+        "min": 1,
+        "max": 4
+      },
+      "timingSeconds": {
+        "setup": 60,
+        "execution": 45,
+        "secondSide": 0,
+        "rest": 90,
+        "transition": 30
+      },
+      "difficultyRank": 2,
+      "selectionRank": 10,
+      "primaryContributions": [
+        "push"
+      ],
+      "secondaryContributions": [],
+      "progressionContext": "floor_press|adjustable_dumbbell|pair_each_kg|bilateral|floor"
+    },
+    "goblet_squat": {
+      "anchor": "knee",
+      "catalogStatus": "published_in_fixture_catalog",
+      "productPublicationStatus": "candidate_validation_required",
+      "loadMode": "central_total_kg",
+      "equipment": [
+        {
+          "category": "adjustable_dumbbell",
+          "configuration": "single",
+          "units": 1
+        }
+      ],
+      "supports": [],
+      "repRange": {
+        "min": 8,
+        "max": 12,
+        "entry": 8
+      },
+      "sets": {
+        "min": 1,
+        "max": 4
+      },
+      "timingSeconds": {
+        "setup": 45,
+        "execution": 45,
+        "secondSide": 0,
+        "rest": 90,
+        "transition": 25
+      },
+      "difficultyRank": 2,
+      "selectionRank": 10,
+      "primaryContributions": [
+        "knee"
+      ],
+      "secondaryContributions": [],
+      "progressionContext": "goblet_squat|adjustable_dumbbell|central_total_kg|bilateral"
+    },
+    "romanian_deadlift": {
+      "anchor": "hinge",
+      "catalogStatus": "published_in_fixture_catalog",
+      "productPublicationStatus": "candidate_validation_required",
+      "loadMode": "pair_each_kg",
+      "equipment": [
+        {
+          "category": "adjustable_dumbbell",
+          "configuration": "pair",
+          "units": 2
+        }
+      ],
+      "supports": [],
+      "repRange": {
+        "min": 8,
+        "max": 12,
+        "entry": 8
+      },
+      "sets": {
+        "min": 1,
+        "max": 4
+      },
+      "timingSeconds": {
+        "setup": 45,
+        "execution": 45,
+        "secondSide": 0,
+        "rest": 90,
+        "transition": 25
+      },
+      "difficultyRank": 2,
+      "selectionRank": 10,
+      "primaryContributions": [
+        "hinge"
+      ],
+      "secondaryContributions": [],
+      "progressionContext": "romanian_deadlift|adjustable_dumbbell|pair_each_kg|bilateral"
+    }
+  },
+  "substitutions": [
+    {
+      "from": "floor_press",
+      "to": "incline_pushup",
+      "type": "partial",
+      "rank": 1
+    },
+    {
+      "from": "goblet_squat",
+      "to": "bodyweight_squat",
+      "type": "partial",
+      "rank": 1
+    },
+    {
+      "from": "romanian_deadlift",
+      "to": "bodyweight_hinge",
+      "type": "partial",
+      "rank": 1
+    }
+  ],
+  "cases": [
+    {
+      "id": "S1_BEGINNER_20_NO_EQUIPMENT",
+      "kind": "session_decision",
+      "description": "Un débutant obtient une séance utile sans matériel mobile et sans faux tirage.",
+      "now": "2026-09-02T08:00:00.000Z",
+      "input": {
+        "request": {
+          "durationMinutes": 20,
+          "mode": "normal"
+        },
+        "persistentInventory": [],
+        "todayInventory": [],
+        "todaySupports": [
+          "wall_or_stable_plane"
+        ],
+        "history": [],
+        "refusals": []
+      },
+      "expected": {
+        "catalogVersion": "fixture-v2.0.0",
+        "decisionPolicyVersion": "2.0.0",
+        "decision": "generate_session",
+        "mode": "normal",
+        "estimatedSeconds": 1190,
+        "plan": [
+          {
+            "exerciseId": "incline_pushup",
+            "sets": 4,
+            "targetReps": 6,
+            "restSeconds": 75,
+            "referenceStatus": "new",
+            "progressionContext": "incline_pushup|bodyweight|bilateral|wall_or_stable_plane"
+          },
+          {
+            "exerciseId": "bodyweight_squat",
+            "sets": 4,
+            "targetReps": 8,
+            "restSeconds": 75,
+            "referenceStatus": "new",
+            "progressionContext": "bodyweight_squat|bodyweight|bilateral"
+          },
+          {
+            "exerciseId": "bodyweight_hinge",
+            "sets": 3,
+            "targetReps": 8,
+            "restSeconds": 75,
+            "referenceStatus": "new",
+            "progressionContext": "bodyweight_hinge|bodyweight|bilateral"
+          }
+        ],
+        "coveredAnchors": [
+          "push",
+          "knee",
+          "hinge"
+        ],
+        "omittedAnchors": [
+          "pull"
+        ],
+        "reasons": [
+          {
+            "code": "anchor_omitted_no_compatible_movement",
+            "scope": "movement",
+            "source": "product_scope",
+            "message": "Aucun mouvement propre et compatible ne couvre cet ancrage aujourd'hui.",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ],
+        "automaticProgression": false
+      }
+    },
+    {
+      "id": "S2_REGULAR_30_USUAL_EQUIPMENT_ABSENT",
+      "kind": "session_decision",
+      "description": "Le matériel habituel manque aujourd'hui sans modifier l'inventaire persistant ni le mode global.",
+      "now": "2026-09-02T08:00:00.000Z",
+      "input": {
+        "request": {
+          "durationMinutes": 30
+        },
+        "persistentInventory": [
+          {
+            "category": "adjustable_dumbbell",
+            "units": 2,
+            "perUnitWeightsKg": [
+              6,
+              8,
+              10
+            ]
+          }
+        ],
+        "todayInventory": [],
+        "todaySupports": [
+          "wall_or_stable_plane"
+        ],
+        "history": [
+          {
+            "endedAt": "2026-08-30T08:30:00.000Z",
+            "completedExerciseIds": [
+              "one_arm_row",
+              "floor_press",
+              "goblet_squat",
+              "romanian_deadlift"
+            ],
+            "catalogVersion": "fixture-v2.0.0",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ],
+        "refusals": []
+      },
+      "expected": {
+        "catalogVersion": "fixture-v2.0.0",
+        "decisionPolicyVersion": "2.0.0",
+        "decision": "generate_session",
+        "mode": "normal",
+        "estimatedSeconds": 1305,
+        "plan": [
+          {
+            "exerciseId": "incline_pushup",
+            "sourceExerciseId": "floor_press",
+            "sets": 4,
+            "targetReps": 6,
+            "restSeconds": 75,
+            "referenceStatus": "new_after_partial_substitution",
+            "progressionContext": "incline_pushup|bodyweight|bilateral|wall_or_stable_plane"
+          },
+          {
+            "exerciseId": "bodyweight_squat",
+            "sourceExerciseId": "goblet_squat",
+            "sets": 4,
+            "targetReps": 8,
+            "restSeconds": 75,
+            "referenceStatus": "new_after_partial_substitution",
+            "progressionContext": "bodyweight_squat|bodyweight|bilateral"
+          },
+          {
+            "exerciseId": "bodyweight_hinge",
+            "sourceExerciseId": "romanian_deadlift",
+            "sets": 4,
+            "targetReps": 8,
+            "restSeconds": 75,
+            "referenceStatus": "new_after_partial_substitution",
+            "progressionContext": "bodyweight_hinge|bodyweight|bilateral"
+          }
+        ],
+        "coveredAnchors": [
+          "push",
+          "knee",
+          "hinge"
+        ],
+        "omittedAnchors": [
+          "pull"
+        ],
+        "persistentInventoryChanged": false,
+        "reasons": [
+          {
+            "code": "equipment_temporarily_unavailable",
+            "scope": "session",
+            "source": "equipment",
+            "message": "Le matériel habituel n'est pas disponible aujourd'hui.",
+            "decisionPolicyVersion": "2.0.0"
+          },
+          {
+            "code": "partial_substitution_new_reference",
+            "scope": "movement",
+            "source": "equipment",
+            "message": "Le remplacement reste utile mais crée une nouvelle référence locale.",
+            "decisionPolicyVersion": "2.0.0"
+          },
+          {
+            "code": "anchor_omitted_no_compatible_movement",
+            "scope": "movement",
+            "source": "equipment",
+            "message": "Aucun mouvement propre et compatible ne couvre cet ancrage aujourd'hui.",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ],
+        "automaticProgression": false
+      }
+    },
+    {
+      "id": "S3_RETURN_30_RECALIBRATION_SELECTED",
+      "kind": "session_decision",
+      "description": "Un retour ancien utilise le mode de recalibration choisi sans coefficient temporel ni progression automatique.",
+      "now": "2026-09-02T08:00:00.000Z",
+      "input": {
+        "request": {
+          "durationMinutes": 30,
+          "mode": "recalibration"
+        },
+        "persistentInventory": [
+          {
+            "category": "adjustable_dumbbell",
+            "units": 2,
+            "perUnitWeightsKg": [
+              6,
+              8,
+              10
+            ]
+          }
+        ],
+        "todayInventory": [
+          {
+            "category": "adjustable_dumbbell",
+            "units": 2,
+            "perUnitWeightsKg": [
+              6,
+              8,
+              10
+            ]
+          }
+        ],
+        "todaySupports": [
+          "stable_hand_support",
+          "floor_allowed"
+        ],
+        "history": [
+          {
+            "endedAt": "2026-07-01T08:30:00.000Z",
+            "references": [
+              {
+                "exerciseId": "one_arm_row",
+                "loadKg": 8,
+                "targetReps": 10,
+                "progressionContext": "one_arm_row|adjustable_dumbbell|single_total_kg|unilateral|stable_hand_support"
+              },
+              {
+                "exerciseId": "floor_press",
+                "loadKg": 8,
+                "targetReps": 10,
+                "progressionContext": "floor_press|adjustable_dumbbell|pair_each_kg|bilateral|floor"
+              },
+              {
+                "exerciseId": "goblet_squat",
+                "loadKg": 10,
+                "targetReps": 10,
+                "progressionContext": "goblet_squat|adjustable_dumbbell|central_total_kg|bilateral"
+              },
+              {
+                "exerciseId": "romanian_deadlift",
+                "loadKg": 10,
+                "targetReps": 10,
+                "progressionContext": "romanian_deadlift|adjustable_dumbbell|pair_each_kg|bilateral"
+              }
+            ],
+            "catalogVersion": "fixture-v2.0.0",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ],
+        "refusals": []
+      },
+      "expected": {
+        "catalogVersion": "fixture-v2.0.0",
+        "decisionPolicyVersion": "2.0.0",
+        "decision": "generate_session",
+        "mode": "recalibration",
+        "estimatedSeconds": 1790,
+        "automaticProgression": false,
+        "plan": [
+          {
+            "exerciseId": "one_arm_row",
+            "sets": 3,
+            "targetReps": 8,
+            "restSeconds": 90,
+            "load": {
+              "mode": "single_total_kg",
+              "kg": 6
+            },
+            "referenceStatus": "recalibrating",
+            "progressionContext": "one_arm_row|adjustable_dumbbell|single_total_kg|unilateral|stable_hand_support"
+          },
+          {
+            "exerciseId": "floor_press",
+            "sets": 4,
+            "targetReps": 6,
+            "restSeconds": 90,
+            "load": {
+              "mode": "pair_each_kg",
+              "kg": 6
+            },
+            "referenceStatus": "recalibrating",
+            "progressionContext": "floor_press|adjustable_dumbbell|pair_each_kg|bilateral|floor"
+          },
+          {
+            "exerciseId": "goblet_squat",
+            "sets": 3,
+            "targetReps": 8,
+            "restSeconds": 90,
+            "load": {
+              "mode": "central_total_kg",
+              "kg": 8
+            },
+            "referenceStatus": "recalibrating",
+            "progressionContext": "goblet_squat|adjustable_dumbbell|central_total_kg|bilateral"
+          },
+          {
+            "exerciseId": "romanian_deadlift",
+            "sets": 3,
+            "targetReps": 8,
+            "restSeconds": 90,
+            "load": {
+              "mode": "pair_each_kg",
+              "kg": 8
+            },
+            "referenceStatus": "recalibrating",
+            "progressionContext": "romanian_deadlift|adjustable_dumbbell|pair_each_kg|bilateral"
+          }
+        ],
+        "coveredAnchors": [
+          "pull",
+          "push",
+          "knee",
+          "hinge"
+        ],
+        "omittedAnchors": [],
+        "reasons": [
+          {
+            "code": "recalibration_user_selected",
+            "scope": "session",
+            "source": "user",
+            "message": "La personne a choisi de retrouver ses repères.",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "S4_ACTIVE_INTERRUPTED_CONTEXT_CHANGED",
+      "kind": "session_decision",
+      "description": "Une séance active conserve ses séries confirmées et recompose seulement le travail restant avec le contexte actuel.",
+      "now": "2026-09-02T08:00:00.000Z",
+      "input": {
+        "request": {
+          "durationMinutes": 20,
+          "mode": "normal",
+          "remainingSeconds": 720
+        },
+        "persistentInventory": [
+          {
+            "category": "adjustable_dumbbell",
+            "units": 2,
+            "perUnitWeightsKg": [
+              6,
+              8,
+              10
+            ]
+          }
+        ],
+        "todayInventory": [],
+        "todaySupports": [
+          "wall_or_stable_plane"
+        ],
+        "history": [],
+        "refusals": [],
+    "activeSession": {
+      "sessionId": "active-s4",
+      "mode": "normal",
+      "catalogVersion": "fixture-v2.0.0",
+      "decisionPolicyVersion": "2.0.0",
+          "confirmed": [
+            {
+              "exerciseId": "one_arm_row",
+              "sets": 3,
+              "targetReps": 8,
+              "load": {
+                "mode": "single_total_kg",
+                "kg": 6
+              },
+              "progressionContext": "one_arm_row|adjustable_dumbbell|single_total_kg|unilateral|stable_hand_support"
+            }
+          ],
+      "unstarted": [
+        {
+          "exerciseId": "floor_press",
+          "sets": 4,
+          "targetReps": 10,
+          "restSeconds": 90,
+          "load": {
+            "mode": "pair_each_kg",
+            "kg": 8
+          },
+          "referenceStatus": "kept",
+          "progressionContext": "floor_press|adjustable_dumbbell|pair_each_kg|bilateral|floor"
+        },
+        {
+          "exerciseId": "goblet_squat",
+          "sets": 3,
+          "targetReps": 10,
+          "restSeconds": 90,
+          "load": {
+            "mode": "central_total_kg",
+            "kg": 10
+          },
+          "referenceStatus": "kept",
+          "progressionContext": "goblet_squat|adjustable_dumbbell|central_total_kg|bilateral"
+        },
+        {
+          "exerciseId": "romanian_deadlift",
+          "sets": 3,
+          "targetReps": 10,
+          "restSeconds": 90,
+          "load": {
+            "mode": "pair_each_kg",
+            "kg": 10
+          },
+          "referenceStatus": "kept",
+          "progressionContext": "romanian_deadlift|adjustable_dumbbell|pair_each_kg|bilateral"
+        }
+      ]
+        }
+      },
+      "expected": {
+        "catalogVersion": "fixture-v2.0.0",
+        "decisionPolicyVersion": "2.0.0",
+        "decision": "resume_or_adapt_active_session",
+        "sessionId": "active-s4",
+        "mode": "normal",
+        "estimatedSeconds": 720,
+        "confirmedImmutable": true,
+        "createsDebt": false,
+        "confirmed": [
+          {
+            "exerciseId": "one_arm_row",
+            "sets": 3,
+            "targetReps": 8,
+            "load": {
+              "mode": "single_total_kg",
+              "kg": 6
+            },
+            "progressionContext": "one_arm_row|adjustable_dumbbell|single_total_kg|unilateral|stable_hand_support"
+          }
+        ],
+        "plan": [
+          {
+            "exerciseId": "incline_pushup",
+            "sourceExerciseId": "floor_press",
+            "sets": 3,
+            "targetReps": 6,
+            "restSeconds": 75,
+            "referenceStatus": "new_after_partial_substitution",
+            "progressionContext": "incline_pushup|bodyweight|bilateral|wall_or_stable_plane"
+          },
+          {
+            "exerciseId": "bodyweight_squat",
+            "sourceExerciseId": "goblet_squat",
+            "sets": 2,
+            "targetReps": 8,
+            "restSeconds": 75,
+            "referenceStatus": "new_after_partial_substitution",
+            "progressionContext": "bodyweight_squat|bodyweight|bilateral"
+          },
+          {
+            "exerciseId": "bodyweight_hinge",
+            "sourceExerciseId": "romanian_deadlift",
+            "sets": 2,
+            "targetReps": 8,
+            "restSeconds": 75,
+            "referenceStatus": "new_after_partial_substitution",
+            "progressionContext": "bodyweight_hinge|bodyweight|bilateral"
+          }
+        ],
+        "reasons": [
+          {
+            "code": "active_session_revalidated",
+            "scope": "session",
+            "source": "user",
+            "message": "Le travail restant a été revalidé avec le contexte actuel.",
+            "decisionPolicyVersion": "2.0.0"
+          },
+          {
+            "code": "equipment_temporarily_unavailable",
+            "scope": "session",
+            "source": "equipment",
+            "message": "Le matériel habituel n'est pas disponible aujourd'hui.",
+            "decisionPolicyVersion": "2.0.0"
+          },
+          {
+            "code": "partial_substitution_new_reference",
+            "scope": "movement",
+            "source": "equipment",
+            "message": "Le remplacement reste utile mais crée une nouvelle référence locale.",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ],
+        "automaticProgression": false
+      }
+    },
+    {
+      "id": "S5_PERSISTENT_REFUSAL_NO_PAIN",
+      "kind": "session_decision",
+      "description": "Un refus persistant d'un mouvement utilise la première substitution éditoriale sans inférence de santé.",
+      "now": "2026-09-02T08:00:00.000Z",
+      "input": {
+        "request": {
+          "durationMinutes": 30,
+          "mode": "normal"
+        },
+        "persistentInventory": [
+          {
+            "category": "adjustable_dumbbell",
+            "units": 2,
+            "perUnitWeightsKg": [
+              6,
+              8,
+              10
+            ]
+          }
+        ],
+        "todayInventory": [
+          {
+            "category": "adjustable_dumbbell",
+            "units": 2,
+            "perUnitWeightsKg": [
+              6,
+              8,
+              10
+            ]
+          }
+        ],
+        "todaySupports": [
+          "wall_or_stable_plane",
+          "stable_hand_support",
+          "floor_allowed"
+        ],
+        "history": [
+          {
+            "endedAt": "2026-08-30T08:30:00.000Z",
+            "references": [
+              {
+                "exerciseId": "one_arm_row",
+                "loadKg": 8,
+                "targetReps": 10,
+                "progressionContext": "one_arm_row|adjustable_dumbbell|single_total_kg|unilateral|stable_hand_support"
+              },
+              {
+                "exerciseId": "floor_press",
+                "loadKg": 8,
+                "targetReps": 10,
+                "progressionContext": "floor_press|adjustable_dumbbell|pair_each_kg|bilateral|floor"
+              },
+              {
+                "exerciseId": "goblet_squat",
+                "loadKg": 10,
+                "targetReps": 10,
+                "progressionContext": "goblet_squat|adjustable_dumbbell|central_total_kg|bilateral"
+              },
+              {
+                "exerciseId": "romanian_deadlift",
+                "loadKg": 10,
+                "targetReps": 10,
+                "progressionContext": "romanian_deadlift|adjustable_dumbbell|pair_each_kg|bilateral"
+              }
+            ],
+            "catalogVersion": "fixture-v2.0.0",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ],
+        "refusals": [
+          {
+            "scope": "movement",
+            "temporalScope": "persistent",
+            "exerciseId": "floor_press"
+          }
+        ]
+      },
+      "expected": {
+        "catalogVersion": "fixture-v2.0.0",
+        "decisionPolicyVersion": "2.0.0",
+        "decision": "generate_session",
+        "mode": "normal",
+        "estimatedSeconds": 1730,
+        "plan": [
+          {
+            "exerciseId": "one_arm_row",
+            "sets": 4,
+            "targetReps": 10,
+            "restSeconds": 90,
+            "load": {
+              "mode": "single_total_kg",
+              "kg": 8
+            },
+            "referenceStatus": "kept",
+            "progressionContext": "one_arm_row|adjustable_dumbbell|single_total_kg|unilateral|stable_hand_support"
+          },
+          {
+            "exerciseId": "incline_pushup",
+            "sourceExerciseId": "floor_press",
+            "sets": 3,
+            "targetReps": 6,
+            "restSeconds": 75,
+            "referenceStatus": "new_after_partial_substitution",
+            "progressionContext": "incline_pushup|bodyweight|bilateral|wall_or_stable_plane"
+          },
+          {
+            "exerciseId": "goblet_squat",
+            "sets": 3,
+            "targetReps": 10,
+            "restSeconds": 90,
+            "load": {
+              "mode": "central_total_kg",
+              "kg": 10
+            },
+            "referenceStatus": "kept",
+            "progressionContext": "goblet_squat|adjustable_dumbbell|central_total_kg|bilateral"
+          },
+          {
+            "exerciseId": "romanian_deadlift",
+            "sets": 3,
+            "targetReps": 10,
+            "restSeconds": 90,
+            "load": {
+              "mode": "pair_each_kg",
+              "kg": 10
+            },
+            "referenceStatus": "kept",
+            "progressionContext": "romanian_deadlift|adjustable_dumbbell|pair_each_kg|bilateral"
+          }
+        ],
+        "coveredAnchors": [
+          "pull",
+          "push",
+          "knee",
+          "hinge"
+        ],
+        "omittedAnchors": [],
+        "reasons": [
+          {
+            "code": "refusal_persistent",
+            "scope": "movement",
+            "source": "user",
+            "message": "Ce mouvement a été refusé durablement sur demande explicite.",
+            "decisionPolicyVersion": "2.0.0"
+          },
+          {
+            "code": "partial_substitution_new_reference",
+            "scope": "movement",
+            "source": "user",
+            "message": "Le remplacement reste utile mais crée une nouvelle référence locale.",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ],
+        "automaticProgression": false
+      }
+    },
+    {
+      "id": "L1_LIGHT_COMPONENTWISE_REDUCTION",
+      "kind": "session_decision",
+      "description": "Le mode allégé réduit strictement les séries du plan normal comparable sans durcir une autre dimension.",
+      "now": "2026-09-02T08:00:00.000Z",
+      "input": {
+        "request": {
+          "durationMinutes": 20,
+          "mode": "light"
+        },
+        "persistentInventory": [],
+        "todayInventory": [],
+        "todaySupports": [
+          "wall_or_stable_plane"
+        ],
+        "history": [],
+        "refusals": [],
+        "normalComparableCaseId": "S1_BEGINNER_20_NO_EQUIPMENT"
+      },
+      "expected": {
+        "catalogVersion": "fixture-v2.0.0",
+        "decisionPolicyVersion": "2.0.0",
+        "decision": "generate_session",
+        "mode": "light",
+        "estimatedSeconds": 840,
+        "plan": [
+          {
+            "exerciseId": "incline_pushup",
+            "sets": 3,
+            "targetReps": 6,
+            "restSeconds": 75,
+            "referenceStatus": "new",
+            "progressionContext": "incline_pushup|bodyweight|bilateral|wall_or_stable_plane"
+          },
+          {
+            "exerciseId": "bodyweight_squat",
+            "sets": 3,
+            "targetReps": 8,
+            "restSeconds": 75,
+            "referenceStatus": "new",
+            "progressionContext": "bodyweight_squat|bodyweight|bilateral"
+          },
+          {
+            "exerciseId": "bodyweight_hinge",
+            "sets": 2,
+            "targetReps": 8,
+            "restSeconds": 75,
+            "referenceStatus": "new",
+            "progressionContext": "bodyweight_hinge|bodyweight|bilateral"
+          }
+        ],
+        "coveredAnchors": [
+          "push",
+          "knee",
+          "hinge"
+        ],
+        "omittedAnchors": [
+          "pull"
+        ],
+        "reasons": [
+          {
+            "code": "light_mode_user_selected",
+            "scope": "session",
+            "source": "user",
+            "message": "La personne a choisi une séance allégée.",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ],
+        "automaticProgression": false
+      }
+    },
+    {
+      "id": "L2_RETURN_QUESTION_UNANSWERED",
+      "kind": "session_decision",
+      "description": "Une question de reprise ignorée conserve les prescriptions et suspend seulement la progression locale.",
+      "now": "2026-09-02T08:00:00.000Z",
+      "input": {
+        "request": {
+          "durationMinutes": 30,
+          "mode": "normal"
+        },
+        "persistentInventory": [
+          {
+            "category": "adjustable_dumbbell",
+            "units": 2,
+            "perUnitWeightsKg": [
+              6,
+              8,
+              10
+            ]
+          }
+        ],
+        "todayInventory": [
+          {
+            "category": "adjustable_dumbbell",
+            "units": 2,
+            "perUnitWeightsKg": [
+              6,
+              8,
+              10
+            ]
+          }
+        ],
+        "todaySupports": [
+          "stable_hand_support",
+          "floor_allowed"
+        ],
+        "history": [
+          {
+            "endedAt": "2026-07-01T08:30:00.000Z",
+            "references": [
+              {
+                "exerciseId": "one_arm_row",
+                "loadKg": 8,
+                "targetReps": 10,
+                "progressionContext": "one_arm_row|adjustable_dumbbell|single_total_kg|unilateral|stable_hand_support"
+              },
+              {
+                "exerciseId": "floor_press",
+                "loadKg": 8,
+                "targetReps": 10,
+                "progressionContext": "floor_press|adjustable_dumbbell|pair_each_kg|bilateral|floor"
+              },
+              {
+                "exerciseId": "goblet_squat",
+                "loadKg": 10,
+                "targetReps": 10,
+                "progressionContext": "goblet_squat|adjustable_dumbbell|central_total_kg|bilateral"
+              },
+              {
+                "exerciseId": "romanian_deadlift",
+                "loadKg": 10,
+                "targetReps": 10,
+                "progressionContext": "romanian_deadlift|adjustable_dumbbell|pair_each_kg|bilateral"
+              }
+            ],
+            "catalogVersion": "fixture-v2.0.0",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ],
+        "refusals": []
+      },
+      "expected": {
+        "catalogVersion": "fixture-v2.0.0",
+        "decisionPolicyVersion": "2.0.0",
+        "decision": "generate_session",
+        "mode": "normal",
+        "estimatedSeconds": 1790,
+        "automaticProgression": false,
+        "plan": [
+          {
+            "exerciseId": "one_arm_row",
+            "sets": 3,
+            "targetReps": 10,
+            "restSeconds": 90,
+            "load": {
+              "mode": "single_total_kg",
+              "kg": 8
+            },
+            "referenceStatus": "reconfirmation_pending",
+            "progressionContext": "one_arm_row|adjustable_dumbbell|single_total_kg|unilateral|stable_hand_support"
+          },
+          {
+            "exerciseId": "floor_press",
+            "sets": 4,
+            "targetReps": 10,
+            "restSeconds": 90,
+            "load": {
+              "mode": "pair_each_kg",
+              "kg": 8
+            },
+            "referenceStatus": "reconfirmation_pending",
+            "progressionContext": "floor_press|adjustable_dumbbell|pair_each_kg|bilateral|floor"
+          },
+          {
+            "exerciseId": "goblet_squat",
+            "sets": 3,
+            "targetReps": 10,
+            "restSeconds": 90,
+            "load": {
+              "mode": "central_total_kg",
+              "kg": 10
+            },
+            "referenceStatus": "reconfirmation_pending",
+            "progressionContext": "goblet_squat|adjustable_dumbbell|central_total_kg|bilateral"
+          },
+          {
+            "exerciseId": "romanian_deadlift",
+            "sets": 3,
+            "targetReps": 10,
+            "restSeconds": 90,
+            "load": {
+              "mode": "pair_each_kg",
+              "kg": 10
+            },
+            "referenceStatus": "reconfirmation_pending",
+            "progressionContext": "romanian_deadlift|adjustable_dumbbell|pair_each_kg|bilateral"
+          }
+        ],
+        "coveredAnchors": [
+          "pull",
+          "push",
+          "knee",
+          "hinge"
+        ],
+        "omittedAnchors": [],
+        "reasons": [
+          {
+            "code": "progression_held_reference_to_reconfirm",
+            "scope": "configuration",
+            "source": "history",
+            "message": "La prescription est conservée en attendant une nouvelle exposition comparable.",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "L3_ALL_CLEAN_OPTIONS_REFUSED",
+      "kind": "session_decision",
+      "description": "Le moteur assume qu'aucune séance propre n'est disponible lorsque toutes les configurations compatibles sont refusées.",
+      "now": "2026-09-02T08:00:00.000Z",
+      "input": {
+        "request": {
+          "durationMinutes": 20,
+          "mode": "normal"
+        },
+        "persistentInventory": [],
+        "todayInventory": [],
+        "todaySupports": [
+          "wall_or_stable_plane"
+        ],
+        "history": [],
+        "refusals": [
+          {
+            "scope": "movement",
+            "temporalScope": "persistent",
+            "exerciseId": "incline_pushup",
+            "progressionContext": "incline_pushup|bodyweight|bilateral|wall_or_stable_plane"
+          },
+          {
+            "scope": "movement",
+            "temporalScope": "persistent",
+            "exerciseId": "bodyweight_squat",
+            "progressionContext": "bodyweight_squat|bodyweight|bilateral"
+          },
+          {
+            "scope": "movement",
+            "temporalScope": "persistent",
+            "exerciseId": "bodyweight_hinge",
+            "progressionContext": "bodyweight_hinge|bodyweight|bilateral"
+          }
+        ]
+      },
+      "expected": {
+        "catalogVersion": "fixture-v2.0.0",
+        "decisionPolicyVersion": "2.0.0",
+        "decision": "no_clean_session",
+        "mode": "normal",
+        "estimatedSeconds": 0,
+        "plan": [],
+        "reasons": [
+          {
+            "code": "all_compatible_configurations_refused",
+            "scope": "session",
+            "source": "user",
+            "message": "Toutes les configurations propres disponibles ont été refusées.",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "L4_PROGRESS_REPETITIONS_ONLY",
+      "kind": "progression_transition",
+      "description": "Une exposition admissible sous le plafond augmente uniquement la cible de répétitions.",
+      "now": "2026-09-02T08:00:00.000Z",
+      "input": {
+        "todayInventory": [
+          {
+            "category": "adjustable_dumbbell",
+            "units": 2,
+            "perUnitWeightsKg": [
+              6,
+              8,
+              10
+            ]
+          }
+        ],
+        "previousPrescription": {
+          "exerciseId": "floor_press",
+          "sets": 3,
+          "targetReps": 10,
+          "load": {
+            "mode": "pair_each_kg",
+            "kg": 8
+          },
+          "progressionContext": "floor_press|adjustable_dumbbell|pair_each_kg|bilateral|floor",
+          "catalogVersion": "fixture-v2.0.0",
+          "decisionPolicyVersion": "2.0.0"
+        },
+        "exposures": [
+          {
+            "confirmedReps": [
+              10,
+              10,
+              10
+            ],
+            "loadKg": 8,
+            "allPrescribedSetsConfirmed": true,
+            "progressionContext": "floor_press|adjustable_dumbbell|pair_each_kg|bilateral|floor",
+            "catalogVersion": "fixture-v2.0.0",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ],
+        "todaySupports": [
+          "floor_allowed"
+        ]
+      },
+      "expected": {
+        "catalogVersion": "fixture-v2.0.0",
+        "decisionPolicyVersion": "2.0.0",
+        "decision": "update_prescription",
+        "nextPrescription": {
+          "exerciseId": "floor_press",
+          "sets": 3,
+          "targetReps": 11,
+          "load": {
+            "mode": "pair_each_kg",
+            "kg": 8
+          },
+          "progressionContext": "floor_press|adjustable_dumbbell|pair_each_kg|bilateral|floor"
+        },
+        "changedFields": [
+          "targetReps"
+        ],
+        "reasons": [
+          {
+            "code": "progression_repetitions_increased",
+            "scope": "configuration",
+            "source": "history",
+            "message": "La cible augmente d'une répétition après une exposition comparable confirmée.",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "L5_PROGRESS_NEXT_REAL_LOAD",
+      "kind": "progression_transition",
+      "description": "Deux confirmations au plafond utilisent le prochain palier réellement possédé et reviennent au bas de plage.",
+      "now": "2026-09-02T08:00:00.000Z",
+      "input": {
+        "todayInventory": [
+          {
+            "category": "adjustable_dumbbell",
+            "units": 2,
+            "perUnitWeightsKg": [
+              6,
+              8,
+              10
+            ]
+          }
+        ],
+        "previousPrescription": {
+          "exerciseId": "floor_press",
+          "sets": 3,
+          "targetReps": 12,
+          "load": {
+            "mode": "pair_each_kg",
+            "kg": 8
+          },
+          "progressionContext": "floor_press|adjustable_dumbbell|pair_each_kg|bilateral|floor",
+          "catalogVersion": "fixture-v2.0.0",
+          "decisionPolicyVersion": "2.0.0"
+        },
+        "exposures": [
+          {
+            "confirmedReps": [
+              12,
+              12,
+              12
+            ],
+            "loadKg": 8,
+            "allPrescribedSetsConfirmed": true,
+            "progressionContext": "floor_press|adjustable_dumbbell|pair_each_kg|bilateral|floor",
+            "catalogVersion": "fixture-v2.0.0",
+            "decisionPolicyVersion": "2.0.0"
+          },
+          {
+            "confirmedReps": [
+              12,
+              12,
+              12
+            ],
+            "loadKg": 8,
+            "allPrescribedSetsConfirmed": true,
+            "progressionContext": "floor_press|adjustable_dumbbell|pair_each_kg|bilateral|floor",
+            "catalogVersion": "fixture-v2.0.0",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ],
+        "todaySupports": [
+          "floor_allowed"
+        ]
+      },
+      "expected": {
+        "catalogVersion": "fixture-v2.0.0",
+        "decisionPolicyVersion": "2.0.0",
+        "decision": "update_prescription",
+        "nextPrescription": {
+          "exerciseId": "floor_press",
+          "sets": 3,
+          "targetReps": 6,
+          "load": {
+            "mode": "pair_each_kg",
+            "kg": 10
+          },
+          "progressionContext": "floor_press|adjustable_dumbbell|pair_each_kg|bilateral|floor"
+        },
+        "changedFields": [
+          "load",
+          "targetReps"
+        ],
+        "atomicChange": "load_step_with_range_reset",
+        "reasons": [
+          {
+            "code": "progression_next_real_load",
+            "scope": "configuration",
+            "source": "history",
+            "message": "Le prochain palier de charge réellement disponible est utilisé.",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "L6_FINISH_ON_TIME_REMOVES_UNSTARTED_WORK",
+      "kind": "active_session_transition",
+      "description": "Terminer à l'heure conserve les séries confirmées et retire uniquement le travail non commencé le moins prioritaire.",
+      "now": "2026-09-02T08:00:00.000Z",
+      "input": {
+        "action": "finish_on_time",
+        "catalogVersion": "fixture-v2.0.0",
+        "decisionPolicyVersion": "2.0.0",
+        "remainingSeconds": 180,
+        "originalCaseId": "S1_BEGINNER_20_NO_EQUIPMENT",
+        "confirmed": [
+          {
+            "exerciseId": "incline_pushup",
+            "sets": 4,
+            "progressionContext": "incline_pushup|bodyweight|bilateral|wall_or_stable_plane"
+          },
+          {
+            "exerciseId": "bodyweight_squat",
+            "sets": 2,
+            "progressionContext": "bodyweight_squat|bodyweight|bilateral"
+          }
+        ],
+        "unstarted": [
+        {
+          "exerciseId": "bodyweight_squat",
+          "sets": 2,
+          "targetReps": 8,
+          "restSeconds": 75,
+          "referenceStatus": "unchanged",
+          "progressionContext": "bodyweight_squat|bodyweight|bilateral"
+        },
+        {
+          "exerciseId": "bodyweight_hinge",
+          "sets": 3,
+          "targetReps": 8,
+          "restSeconds": 75,
+          "referenceStatus": "unchanged",
+          "progressionContext": "bodyweight_hinge|bodyweight|bilateral"
+          }
+        ]
+      },
+      "expected": {
+        "catalogVersion": "fixture-v2.0.0",
+        "decisionPolicyVersion": "2.0.0",
+        "decision": "active_session_transition",
+        "confirmedImmutable": true,
+        "createsDebt": false,
+        "estimatedSeconds": 165,
+        "plan": [
+          {
+            "exerciseId": "bodyweight_squat",
+            "sets": 1,
+            "targetReps": 8,
+            "restSeconds": 75,
+            "referenceStatus": "unchanged",
+            "progressionContext": "bodyweight_squat|bodyweight|bilateral"
+          },
+          {
+            "exerciseId": "bodyweight_hinge",
+            "sets": 1,
+            "targetReps": 8,
+            "restSeconds": 75,
+            "referenceStatus": "unchanged",
+            "progressionContext": "bodyweight_hinge|bodyweight|bilateral"
+          }
+        ],
+        "removed": [
+          {
+            "exerciseId": "bodyweight_squat",
+            "sets": 1,
+            "progressionContext": "bodyweight_squat|bodyweight|bilateral"
+          },
+          {
+            "exerciseId": "bodyweight_hinge",
+            "sets": 2,
+            "progressionContext": "bodyweight_hinge|bodyweight|bilateral"
+          }
+        ],
+        "confirmed": [
+          {
+            "exerciseId": "incline_pushup",
+            "sets": 4,
+            "progressionContext": "incline_pushup|bodyweight|bilateral|wall_or_stable_plane"
+          },
+          {
+            "exerciseId": "bodyweight_squat",
+            "sets": 2,
+            "progressionContext": "bodyweight_squat|bodyweight|bilateral"
+          }
+        ],
+        "reasons": [
+          {
+            "code": "time_budget_removed_unstarted_work",
+            "scope": "session",
+            "source": "time",
+            "message": "Du travail non commencé a été retiré pour terminer dans le temps restant.",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "L7_HEALTH_SIGNAL_BEFORE_SESSION",
+      "kind": "session_decision",
+      "description": "Un signal de santé déclaré avant la séance arrête le moteur standard sans contournement chargé.",
+      "now": "2026-09-02T08:00:00.000Z",
+      "input": {
+        "request": {
+          "durationMinutes": 20,
+          "mode": "normal"
+        },
+        "persistentInventory": [],
+        "todayInventory": [],
+        "todaySupports": [
+          "wall_or_stable_plane"
+        ],
+        "history": [],
+        "refusals": [],
+        "declaredCurrentHealthSignal": true
+      },
+      "expected": {
+        "catalogVersion": "fixture-v2.0.0",
+        "decisionPolicyVersion": "2.0.0",
+        "decision": "stop_standard_session",
+        "estimatedSeconds": 0,
+        "plan": [],
+        "differentiatedClinicalOrientation": false,
+        "reasons": [
+          {
+            "code": "safety_stop_session",
+            "scope": "session",
+            "source": "safety",
+            "message": "Un signal actuel déclaré arrête le moteur standard.",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "L8_HEALTH_SIGNAL_DURING_ACTIVE_SESSION",
+      "kind": "active_session_transition",
+      "description": "Un signal déclaré pendant la séance arrête le mouvement sans effacer le travail confirmé ni proposer une alternative chargée.",
+      "now": "2026-09-02T08:00:00.000Z",
+      "input": {
+        "action": "declare_health_signal",
+        "catalogVersion": "fixture-v2.0.0",
+        "decisionPolicyVersion": "2.0.0",
+        "activeExerciseId": "floor_press",
+        "confirmed": [
+          {
+            "exerciseId": "floor_press",
+            "sets": 2,
+            "targetReps": 8,
+            "load": {
+              "mode": "pair_each_kg",
+              "kg": 6
+            },
+            "progressionContext": "floor_press|adjustable_dumbbell|pair_each_kg|bilateral|floor"
+          }
+        ]
+      },
+      "expected": {
+        "catalogVersion": "fixture-v2.0.0",
+        "decisionPolicyVersion": "2.0.0",
+        "decision": "stop_current_movement",
+        "confirmedImmutable": true,
+        "exposedActions": [
+          "end_session"
+        ],
+        "loadedAlternative": null,
+        "confirmed": [
+          {
+            "exerciseId": "floor_press",
+            "sets": 2,
+            "targetReps": 8,
+            "load": {
+              "mode": "pair_each_kg",
+              "kg": 6
+            },
+            "progressionContext": "floor_press|adjustable_dumbbell|pair_each_kg|bilateral|floor"
+          }
+        ],
+        "reasons": [
+          {
+            "code": "safety_stop_movement",
+            "scope": "movement",
+            "source": "safety",
+            "message": "Un signal déclaré pendant la séance arrête le mouvement en cours.",
+            "decisionPolicyVersion": "2.0.0"
+          }
+        ]
+      }
+    }
+  ]
+}

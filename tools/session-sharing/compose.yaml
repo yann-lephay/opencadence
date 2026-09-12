@@ -1,0 +1,53 @@
+services:
+  collector:
+    image: node:22-bookworm-slim@sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5
+    container_name: lbs-session-sharing
+    command: [node, /app/server.mjs]
+    working_dir: /app
+    user: "1000:1000"
+    init: true
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 64
+    environment:
+      NODE_ENV: production
+      LBS_SHARING_DB: /data/sessions.sqlite
+      LBS_SHARING_BACKUP: /data/sessions-backup.sqlite
+      LBS_SHARING_HOST: 0.0.0.0
+      PORT: "3041"
+    volumes:
+      - ./app:/app:ro
+      - ./data:/data
+    networks: [coolify]
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3041/v1/consent').then(r=>process.exit(r.status===401?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "2"
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: coolify
+      traefik.http.routers.lbs-collect.rule: Host(`collecte.labonneseance.com`)
+      traefik.http.routers.lbs-collect.entrypoints: https
+      traefik.http.routers.lbs-collect.tls: "true"
+      traefik.http.routers.lbs-collect.tls.certresolver: letsencrypt
+      traefik.http.routers.lbs-collect.observability.accesslogs: "false"
+      traefik.http.routers.lbs-collect.observability.tracing: "false"
+      traefik.http.routers.lbs-collect.observability.metrics: "false"
+      traefik.http.routers.lbs-collect.middlewares: lbs-collect-headers
+      traefik.http.services.lbs-collect.loadbalancer.server.port: "3041"
+      traefik.http.middlewares.lbs-collect-headers.headers.stsSeconds: "31536000"
+      traefik.http.middlewares.lbs-collect-headers.headers.contentTypeNosniff: "true"
+      traefik.http.middlewares.lbs-collect-headers.headers.customResponseHeaders.X-Robots-Tag: noindex, nofollow
+networks:
+  coolify:
+    external: true

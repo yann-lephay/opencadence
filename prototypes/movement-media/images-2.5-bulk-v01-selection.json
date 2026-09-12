@@ -1,0 +1,113 @@
+[
+  {
+    "id": "supported_calf_raise",
+    "kind": "cycle",
+    "outputDirectory": "review-images25-bulk-v01",
+    "sources": [
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png"
+    ],
+    "crops": [
+      "408x408+5+5",
+      "408x408+423+5",
+      "408x408+841+5",
+      "408x408+5+423",
+      "408x408+423+423",
+      "408x408+841+423",
+      "408x408+5+841",
+      "408x408+423+841",
+      "408x408+841+841"
+    ],
+    "visiblyDistinctPoses": 9,
+    "durationSeconds": 4,
+    "sequence": [0, 1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1],
+    "fallbackIndices": [0, 4, 8],
+    "status": "visual_candidate_not_release",
+    "notes": [
+      "Single Images 2.5-era bulk generation; nine progressive heel heights extracted from one 3x3 board.",
+      "Both forefeet, wall contact and camera remain stable to visual inspection; final heel and shoe continuity still require user review.",
+      "Return reuses the exact outbound images in reverse; no generated return or interpolation."
+    ]
+  },
+  {
+    "id": "split_squat",
+    "kind": "cycle",
+    "outputDirectory": "review-images25-bulk-v01",
+    "sources": [
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png"
+    ],
+    "crops": [
+      "408x408+5+5",
+      "408x408+423+5",
+      "408x408+841+5",
+      "408x408+5+423",
+      "408x408+423+423",
+      "408x408+841+423",
+      "408x408+5+841",
+      "408x408+423+841",
+      "408x408+841+841"
+    ],
+    "visiblyDistinctPoses": 9,
+    "durationSeconds": 4,
+    "sequence": [0, 1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1],
+    "fallbackIndices": [0, 4, 8],
+    "status": "visual_candidate_not_release",
+    "notes": [
+      "Single Images 2.5-era bulk generation; nine progressive split-squat depths extracted from one 3x3 board.",
+      "Both feet and camera remain stable to visual inspection; rear-knee clearance and final technique still require user review.",
+      "Return reuses the exact outbound images in reverse; no generated return or interpolation."
+    ]
+  },
+  {
+    "id": "seated_band_row",
+    "kind": "cycle",
+    "outputDirectory": "review-images25-bulk-v01",
+    "sources": [
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png"
+    ],
+    "crops": [
+      "408x408+5+5",
+      "408x408+423+5",
+      "408x408+841+5",
+      "408x408+5+423",
+      "408x408+423+423",
+      "408x408+841+423",
+      "408x408+5+841",
+      "408x408+423+841",
+      "408x408+841+841"
+    ],
+    "visiblyDistinctPoses": 9,
+    "durationSeconds": 4,
+    "sequence": [0, 1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1],
+    "fallbackIndices": [0, 4, 8],
+    "status": "visual_candidate_not_release",
+    "notes": [
+      "Single Images 2.5-era bulk generation; nine progressive pull positions extracted from one 3x3 board.",
+      "Feet, band anchor, torso and camera remain stable to visual inspection; hand and band continuity still require user review.",
+      "Return reuses the exact outbound images in reverse; no generated return or interpolation."
+    ]
+  }
+]

@@ -1,0 +1,57 @@
+{
+  "movementId": "farmer_carry",
+  "status": "review_candidate_not_release",
+  "motionKind": "gait",
+  "playback": "loop_review",
+  "sources": [
+    "density-2026-09-05/intermediates-v01.png",
+    "review-v03/frames/pose_01.png",
+    "density-2026-09-05/intermediates-v01.png",
+    "review-v03/frames/pose_02.png",
+    "review-v03/frames/pose_03.png",
+    "review-v03/frames/pose_04.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": [
+    "430x430+448+8",
+    null,
+    "430x430+8+894",
+    null,
+    null,
+    null
+  ],
+  "uniqueSourceFrames": 6,
+  "visiblyDistinctPoses": 6,
+  "displayedSteps": 6,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": false,
+  "interpolatedFrames": 0,
+  "video": "farmer_carry_review_density_v01.mp4",
+  "poster": "farmer_carry_poster_review_density_v01.webp",
+  "fallback": "farmer_carry_fallback_review_density_v01.webp",
+  "fallbackSourceIndices": [
+    1,
+    4,
+    5
+  ],
+  "notes": [
+    "Six natural gait phases selected from original four keys and two useful new intermediates; target of twelve distinct poses NOT reached.",
+    "Right heel contact precedes right full contact, then left swing approaches passing; left contact then right swing. No mirrored or temporally reversed gait.",
+    "Other generated cells excluded for repeated support leg, duplicated keys, or crossed-foot ambiguity. Small registration changes remain.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

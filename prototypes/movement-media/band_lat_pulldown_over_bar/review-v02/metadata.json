@@ -1,0 +1,71 @@
+{
+  "movementId": "band_lat_pulldown_over_bar",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "sources": [
+    "candidate-v01/band_lat_pulldown_over_bar_board.png",
+    "candidate-v01/band_lat_pulldown_over_bar_board.png",
+    "candidate-v01/band_lat_pulldown_over_bar_board.png",
+    "candidate-v01/band_lat_pulldown_over_bar_board.png",
+    "candidate-v01/band_lat_pulldown_over_bar_board.png",
+    "candidate-v01/band_lat_pulldown_over_bar_board.png",
+    "candidate-v01/band_lat_pulldown_over_bar_board.png"
+  ],
+  "boardCellIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "boardCellCrops": [
+    "370x497+10+10",
+    "371x497+392+10",
+    "371x497+772+10",
+    "371x497+1154+10",
+    "370x496+10+518",
+    "371x496+392+518",
+    "371x496+772+518"
+  ],
+  "uniqueSourceFrames": 7,
+  "visiblyDistinctPoses": 7,
+  "displayedSteps": 13,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    6,
+    5,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "band_lat_pulldown_over_bar_review_v02.mp4",
+  "poster": "band_lat_pulldown_over_bar_poster_review_v02.webp",
+  "fallback": "band_lat_pulldown_over_bar_fallback_review_v02.webp",
+  "fallbackSourceIndices": [
+    1,
+    4,
+    7
+  ],
+  "notes": [
+    "Explicit board-cell selections received after independent visual review. Cell boundaries follow the actual grid, not an assumed equal-height grid. Full cell fitted inside a square; no anatomical interpolation or body crop.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

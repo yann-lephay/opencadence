@@ -1,0 +1,38 @@
+[
+  {
+    "id": "easy_rower_intervals",
+    "kind": "rowing",
+    "outputDirectory": "review-density-v02",
+    "sources": [
+      "density-2026-09-05/catch-v01.png",
+      "density-2026-09-05/drive-v01.png",
+      "density-2026-09-05/transitions-v02/drive-open.png",
+      "density-2026-09-05/finish-v01.png",
+      "density-2026-09-05/transitions-v02/arms-away-final.png",
+      "density-2026-09-05/recovery-v01.png",
+      "density-2026-09-05/transitions-v02/recovery-middle.png"
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "visiblyDistinctPoses": 7,
+    "fallbackIndices": [
+      0,
+      3,
+      5
+    ],
+    "reversePoseReuse": false,
+    "notes": [
+      "Seven separately selected source poses; arms-away is now explicit before knee recovery. No reverse-pose reuse.",
+      "Rejected early drive and body-over additions shift fixed equipment or the seat despite extended legs; not used to pad density.",
+      "Catch-to-drive and isolated torso recovery remain sparsely sampled; seven poses on four seconds do not meet the twelve-pose target.",
+      "Independent image QC only; generated prototype, not professional validation or release approval."
+    ]
+  }
+]

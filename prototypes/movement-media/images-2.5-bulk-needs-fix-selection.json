@@ -1,0 +1,76 @@
+[
+  {
+    "id": "dead_bug",
+    "kind": "cycle",
+    "outputDirectory": "review-images25-bulk-v01",
+    "sources": [
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png"
+    ],
+    "crops": [
+      "408x408+5+5",
+      "408x408+423+5",
+      "408x408+841+5",
+      "408x408+5+423",
+      "408x408+423+423",
+      "408x408+841+423",
+      "408x408+5+841",
+      "408x408+423+841",
+      "408x408+841+841"
+    ],
+    "visiblyDistinctPoses": 7,
+    "durationSeconds": 4,
+    "sequence": [0, 1, 2, 3, 2, 1, 4, 5, 6, 7, 6, 5, 8],
+    "fallbackIndices": [0, 3, 7],
+    "status": "visual_candidate_not_release",
+    "notes": [
+      "One bulk board contains both contralateral sides and three neutral checkpoints.",
+      "The 13-step sequence returns through the same generated poses; it does not interpolate anatomy.",
+      "Torso and pelvis appear stable on board review; side identity and lumbar control still require explicit human review."
+    ]
+  },
+  {
+    "id": "dip_bar_inverted_row",
+    "kind": "cycle",
+    "outputDirectory": "review-images25-bulk-v01",
+    "sources": [
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png",
+      "images-2.5-bulk-v01/contact-sheet-3x3.png"
+    ],
+    "crops": [
+      "408x408+5+5",
+      "408x408+423+5",
+      "408x408+841+5",
+      "408x408+5+423",
+      "408x408+423+423",
+      "408x408+841+423",
+      "408x408+5+841",
+      "408x408+423+841",
+      "408x408+841+841"
+    ],
+    "visiblyDistinctPoses": 9,
+    "durationSeconds": 4,
+    "sequence": [0, 1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1],
+    "fallbackIndices": [0, 4, 8],
+    "status": "visual_candidate_not_release",
+    "notes": [
+      "Nine progressive pull heights extracted from one bulk board.",
+      "Bars, grips and heels appear stable on board review; rigid-body alignment still requires explicit human review.",
+      "Return reuses the exact outbound images in reverse; no generated return or interpolation."
+    ]
+  }
+]

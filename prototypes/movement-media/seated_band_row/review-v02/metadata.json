@@ -1,0 +1,57 @@
+{
+  "movementId": "seated_band_row",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "sources": [
+    "stop-motion-v03-candidates/seated_band_row_contact_sheet_v03.png",
+    "stop-motion-v03-candidates/seated_band_row_contact_sheet_v03.png",
+    "stop-motion-v03-candidates/seated_band_row_contact_sheet_v03.png",
+    "stop-motion-v03-candidates/seated_band_row_contact_sheet_v03.png"
+  ],
+  "boardCellIndices": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "boardCellCrops": [
+    "303x306+6+6",
+    "304x306+318+6",
+    "303x306+632+6",
+    "303x306+945+6"
+  ],
+  "uniqueSourceFrames": 4,
+  "visiblyDistinctPoses": 2,
+  "displayedSteps": 7,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "seated_band_row_review_v02.mp4",
+  "poster": "seated_band_row_poster_review_v02.webp",
+  "fallback": "seated_band_row_fallback_review_v02.webp",
+  "fallbackSourceIndices": [
+    1,
+    2,
+    4
+  ],
+  "notes": [
+    "Four source snapshots, but poses 1/2 and 3/4 are near-duplicates: only two clearly distinct anatomical states verified after viewing the rendered fallback. Large middle transition remains visible.",
+    "Explicit board-cell selections received after independent visual review. Cell boundaries follow the actual grid, not an assumed equal-height grid. Full cell fitted inside a square; no anatomical interpolation or body crop.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

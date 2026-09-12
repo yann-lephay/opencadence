@@ -1,0 +1,56 @@
+
+COHORT control runs 210 traces 2712 truncated False
+before_after_event_changes 0
+within_after_event_changes 0
+before changed_plans 255 {'return_chosen': 21, 'explicit_volume_excess': 66, 'initial_too_hard': 72, 'discovery': 25, 'historical_three_explicit': 71}
+after changed_plans 255 {'return_chosen': 21, 'explicit_volume_excess': 66, 'initial_too_hard': 72, 'discovery': 25, 'historical_three_explicit': 71}
+after_totals {'auto_two': {'sessionsGenerated': 6780, 'plannedSets': 54240, 'confirmedSets': 53273, 'questionsConsumed': 0, 'doseChanges': 0, 'equipmentLimits': 0, 'noCleanSession': 0, 'safetyStops': 49, 'sessionsInterrupted': 164, 'repetitionProgressions': 8090, 'loadProgressions': 1495}, 'dose_candidate': {'sessionsGenerated': 6780, 'plannedSets': 54200, 'confirmedSets': 53233, 'questionsConsumed': 150, 'doseChanges': 55, 'equipmentLimits': 95, 'noCleanSession': 0, 'safetyStops': 49, 'sessionsInterrupted': 164, 'repetitionProgressions': 8100, 'loadProgressions': 1495}}
+violations []
+return_no_answer auto_two
+25 before [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'kept')] after [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'kept')]
+119 before [(2, 8, {'kg': 8, 'mode': 'single_total_kg'}, 'reconfirmation_pending')] after [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'reconfirmation_pending')]
+121 before [(2, 9, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 8, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+123 before [(2, 10, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 9, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+126 before [(2, 11, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 10, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+return_no_answer dose_candidate
+25 before [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'kept')] after [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'kept')]
+119 before [(2, 8, {'kg': 8, 'mode': 'single_total_kg'}, 'reconfirmation_pending')] after [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'reconfirmation_pending')]
+121 before [(2, 9, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 8, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+123 before [(2, 10, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 9, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+126 before [(2, 11, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 10, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+return_external_unknown auto_two
+25 before [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'kept')] after [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'kept')]
+119 before [(2, 8, {'kg': 8, 'mode': 'single_total_kg'}, 'reconfirmation_pending')] after [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'reconfirmation_pending')]
+121 before [(2, 9, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 8, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+123 before [(2, 10, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 9, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+126 before [(2, 11, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 10, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+return_external_unknown dose_candidate
+25 before [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'kept')] after [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'kept')]
+119 before [(2, 8, {'kg': 8, 'mode': 'single_total_kg'}, 'reconfirmation_pending')] after [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'reconfirmation_pending')]
+121 before [(2, 9, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 8, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+123 before [(2, 10, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 9, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+126 before [(2, 11, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 10, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+return_external_declared auto_two
+25 before [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'kept')] after [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'kept')]
+119 before [(2, 8, {'kg': 8, 'mode': 'single_total_kg'}, 'reconfirmation_pending')] after [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'reconfirmation_pending')]
+121 before [(2, 9, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 8, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+123 before [(2, 10, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 9, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+126 before [(2, 11, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 10, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+return_external_declared dose_candidate
+25 before [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'kept')] after [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'kept')]
+119 before [(2, 8, {'kg': 8, 'mode': 'single_total_kg'}, 'reconfirmation_pending')] after [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'reconfirmation_pending')]
+121 before [(2, 9, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 8, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+123 before [(2, 10, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 9, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+126 before [(2, 11, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')] after [(2, 10, {'kg': 8, 'mode': 'single_total_kg'}, 'kept')]
+return_chosen auto_two
+25 before [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'kept')] after [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'kept')]
+119 before [(2, 8, {'kg': 6, 'mode': 'single_total_kg'}, 'recalibrating')] after [(2, 8, {'kg': 6, 'mode': 'single_total_kg'}, 'recalibrating')]
+121 before [(2, 8, {'kg': 4, 'mode': 'single_total_kg'}, 'recalibrating')] after [(2, 8, {'kg': 4, 'mode': 'single_total_kg'}, 'recalibrating')]
+123 before [(2, 8, {'kg': 4, 'mode': 'single_total_kg'}, 'recalibrating')] after [(2, 8, {'kg': 4, 'mode': 'single_total_kg'}, 'recalibrating')]
+126 before [(2, 9, {'kg': 4, 'mode': 'single_total_kg'}, 'kept')] after [(2, 9, {'kg': 4, 'mode': 'single_total_kg'}, 'kept')]
+return_chosen dose_candidate
+25 before [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'kept')] after [(2, 12, {'kg': 6, 'mode': 'single_total_kg'}, 'kept')]
+119 before [(1, 8, {'kg': 6, 'mode': 'single_total_kg'}, 'recalibrating')] after [(1, 8, {'kg': 6, 'mode': 'single_total_kg'}, 'recalibrating')]
+121 before [(1, 8, {'kg': 4, 'mode': 'single_total_kg'}, 'recalibrating')] after [(1, 8, {'kg': 4, 'mode': 'single_total_kg'}, 'recalibrating')]
+123 before [(1, 8, {'kg': 4, 'mode': 'single_total_kg'}, 'recalibrating')] after [(1, 8, {'kg': 4, 'mode': 'single_total_kg'}, 'recalibrating')]
+126 before [(2, 8, {'kg': 4, 'mode': 'single_total_kg'}, 'kept')] after [(2, 8, {'kg': 4, 'mode': 'single_total_kg'}, 'kept')]

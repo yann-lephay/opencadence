@@ -1,0 +1,37 @@
+{
+  "source": "../reverse_lunge_fourkeys_fixed_v01.png",
+  "cellCrops": [
+    "618x618+5+5",
+    "618x618+632+5",
+    "618x618+5+632",
+    "618x618+632+632"
+  ],
+  "translationPixels": [
+    [
+      97,
+      32
+    ],
+    [
+      34,
+      44
+    ],
+    [
+      -4,
+      81
+    ],
+    [
+      21,
+      81
+    ]
+  ],
+  "scale": 1,
+  "rotation": 0,
+  "workingCanvas": [
+    700,
+    700
+  ],
+  "sharedFinalCrop": "510x568+100+82",
+  "bodyWarp": false,
+  "allVirtualEdgePixelsExcludedFromFinal": true,
+  "review": "PASS_PROTOTYPE_WITH_RESERVES: front foot registered; floor line retains small 10px source-relative differences."
+}

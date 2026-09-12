@@ -1,0 +1,44 @@
+{
+  "movementId": "supported_one_arm_row",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "sources": [
+    "stop-motion-v02-candidate-matrix/row3-frames/frame_01_start.png",
+    "stop-motion-v02-candidate-matrix/row3-frames/frame_02_early.png",
+    "stop-motion-v02-candidate-matrix/row3-frames/frame_03_late.png",
+    "stop-motion-v02-candidate-matrix/row3-frames/frame_04_top.png"
+  ],
+  "uniqueSourceFrames": 4,
+  "visiblyDistinctPoses": 4,
+  "displayedSteps": 7,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "supported_one_arm_row_review_v02.mp4",
+  "poster": "supported_one_arm_row_poster_review_v02.webp",
+  "fallback": "supported_one_arm_row_fallback_review_v02.webp",
+  "fallbackSourceIndices": [
+    1,
+    2,
+    4
+  ],
+  "notes": [
+    "Four readable selected poses; no synthetic intermediates.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

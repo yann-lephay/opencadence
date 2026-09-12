@@ -1,0 +1,41 @@
+{
+  "movementId": "supported_calf_raise",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "sources": [
+    "stop-motion-v01-candidates/frames-v02/frame_01.png",
+    "stop-motion-v01-candidates/frames-v02/frame_04.png",
+    "stop-motion-v01-candidates/frames-v02/frame_08.png"
+  ],
+  "uniqueSourceFrames": 3,
+  "visiblyDistinctPoses": 2,
+  "displayedSteps": 5,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "supported_calf_raise_review_v02.mp4",
+  "poster": "supported_calf_raise_poster_review_v02.webp",
+  "fallback": "supported_calf_raise_fallback_review_v02.webp",
+  "fallbackSourceIndices": [
+    1,
+    2,
+    3
+  ],
+  "notes": [
+    "Three source snapshots, but only two clearly distinct states: heels down and raised. The intermediate/high snapshots are close; do not advertise three distinct heights.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

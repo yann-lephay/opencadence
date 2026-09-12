@@ -1,0 +1,50 @@
+{
+  "movementId": "easy_rower_intervals",
+  "status": "needs_fix_diagnostic",
+  "motionKind": "rowing",
+  "playback": "loop_review",
+  "sources": [
+    "rework-2026-09-05/easy_rower_intervals_keyposes_v02.png",
+    "rework-2026-09-05/easy_rower_intervals_keyposes_v02.png",
+    "rework-2026-09-05/easy_rower_intervals_keyposes_v02.png",
+    "rework-2026-09-05/easy_rower_intervals_keyposes_v02.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": [
+    "618x618+5+5",
+    "618x618+632+5",
+    "618x618+5+632",
+    "618x618+632+632"
+  ],
+  "uniqueSourceFrames": 4,
+  "visiblyDistinctPoses": 4,
+  "displayedSteps": 4,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": false,
+  "interpolatedFrames": 0,
+  "video": "easy_rower_intervals_review_v03.mp4",
+  "poster": "easy_rower_intervals_poster_review_v03.webp",
+  "fallback": "easy_rower_intervals_fallback_review_v03.webp",
+  "fallbackSourceIndices": [
+    1,
+    2,
+    4
+  ],
+  "notes": [
+    "DIAGNOSTIC ONLY: footplate shifts relative to machine rail/flywheel across phases. Do not promote as a correct rowing demonstration.",
+    "Chronological catch, drive, finish, recovery; no temporal reversal. Four sparse source poses.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

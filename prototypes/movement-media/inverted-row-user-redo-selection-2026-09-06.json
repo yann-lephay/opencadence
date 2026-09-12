@@ -1,0 +1,33 @@
+[
+  {
+    "id": "dip_bar_inverted_row",
+    "kind": "cycle",
+    "outputDirectory": "review-user-v01",
+    "sources": [
+      "user-redo-2026-09-06/start.png",
+      "user-redo-2026-09-06/middle.png",
+      "user-redo-2026-09-06/top.png"
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      1,
+      0
+    ],
+    "fallbackIndices": [
+      0,
+      1,
+      2
+    ],
+    "durationSeconds": 4,
+    "visiblyDistinctPoses": 3,
+    "reversePoseReuse": true,
+    "status": "user_review_candidate_not_release",
+    "notes": [
+      "Three separately reviewed keyposes, five displayed steps over4seconds. Deliberate sparse stop-motion; no interpolation or new return-phase anatomy.",
+      "Start is cropped from new contact sheet; middle and top generated independently from reference stills. Original rejected review-v03 retained.",
+      "Hands and hardware have residual source drift; source endpoints require user review. Not professional validation or integration approval."
+    ]
+  }
+]

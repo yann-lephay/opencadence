@@ -1,0 +1,82 @@
+{
+  "movementId": "dip_bar_inverted_row",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "rework-2026-09-05/cycle-poses-v01.png",
+    "rework-2026-09-05/cycle-poses-v01.png",
+    "rework-2026-09-05/cycle-poses-v01.png",
+    "rework-2026-09-05/cycle-poses-v01.png",
+    "rework-2026-09-05/cycle-poses-v01.png",
+    "rework-2026-09-05/cycle-poses-v01.png",
+    "rework-2026-09-05/cycle-poses-v01.png",
+    "rework-2026-09-05/cycle-poses-v01.png",
+    "rework-2026-09-05/cycle-poses-v01.png",
+    "rework-2026-09-05/cycle-poses-v01.png"
+  ],
+  "boardCellIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    9,
+    10,
+    11,
+    12
+  ],
+  "boardCellCrops": [
+    "301x266+9+9",
+    "301x266+322+9",
+    "301x266+635+9",
+    "301x266+948+9",
+    "301x266+9+322",
+    "301x266+322+322",
+    "301x266+9+635",
+    "301x266+322+635",
+    "301x266+635+635",
+    "301x266+948+635"
+  ],
+  "uniqueSourceFrames": 10,
+  "visiblyDistinctPoses": 8,
+  "displayedSteps": 13,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    5,
+    4,
+    3,
+    7,
+    8,
+    9,
+    10
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "dip_bar_inverted_row_review_v03.mp4",
+  "poster": "dip_bar_inverted_row_poster_review_v03.webp",
+  "fallback": "dip_bar_inverted_row_fallback_review_v03.webp",
+  "fallbackSourceIndices": [
+    1,
+    6,
+    10
+  ],
+  "notes": [
+    "Crop removes numeric labels only; bars, heels and head remain in frame. Selected forward and return poses, reusing high positions to bridge a missing return phase.",
+    "Small equipment and foot-position drift remains visible; prototype only.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

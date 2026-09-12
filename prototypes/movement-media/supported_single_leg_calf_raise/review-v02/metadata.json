@@ -1,0 +1,56 @@
+{
+  "movementId": "supported_single_leg_calf_raise",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "sources": [
+    "candidate-v01/supported_single_leg_calf_raise_board.png",
+    "candidate-v01/supported_single_leg_calf_raise_board.png",
+    "candidate-v01/supported_single_leg_calf_raise_board.png",
+    "candidate-v01/supported_single_leg_calf_raise_board.png"
+  ],
+  "boardCellIndices": [
+    5,
+    6,
+    7,
+    8
+  ],
+  "boardCellCrops": [
+    "433x430+9+448",
+    "432x430+450+448",
+    "432x430+891+448",
+    "434x430+1331+448"
+  ],
+  "uniqueSourceFrames": 4,
+  "visiblyDistinctPoses": 4,
+  "displayedSteps": 7,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "supported_single_leg_calf_raise_review_v02.mp4",
+  "poster": "supported_single_leg_calf_raise_poster_review_v02.webp",
+  "fallback": "supported_single_leg_calf_raise_fallback_review_v02.webp",
+  "fallbackSourceIndices": [
+    1,
+    2,
+    4
+  ],
+  "notes": [
+    "Explicit board-cell selections received after independent visual review. Cell boundaries follow the actual grid, not an assumed equal-height grid. Full cell fitted inside a square; no anatomical interpolation or body crop.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

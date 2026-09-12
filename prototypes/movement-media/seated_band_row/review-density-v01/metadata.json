@@ -1,0 +1,57 @@
+{
+  "movementId": "seated_band_row",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "review-v03/frames/pose_01.png",
+    "density-2026-09-05/between-01-02-early.png",
+    "density-2026-09-05/between-01-02-late.png",
+    "review-v03/frames/pose_02.png",
+    "review-v03/frames/pose_03.png",
+    "density-2026-09-05/between-02-04.png",
+    "review-v03/frames/pose_04.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": null,
+  "uniqueSourceFrames": 7,
+  "visiblyDistinctPoses": 6,
+  "displayedSteps": 13,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    6,
+    5,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "seated_band_row_review_density_v01.mp4",
+  "poster": "seated_band_row_poster_review_density_v01.webp",
+  "fallback": "seated_band_row_fallback_review_density_v01.webp",
+  "fallbackSourceIndices": [
+    1,
+    4,
+    7
+  ],
+  "notes": [
+    "Diagnostic density assembly: three generated single intermediate images. Old poses2/3 similar: seven source images are not claimed as seven distinct anatomical states.",
+    "Return explicitly reuses static arm positions, not reverse video. Final count and candidate status pending QC.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

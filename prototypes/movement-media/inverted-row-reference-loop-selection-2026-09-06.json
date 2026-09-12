@@ -1,0 +1,38 @@
+[
+  {
+    "id": "dip_bar_inverted_row",
+    "kind": "cycle",
+    "outputDirectory": "review-reference-loop-v02",
+    "sources": [
+      "real-reference-2026-09-06/loop-work/low.png",
+      "real-reference-2026-09-06/loop-work/early-aligned.png",
+      "real-reference-2026-09-06/loop-work/late-aligned.png",
+      "real-reference-2026-09-06/loop-work/high-aligned.png"
+    ],
+    "crops": ["746x746+52+70", "746x746+52+70", "746x746+52+70", "746x746+52+70"],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      2,
+      1,
+      0
+    ],
+    "fallbackIndices": [
+      0,
+      2,
+      3
+    ],
+    "durationSeconds": 4,
+    "visiblyDistinctPoses": null,
+    "reversePoseReuse": true,
+    "status": "loop_candidate_pending_user_review",
+    "notes": [
+      "User visually accepted original two endpoints (keyposes-v02), not this new animation. Two additional stills guided by real SELF reference GIF frames3/6, plus brand source.",
+      "Uniform whole-frame scale/translation registration only; no local anatomy warp, optical flow, crossfade or generated motion interpolation. Original accepted image untouched.",
+      "Four source images, seven displayed steps over four seconds. First intermediate nearly duplicates the low pose; last intermediate is close to the high pose. Distinct pose count unconfirmed, not twelve unique poses. Return explicitly reuses ascent stills.",
+      "Residual hand/heel/equipment registration differences remain; no claim of perfectly fixed contacts. Professional and publication approval absent; source rights not cleared."
+    ]
+  }
+]

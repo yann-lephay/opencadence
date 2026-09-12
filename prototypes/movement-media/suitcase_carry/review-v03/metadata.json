@@ -1,0 +1,50 @@
+{
+  "movementId": "suitcase_carry",
+  "status": "review_candidate_not_release",
+  "motionKind": "gait",
+  "playback": "loop_review",
+  "sources": [
+    "rework-2026-09-05/suitcase_carry_keyposes_v03.png",
+    "rework-2026-09-05/suitcase_passing_right_v01.png",
+    "rework-2026-09-05/suitcase_opposite_v01.png",
+    "rework-2026-09-05/suitcase_passing_left_v01.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": [
+    "618x618+5+5",
+    null,
+    null,
+    null
+  ],
+  "uniqueSourceFrames": 4,
+  "visiblyDistinctPoses": 4,
+  "displayedSteps": 4,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": false,
+  "interpolatedFrames": 0,
+  "video": "suitcase_carry_review_v03.mp4",
+  "poster": "suitcase_carry_poster_review_v03.webp",
+  "fallback": "suitcase_carry_fallback_review_v03.webp",
+  "fallbackSourceIndices": [
+    1,
+    2,
+    4
+  ],
+  "notes": [
+    "Natural alternating gait. Single dumbbell remains in anatomical left hand (viewer right).",
+    "No reversed or mirrored gait. Four key poses only; one second per pose at four seconds, visibly stepped preview. Slight framing variation remains.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

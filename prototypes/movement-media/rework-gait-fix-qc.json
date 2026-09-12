@@ -1,0 +1,36 @@
+{
+  "date": "2026-09-05",
+  "scope": "One additional built-in image generation per remaining rejected movement. No app or registry change.",
+  "results": [
+    {
+      "movementId": "reverse_lunge",
+      "proposedStatus": "visual_candidate",
+      "verdict": "PASS_PROTOTYPE_WITH_RESERVES",
+      "directory": "reverse_lunge/review-v04",
+      "video": "reverse_lunge/review-v04/reverse_lunge_review_v04.mp4",
+      "poster": "reverse_lunge/review-v04/reverse_lunge_poster_review_v04.webp",
+      "fallback": "reverse_lunge/review-v04/reverse_lunge_fallback_review_v04.webp",
+      "sourceFrames": 4,
+      "visiblyDistinctPoses": 4,
+      "displayedSteps": 7,
+      "durationSeconds": 4,
+      "technicalDecode": "PASS",
+      "notes": [
+        "New four-key source replaces sliding-marker source. Blank background allows whole-frame translation and common crop without warping anatomy.",
+        "Front-foot toe/sole registered; rear foot naturally steps backward. Knee remains visibly above floor. Sparse four-pose candidate only.",
+        "Small floor-line displacement remains (~10px in 618px source); head margin tight but no anatomy clipped. Final fallback and all aligned source frames visually inspected. No live playback or professional validation."
+      ]
+    },
+    {
+      "movementId": "easy_rower_intervals",
+      "proposedStatus": "needs_fix",
+      "verdict": "REJECT",
+      "newSource": "easy_rower_intervals/rework-2026-09-05/easy_rower_intervals_fourkeys_fixed_v01.png",
+      "newPrompt": "easy_rower_intervals/rework-2026-09-05/easy_rower_intervals_fourkeys_fixed_v01.json",
+      "notes": [
+        "New four-key attempt still moves footplate assembly relative to flywheel and rail.",
+        "No review-v04 rendered and no acceptance. Previous review-v03 remains diagnostic only. Requires corrected machine reference/capture rather than accepting this source."
+      ]
+    }
+  ]
+}

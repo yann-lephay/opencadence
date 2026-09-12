@@ -1,0 +1,56 @@
+{
+  "movementId": "kettlebell_deadlift",
+  "status": "user_correction_pending_visual_review",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "review-v04/frames/pose_01.png",
+    "review-v04/frames/pose_02.png",
+    "review-v04/frames/pose_03.png",
+    "review-v04/frames/pose_04.png",
+    "review-v04/frames/pose_06.png",
+    "review-v04/frames/pose_07.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": null,
+  "uniqueSourceFrames": 6,
+  "visiblyDistinctPoses": 6,
+  "displayedSteps": 11,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    5,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "kettlebell_deadlift_review_user_v01.mp4",
+  "poster": "kettlebell_deadlift_poster_review_user_v01.webp",
+  "fallback": "kettlebell_deadlift_fallback_review_user_v01.webp",
+  "fallbackSourceIndices": [
+    1,
+    4,
+    6
+  ],
+  "notes": [
+    "User flagged review-v04 pose05 in screenshot: knees flex while trunk remains comparatively upright. Remove that exact pose from both ascent and descent; retain other images unchanged.",
+    "Six existing source photos, eleven displayed steps over four seconds. No new generation, interpolation, anatomical deformation or reframing.",
+    "User said remaining images good; scoped to this exercise, not assumed approval of all other movements in batch31–40. New timing/sequence still requires user visual acceptance.",
+    "Prototype comparison only, no catalog promotion, app integration, professional or release approval.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

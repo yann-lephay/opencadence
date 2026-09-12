@@ -1,0 +1,33 @@
+[
+  {
+    "id": "dead_bug",
+    "kind": "cycle",
+    "outputDirectory": "review-user-keyposes-v02",
+    "sources": [
+      "user-redo-2026-09-06-b/center.png",
+      "user-redo-2026-09-06-b/side-a.png",
+      "user-redo-2026-09-06-b/side-b.png"
+    ],
+    "sequence": [
+      0,
+      1,
+      0,
+      2
+    ],
+    "fallbackIndices": [
+      0,
+      1,
+      2
+    ],
+    "durationSeconds": 4,
+    "visiblyDistinctPoses": 3,
+    "reversePoseReuse": false,
+    "status": "keypose_slideshow_timing_review",
+    "notes": [
+      "Same three source poses and center-A-center-B order as six-second v01. Only dwell time reduced from1.5s to1s per step.",
+      "User confirmed angle/pairing readability and suggested fewer images may suffice. Four-second pacing still awaiting review.",
+      "Deliberate three-pose slideshow, not continuous motion or prescribed exercise tempo. No extra anatomical frames, interpolation or mirroring.",
+      "Not integrated or professionally validated. Original six-second version preserved."
+    ]
+  }
+]

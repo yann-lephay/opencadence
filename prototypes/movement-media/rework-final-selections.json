@@ -1,0 +1,336 @@
+[
+  {
+    "id": "dumbbell_floor_press",
+    "kind": "cycle",
+    "outputDirectory": "review-v04",
+    "sources": [
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png",
+      "rework-2026-09-05/dumbbell_floor_press_cycle_v01.png"
+    ],
+    "crops": [
+      "300x300+10+10",
+      "300x300+322+10",
+      "300x300+634+10",
+      "300x300+946+10",
+      "300x300+10+322",
+      "300x300+322+322",
+      "300x300+634+322",
+      "300x300+946+322"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "visiblyDistinctPoses": 8,
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      6,
+      5,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "fallbackIndices": [
+      0,
+      4,
+      7
+    ],
+    "notes": [
+      "Correction of review-v03 discontinuous return: eight downward poses reused in reverse for the upward return.",
+      "No new anatomical poses invented; review candidate only."
+    ]
+  },
+  {
+    "id": "single_arm_dumbbell_floor_press",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/single_arm_dumbbell_floor_press_phases_v04.png",
+      "rework-2026-09-05/single_arm_dumbbell_floor_press_phases_v04.png",
+      "rework-2026-09-05/single_arm_dumbbell_floor_press_phases_v04.png",
+      "rework-2026-09-05/single_arm_dumbbell_floor_press_phases_v04.png",
+      "rework-2026-09-05/single_arm_dumbbell_floor_press_phases_v04.png",
+      "rework-2026-09-05/single_arm_dumbbell_floor_press_phases_v04.png"
+    ],
+    "crops": [
+      "436x436+5+5",
+      "436x436+448+5",
+      "436x436+891+5",
+      "436x436+1334+5",
+      "436x436+5+448",
+      "436x436+448+448"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "fallbackIndices": [
+      0,
+      2,
+      5
+    ],
+    "visiblyDistinctPoses": 6,
+    "reversePoseReuse": true,
+    "notes": [
+      "Near working arm is preserved. Far free arm is occluded; do not infer its installation from these images alone.",
+      "Excluded source poses 7 and 8: forearm tilts toward torso and repeats the endpoint.",
+      "Six poses, eleven displayed steps. Not professional validation or release approval."
+    ]
+  },
+  {
+    "id": "double_dumbbell_front_squat",
+    "kind": "cycle",
+    "outputDirectory": "review-v04",
+    "sources": [
+      "rework-2026-09-05/aligned-cells/pose_01.png",
+      "rework-2026-09-05/aligned-cells/pose_02.png",
+      "rework-2026-09-05/aligned-cells/pose_03.png",
+      "rework-2026-09-05/aligned-cells/pose_04.png",
+      "rework-2026-09-05/aligned-cells/pose_05.png",
+      "rework-2026-09-05/aligned-cells/pose_06.png",
+      "rework-2026-09-05/aligned-cells/pose_07.png",
+      "rework-2026-09-05/aligned-cells/pose_08.png",
+      "rework-2026-09-05/aligned-cells/pose_09.png",
+      "rework-2026-09-05/aligned-cells/pose_10.png",
+      "rework-2026-09-05/aligned-cells/pose_11.png"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "visiblyDistinctPoses": 8,
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      6,
+      4,
+      8,
+      9,
+      10
+    ],
+    "fallbackIndices": [
+      0,
+      7,
+      10
+    ],
+    "notes": [
+      "Actual uneven board rows cropped separately, each padded to the same 320px square without scaling before rendering. Source anatomy is not cropped.",
+      "Original crop geometry: [\"304x313+8+8\",\"303x313+320+8\",\"303x313+632+8\",\"303x313+943+8\",\"304x297+8+330\",\"303x297+320+330\",\"303x297+632+330\",\"303x297+943+330\",\"304x293+8+636\",\"303x293+320+636\",\"303x293+632+636\"]",
+      "Poster and loop remain review candidates, not professional validation."
+    ]
+  },
+  {
+    "id": "dumbbell_hip_thrust",
+    "kind": "cycle",
+    "outputDirectory": "review-v04",
+    "sources": [
+      "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+      "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+      "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+      "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+      "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+      "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+      "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png"
+    ],
+    "crops": [
+      "424x424+11+11",
+      "424x424+454+11",
+      "424x424+897+11",
+      "424x424+1340+11",
+      "424x424+11+454",
+      "424x424+454+454",
+      "424x424+897+454"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "visiblyDistinctPoses": 7,
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      5,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "fallbackIndices": [
+      0,
+      3,
+      6
+    ],
+    "notes": [
+      "Excluded source pose 8: bench contact becomes visually ambiguous. Selected first seven poses and reversed still-image return.",
+      "One dumbbell viewed end-on; far head is occluded, not evidence of a missing dumbbell.",
+      "Professional validation remains required; not a release asset."
+    ]
+  },
+  {
+    "id": "wall_hip_hinge",
+    "kind": "cycle",
+    "outputDirectory": "review-v04",
+    "sources": [
+      "rework-2026-09-05/wall_hip_hinge_keyposes_v02.png",
+      "rework-2026-09-05/wall_hip_hinge_keyposes_v02.png",
+      "rework-2026-09-05/wall_hip_hinge_keyposes_v02.png",
+      "rework-2026-09-05/wall_hip_hinge_keyposes_v02.png"
+    ],
+    "crops": [
+      "606x606+15+15",
+      "606x606+634+15",
+      "606x606+15+634",
+      "606x606+634+634"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      2,
+      1,
+      0
+    ],
+    "fallbackIndices": [
+      0,
+      1,
+      3
+    ],
+    "visiblyDistinctPoses": 4,
+    "reversePoseReuse": true,
+    "notes": [
+      "Fallback to four independently reviewed key poses; eight-pose board rejected for relative foot/wall drift.",
+      "Low-density exception: four distinct poses and seven displayed steps, not twelve unique frames.",
+      "Small global frame drift remains a prototype reserve; no anatomical modification or professional certification."
+    ]
+  },
+  {
+    "id": "kettlebell_deadlift",
+    "kind": "cycle",
+    "outputDirectory": "review-v04",
+    "sources": [
+      "rework-2026-09-05/low-floor-v02.png",
+      "rework-2026-09-05/low-lift-v02.png",
+      "rework-2026-09-05/intermediate-low.png",
+      "rework-2026-09-05/intermediate-mid.png",
+      "rework-2026-09-05/kettlebell_deadlift_keyposes_v01.png",
+      "rework-2026-09-05/intermediate-high.png",
+      "rework-2026-09-05/kettlebell_deadlift_keyposes_v01.png"
+    ],
+    "crops": [
+      null,
+      null,
+      null,
+      null,
+      "614x614+8+632",
+      null,
+      "614x614+632+632"
+    ],
+    "boardCellIndices": [
+      null,
+      null,
+      null,
+      null,
+      3,
+      null,
+      4
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      5,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "fallbackIndices": [
+      0,
+      3,
+      6
+    ],
+    "visiblyDistinctPoses": 7,
+    "reversePoseReuse": true,
+    "notes": [
+      "Two lowest poses regenerated from the stable solo reference to correct foot and framing displacement.",
+      "Seven source poses, thirteen displayed steps; reused return is not additional unique anatomy.",
+      "Final independent visual review required; not professional validation or release."
+    ]
+  }
+]

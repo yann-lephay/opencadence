@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev -H 127.0.0.1 -p 3015",
     "build": "next build",
+    "simulate:v2": "swift run --package-path ios/CadenceEngine CadenceSimulator",
     "start": "next start -H 127.0.0.1 -p 3015",
     "typecheck": "tsc --noEmit"
   },
@@ -18,6 +19,7 @@
     "react-dom": "^19.2.3"
   },
   "devDependencies": {
+    "@runwayml/sdk": "^4.20.0",
     "@tailwindcss/postcss": "^4.1.0",
     "@types/node": "^22.10.0",
     "@types/react": "^19.0.0",

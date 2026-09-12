@@ -1,0 +1,18 @@
+{
+  "ios/CadenceEngine/Sources/CadenceEngine/PersonalizationModels.swift": "4a99e9f62beb53a2430e4b3d64a64ee6b99bca4c4d1efaeff942fc3894b70294",
+  "ios/CadenceEngine/Sources/CadenceEngine/PersonalizedSession.swift": "f5602168857b86d1aa62fd692104996a69281700dd5dc4daa36516606e258cfe",
+  "ios/CadenceEngine/Sources/CadenceEngine/V2Models.swift": "873f97badc817a5db28197c3cd0f9c921d6a3d97047e3472f8dc75006c39ce67",
+  "ios/CadenceEngine/Tests/CadenceEngineTests/PersonalizedSessionTests.swift": "c377fa9cde51057baca7c6172b252c32bec4d6752e164a8f5dc0e007a308ba89",
+  "ios/OpenCadence/OpenCadence/Models/AppModels.swift": "88fb8a57369e044f9ae680cf2bece9f9795d7032e4fb6d15c72d3a6ffef4493f",
+  "ios/OpenCadence/OpenCadence/Services/ActiveSessionCoordinator.swift": "3522110b227c919c1689ff8573c28e04275e335c0d7f1a5b812306b6882edf74",
+  "ios/OpenCadence/OpenCadence/Services/NativePersonalization.swift": "10fa5e7554c74a205ecc09094d81a08388997009d6d3ecc7a88f106b1f8d01c1",
+  "ios/OpenCadence/OpenCadence/Services/WorkoutEngineBridge.swift": "1d4f57c83906f6e0954c1d1b8c72b5b179b359961d5b46b3db1726debdd8ffd6",
+  "ios/OpenCadence/OpenCadence/Views/ActiveWorkoutView.swift": "d205a620e4f69217abe151d85e7f0f55c1bd468729f48201240a4c1c07e9053b",
+  "ios/OpenCadence/OpenCadence/Views/SessionAdaptationNotice.swift": "5ebd9175d9d5e3be71945d8f4a8b0e3322b2309d21c73786c7e0d948a42a7431",
+  "ios/OpenCadence/OpenCadence/Views/PersonalizationAdjustmentView.swift": "638db7f0eae96016a1ec441b9f8b5764b3bb8aed18c610c2fb3fc5d54fa42dd3",
+  "ios/OpenCadence/OpenCadence/Views/PersonalizationProofView.swift": "eb719171005a19a6c14961a31901453001fcc2ecada369746da8ea148ea5016f",
+  "ios/OpenCadence/OpenCadence/Localizable.xcstrings": "f26a6c439cb05f6038e8204a94dcb7e7a5195d505dbefa01795d45b070dd56da",
+  "ios/OpenCadence/OpenCadenceTests/PersonalizationCorrectionsTests.swift": "478922b9d3285ac3eccef1d7e6fcd2036dec7bf6116597202b67755357785137",
+  "ios/OpenCadence/OpenCadenceTests/TenSessionPersonaTests.swift": "fd995ce993e13804149ced8b51f7bf41b4525f6f0b979e18a8cf806e3e2557c4",
+  "qc/decision-surfaces/ios-personalized-first-sessions.json": "e15751a91437e3d81f71b77497f85f2050cb29ececb19fbcae8f59bcd921250e"
+}

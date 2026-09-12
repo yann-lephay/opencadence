@@ -1,0 +1,223 @@
+{
+  "version": "0.1",
+  "objective": {
+    "requestedOutcome": "Permettre d’écarter un mouvement précis avant de commencer une séance et obtenir immédiatement un nouveau programme compatible, sans diagnostic ni culpabilisation.",
+    "nonGoals": [
+      "Diagnostiquer la cause d’une douleur ou recommander un traitement.",
+      "Transformer un ressenti en score général de préparation.",
+      "Réutiliser le suivi menstruel facultatif comme état de forme générique.",
+      "Créer une limitation permanente ou réécrire les séances passées.",
+      "Inventer une substitution absente du catalogue validé.",
+      "Remplacer les signalements de sécurité disponibles pendant la séance."
+    ],
+    "changeType": "journey"
+  },
+  "surface": {
+    "id": "ios:workout-preview/movement-adjustment",
+    "mode": "guided",
+    "scope": {
+      "kind": "dialog",
+      "parentId": "ios:workout-preview"
+    },
+    "episode": {
+      "trigger": "Une séance a été préparée et la personne choisit d’adapter ses mouvements avant de la commencer.",
+      "userJob": "Écarter pour aujourd’hui un mouvement précis que je ne souhaite pas faire, puis vérifier la séance recalculée avant de démarrer.",
+      "completionEvidence": "Chaque mouvement choisi est absent du nouveau plan ou la surface explique qu’aucun plan compatible n’existe ; les choix restent modifiables et sont conservés dans le snapshot de la séance démarrée."
+    }
+  },
+  "truth": {
+    "mustBeTrue": [
+      "La surface propose uniquement les mouvements du plan initial réellement compatible avec le matériel déclaré.",
+      "Aucune exclusion n’est précochée et aucune cause médicale n’est demandée ou inférée.",
+      "Un mouvement écarté n’apparaît jamais dans la séance recalculée.",
+      "Les candidats qui portent exactement la même variante que le mouvement écarté sont exclus avec lui afin d’éviter un faux changement de clé invisible pour la personne.",
+      "Une substitution provient exclusivement du catalogue et des règles déterministes du moteur.",
+      "Une décision sans plan compatible conserve les choix et offre un retour direct vers leur modification.",
+      "Les exclusions valent uniquement pour la séance préparée et ne réécrivent ni le profil ni l’historique.",
+      "La décision moteur enregistre les clés écartées afin que le snapshot décrive pourquoi le plan a changé.",
+      "Écarter un mouvement n’autorise jamais à continuer malgré une douleur, un malaise ou un signal inhabituel pendant l’exercice."
+    ],
+    "canonicalTerms": [
+      {
+        "canonical": "Limitation.excludedExerciseKeys",
+        "userFacing": "Mouvement écarté pour cette séance",
+        "precisionMoment": "Dans l’adaptation ouverte depuis l’aperçu et dans le résumé de la séance recalculée.",
+        "source": "docs/IOS-ENGINE-BEHAVIOR-CONTRACT.md#eng-calibration-001--calibration-locale-et-limitations"
+      },
+      {
+        "canonical": "request_valid_input",
+        "userFacing": "Aucune séance compatible avec ces choix",
+        "precisionMoment": "Lorsque les exclusions ne laissent aucun plan valide dans le catalogue actuel.",
+        "source": "ios/CadenceEngine/Sources/CadenceEngine/CadenceEngine.swift"
+      }
+    ]
+  },
+  "decision": {
+    "currentState": "Les mouvements du plan initial, ceux écartés pour aujourd’hui et la capacité du moteur à produire un nouveau plan compatible.",
+    "dominantAction": {
+      "id": "recalculate-with-exclusions",
+      "label": "Recalculer la séance",
+      "expectedResult": "Un nouvel aperçu exclut les mouvements choisis et expose l’adaptation ou l’absence honnête de plan.",
+      "reversibility": "reversible",
+      "guard": "review"
+    },
+    "constraints": [
+      {
+        "id": "no-silent-noop",
+        "mustBeTrue": "Chaque sélection modifie le plan ou produit un état explicite sans plan compatible.",
+        "detectability": "immediate",
+        "consequence": "La personne croirait à tort qu’un mouvement a été retiré.",
+        "recovery": "Comparer les clés écartées au plan recalculé et refuser tout plan qui en contient encore une."
+      },
+      {
+        "id": "preserve-selection-on-failure",
+        "mustBeTrue": "Une erreur ou un plan impossible conserve toutes les cases choisies.",
+        "detectability": "immediate",
+        "consequence": "La personne devrait reconstruire un contexte potentiellement lié à une gêne.",
+        "recovery": "Rouvrir directement la même liste avec les mêmes sélections."
+      },
+      {
+        "id": "session-only-scope",
+        "mustBeTrue": "Les exclusions disparaissent lors de la préparation d’une nouvelle séance et ne modifient pas le profil.",
+        "detectability": "delayed",
+        "consequence": "Une décision ponctuelle deviendrait une règle permanente invisible.",
+        "recovery": "Conserver les exclusions dans la décision de séance uniquement, jamais dans UserSetupRecord."
+      },
+      {
+        "id": "safety-boundary",
+        "mustBeTrue": "La surface ne suggère jamais qu’une substitution suffit face à une douleur, un malaise ou une fatigue excessive.",
+        "detectability": "immediate",
+        "consequence": "Une adaptation produit pourrait être confondue avec une recommandation médicale.",
+        "recovery": "Rappeler d’arrêter l’exercice concerné et conserver le parcours de signalement et d’orientation existant."
+      }
+    ]
+  },
+  "languageAndTrust": {
+    "complexityAbsorbed": [
+      "Recherche d’une variante compatible après exclusion.",
+      "Réallocation du budget entre les familles encore disponibles.",
+      "Validation que le plan final ne contient aucune clé écartée.",
+      "Conservation des exclusions dans le snapshot sans les rendre permanentes."
+    ],
+    "consequencesNeverHidden": [
+      "La nouvelle séance peut contenir moins de familles de mouvements.",
+      "Le catalogue actuel peut ne proposer aucune alternative.",
+      "Les choix s’appliquent seulement à cette séance.",
+      "L’adaptation ne remplace pas l’arrêt de l’exercice ni un avis médical lorsqu’ils sont nécessaires."
+    ],
+    "reassurance": [
+      {
+        "claim": "Tu pourras réintégrer un mouvement avant de commencer.",
+        "evidence": "La liste reste accessible depuis l’aperçu et chaque exclusion est réversible.",
+        "placement": "Sous la liste des mouvements."
+      },
+      {
+        "claim": "Le moteur n’invente aucune alternative.",
+        "evidence": "Toute substitution doit appartenir au catalogue et passer les validations matériel et limitation.",
+        "placement": "Dans le résumé après recalcul."
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "scope-today",
+      "purpose": "orientation",
+      "visibility": "persistent",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Évite qu’une exclusion ponctuelle soit perçue comme permanente."
+    },
+    {
+      "id": "planned-movement-list",
+      "purpose": "decision",
+      "visibility": "persistent",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Permet une décision sur des mouvements réels plutôt que sur une zone du corps ambiguë."
+    },
+    {
+      "id": "selected-count",
+      "purpose": "state",
+      "visibility": "contextual",
+      "hierarchy": 2,
+      "verdict": "keep",
+      "reason": "Rend la portée de l’adaptation vérifiable avant recalcul."
+    },
+    {
+      "id": "medical-cause-question",
+      "purpose": "orientation",
+      "visibility": "on_demand",
+      "hierarchy": 3,
+      "verdict": "remove",
+      "reason": "La cause n’est pas nécessaire à l’exclusion et l’app ne doit ni diagnostiquer ni collecter une donnée de santé inutile."
+    },
+    {
+      "id": "general-readiness-score",
+      "purpose": "orientation",
+      "visibility": "on_demand",
+      "hierarchy": 3,
+      "verdict": "remove",
+      "reason": "Le moteur possède déjà des signaux factuels issus de l’historique ; un score vague ajouterait une fausse précision."
+    }
+  ],
+  "states": [
+    {
+      "id": "no-exclusion",
+      "kind": "empty",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Fermer sans modifier la séance ou choisir un mouvement.",
+      "recovery": "Revenir à l’aperçu initial inchangé."
+    },
+    {
+      "id": "exclusions-selected",
+      "kind": "partial_success",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Recalculer la séance.",
+      "recovery": "Décocher un mouvement avant ou après le recalcul."
+    },
+    {
+      "id": "adapted-plan-ready",
+      "kind": "partial_success",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Vérifier le nouveau plan puis commencer.",
+      "recovery": "Rouvrir l’adaptation et réintégrer un mouvement."
+    },
+    {
+      "id": "no-compatible-plan",
+      "kind": "error",
+      "blocking": true,
+      "preserveInput": true,
+      "nextStep": "Modifier les mouvements écartés.",
+      "recovery": "Réintégrer au moins un mouvement jusqu’à obtenir un plan valide."
+    },
+    {
+      "id": "recalculation-failed",
+      "kind": "error",
+      "blocking": true,
+      "preserveInput": true,
+      "nextStep": "Réessayer sans perdre les sélections.",
+      "recovery": "Conserver l’aperçu précédent et la liste choisie."
+    }
+  ],
+  "motion": [],
+  "review": {
+    "risk": "R2",
+    "domains": [
+      "saas",
+      "health-adjacent"
+    ],
+    "requiredJudges": [
+      "product",
+      "experience",
+      "risk",
+      "language"
+    ],
+    "humanGate": [
+      "Avant bêta externe, relire les formulations de prudence et le parcours de signalement avec une personne compétente.",
+      "Avant direction visuelle finale, comparer le rendu structurel au contrat visuel choisi par Yann."
+    ]
+  }
+}

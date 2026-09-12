@@ -1,0 +1,285 @@
+[
+  {
+    "id": "dead_bug",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/dead_bug_keyposes_v01.png",
+      "rework-2026-09-05/dead_bug_early_v01.png",
+      "rework-2026-09-05/dead_bug_keyposes_v01.png",
+      "rework-2026-09-05/dead_bug_keyposes_v01.png",
+      "rework-2026-09-05/dead_bug_mid_v01.png",
+      "rework-2026-09-05/dead_bug_late_v01.png",
+      "rework-2026-09-05/dead_bug_keyposes_v01.png"
+    ],
+    "crops": [
+      "754x498+8+8",
+      null,
+      "754x498+770+8",
+      "754x498+8+514",
+      null,
+      null,
+      "754x498+770+514"
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      5,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "visiblyDistinctPoses": 7,
+    "reversePoseReuse": true,
+    "fallbackIndices": [
+      0,
+      3,
+      6
+    ],
+    "notes": [
+      "Seven selected source poses, 13 displayed steps. Controlled return reuses outward poses; no additional anatomical frames invented.",
+      "Contralateral far-arm/near-leg extension; only this side is demonstrated. End poses are close. Small source registration differences remain."
+    ]
+  },
+  {
+    "id": "low_step_up",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/low_step_up_keyposes_v02.png",
+      "rework-2026-09-05/low_step_up_keyposes_v02.png",
+      "rework-2026-09-05/low_step_up_keyposes_v02.png",
+      "rework-2026-09-05/low_step_up_keyposes_v02.png"
+    ],
+    "crops": [
+      "618x618+5+5",
+      "618x618+632+5",
+      "618x618+5+632",
+      "618x618+632+632"
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      2,
+      1,
+      0
+    ],
+    "visiblyDistinctPoses": 4,
+    "reversePoseReuse": true,
+    "fallbackIndices": [
+      0,
+      1,
+      3
+    ],
+    "notes": [
+      "Four clear key poses, seven displayed steps. Sparse stop-motion exception, not 12 unique poses.",
+      "Support foot flat on a low stable step. Full ascent then controlled descent illustrated using reversed selected stills; no added heel raise."
+    ]
+  },
+  {
+    "id": "farmer_carry",
+    "kind": "gait",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/farmer_carry_keyposes_v03.png",
+      "rework-2026-09-05/farmer_passing_v01.png",
+      "rework-2026-09-05/farmer_carry_keyposes_v03.png",
+      "rework-2026-09-05/farmer_passing_left_v02.png"
+    ],
+    "crops": [
+      "618x618+5+5",
+      null,
+      "618x618+5+632",
+      null
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "visiblyDistinctPoses": 4,
+    "reversePoseReuse": false,
+    "fallbackIndices": [
+      0,
+      1,
+      3
+    ],
+    "notes": [
+      "Natural alternating gait: right lead, right support/left swing, left lead, left support/right swing.",
+      "No reversed or mirrored gait. Four key poses only; one second per pose at four seconds, visibly stepped preview. Slight framing variation remains."
+    ]
+  },
+  {
+    "id": "suitcase_carry",
+    "kind": "gait",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/suitcase_carry_keyposes_v03.png",
+      "rework-2026-09-05/suitcase_passing_right_v01.png",
+      "rework-2026-09-05/suitcase_opposite_v01.png",
+      "rework-2026-09-05/suitcase_passing_left_v01.png"
+    ],
+    "crops": [
+      "618x618+5+5",
+      null,
+      null,
+      null
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "visiblyDistinctPoses": 4,
+    "reversePoseReuse": false,
+    "fallbackIndices": [
+      0,
+      1,
+      3
+    ],
+    "notes": [
+      "Natural alternating gait. Single dumbbell remains in anatomical left hand (viewer right).",
+      "No reversed or mirrored gait. Four key poses only; one second per pose at four seconds, visibly stepped preview. Slight framing variation remains."
+    ]
+  },
+  {
+    "id": "suitcase_march",
+    "kind": "gait",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/suitcase_march_keyposes_v03.png",
+      "rework-2026-09-05/suitcase_march_keyposes_v03.png",
+      "rework-2026-09-05/suitcase_march_keyposes_v03.png",
+      "rework-2026-09-05/march_opposite_mid_v01.png"
+    ],
+    "crops": [
+      "618x618+5+5",
+      "618x618+632+632",
+      "618x618+632+5",
+      null
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      2
+    ],
+    "visiblyDistinctPoses": 4,
+    "reversePoseReuse": false,
+    "fallbackIndices": [
+      0,
+      1,
+      3
+    ],
+    "notes": [
+      "Alternating knee lifts with neutral pose between sides. Single dumbbell remains anatomical right hand (viewer left).",
+      "Four unique poses and five displayed steps, not a dense animation. No mirrored or reversed gait."
+    ]
+  },
+  {
+    "id": "easy_rower_intervals",
+    "kind": "rowing",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/easy_rower_intervals_keyposes_v02.png",
+      "rework-2026-09-05/easy_rower_intervals_keyposes_v02.png",
+      "rework-2026-09-05/easy_rower_intervals_keyposes_v02.png",
+      "rework-2026-09-05/easy_rower_intervals_keyposes_v02.png"
+    ],
+    "crops": [
+      "618x618+5+5",
+      "618x618+632+5",
+      "618x618+5+632",
+      "618x618+632+632"
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "visiblyDistinctPoses": 4,
+    "reversePoseReuse": false,
+    "fallbackIndices": [
+      0,
+      1,
+      3
+    ],
+    "notes": [
+      "DIAGNOSTIC ONLY: footplate shifts relative to machine rail/flywheel across phases. Do not promote as a correct rowing demonstration.",
+      "Chronological catch, drive, finish, recovery; no temporal reversal. Four sparse source poses."
+    ],
+    "status": "needs_fix_diagnostic"
+  },
+  {
+    "id": "reverse_lunge",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/reverse_lunge_cycle_v01.png",
+      "rework-2026-09-05/reverse_lunge_cycle_v01.png",
+      "rework-2026-09-05/reverse_lunge_cycle_v01.png",
+      "rework-2026-09-05/reverse_lunge_cycle_v01.png",
+      "rework-2026-09-05/reverse_lunge_cycle_v01.png",
+      "rework-2026-09-05/reverse_lunge_cycle_v01.png",
+      "rework-2026-09-05/reverse_lunge_cycle_v01.png",
+      "rework-2026-09-05/reverse_lunge_cycle_v01.png",
+      "rework-2026-09-05/reverse_lunge_cycle_v01.png",
+      "rework-2026-09-05/reverse_lunge_cycle_v01.png",
+      "rework-2026-09-05/reverse_lunge_cycle_v01.png",
+      "rework-2026-09-05/reverse_lunge_cycle_v01.png"
+    ],
+    "crops": [
+      "304x304+5+5",
+      "304x304+318+5",
+      "304x304+631+5",
+      "304x304+944+5",
+      "304x304+5+318",
+      "304x304+318+318",
+      "304x304+631+318",
+      "304x304+5+631",
+      "304x304+318+631",
+      "304x304+631+631",
+      "304x304+5+944",
+      "304x304+318+944"
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "visiblyDistinctPoses": 10,
+    "reversePoseReuse": false,
+    "fallbackIndices": [
+      0,
+      5,
+      11
+    ],
+    "notes": [
+      "DIAGNOSTIC ONLY: front foot and orange ground marker translate relative to the static furniture. Whole-frame alignment would move the background and cannot restore contact consistency.",
+      "12 selected source snapshots; 10 clearly different pose stages conservatively counted. Excludes near-floor pose 8 and duplicate standing cells 12,15,16. No anatomical warp or synthetic alignment applied."
+    ],
+    "status": "needs_fix_diagnostic"
+  }
+]

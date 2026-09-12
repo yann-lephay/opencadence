@@ -1,0 +1,55 @@
+{
+  "movementId": "band_assisted_pull_up",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "density-2026-09-05/reference-hang.png",
+    "density-2026-09-05/old-early-reference.png",
+    "density-2026-09-05/quarter-v02.png",
+    "density-2026-09-05/early-v01.png",
+    "density-2026-09-05/mid-v01.png",
+    "density-2026-09-05/top-v02.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": null,
+  "uniqueSourceFrames": 6,
+  "visiblyDistinctPoses": 6,
+  "displayedSteps": 11,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    5,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "band_assisted_pull_up_review_density_v01.mp4",
+  "poster": "band_assisted_pull_up_poster_review_density_v01.webp",
+  "fallback": "band_assisted_pull_up_fallback_review_density_v01.webp",
+  "fallbackSourceIndices": [
+    1,
+    4,
+    6
+  ],
+  "notes": [
+    "Old early frame from previously inspected cycle sheet retained to bridge hanging-to-quarter gap; no old flawed top reused.",
+    "Six distinct poses selected, eleven displayed steps using explicit controlled return; target of twelve unique poses not reached.",
+    "Near-top and upper-mid requests did not create useful extra levels and were excluded.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

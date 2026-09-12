@@ -1,0 +1,16 @@
+[
+  {
+    "id": "incline_push_up",
+    "kind": "cycle",
+    "outputDirectory": "review-images25-fixed-scene-v01",
+    "sources": ["images-2.5-fixed-scene-v01/contact-sheet-3x3.png", "images-2.5-fixed-scene-v01/contact-sheet-3x3.png", "images-2.5-fixed-scene-v01/contact-sheet-3x3.png", "images-2.5-fixed-scene-v01/contact-sheet-3x3.png", "images-2.5-fixed-scene-v01/contact-sheet-3x3.png", "images-2.5-fixed-scene-v01/contact-sheet-3x3.png", "images-2.5-fixed-scene-v01/contact-sheet-3x3.png", "images-2.5-fixed-scene-v01/contact-sheet-3x3.png", "images-2.5-fixed-scene-v01/contact-sheet-3x3.png"],
+    "boardCellIndices": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "crops": ["408x408+5+5", "408x408+423+5", "408x408+841+5", "408x408+5+423", "408x408+423+423", "408x408+841+423", "408x408+5+841", "408x408+423+841", "408x408+841+841"],
+    "visiblyDistinctPoses": 9,
+    "durationSeconds": 4,
+    "sequence": [0, 1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1],
+    "fallbackIndices": [0, 4, 8],
+    "status": "visual_candidate_not_release",
+    "notes": ["A/B prompt variant: the entire room and equipment are explicitly treated as one immutable background plate.", "Only the person's pose is allowed to change; hands and forefeet are requested at fixed pixel coordinates.", "Return reuses the exact outbound poses in reverse; no anatomical interpolation."]
+  }
+]

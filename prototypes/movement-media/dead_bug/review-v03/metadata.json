@@ -1,0 +1,65 @@
+{
+  "movementId": "dead_bug",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "rework-2026-09-05/dead_bug_keyposes_v01.png",
+    "rework-2026-09-05/dead_bug_early_v01.png",
+    "rework-2026-09-05/dead_bug_keyposes_v01.png",
+    "rework-2026-09-05/dead_bug_keyposes_v01.png",
+    "rework-2026-09-05/dead_bug_mid_v01.png",
+    "rework-2026-09-05/dead_bug_late_v01.png",
+    "rework-2026-09-05/dead_bug_keyposes_v01.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": [
+    "754x498+8+8",
+    null,
+    "754x498+770+8",
+    "754x498+8+514",
+    null,
+    null,
+    "754x498+770+514"
+  ],
+  "uniqueSourceFrames": 7,
+  "visiblyDistinctPoses": 7,
+  "displayedSteps": 13,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    6,
+    5,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "dead_bug_review_v03.mp4",
+  "poster": "dead_bug_poster_review_v03.webp",
+  "fallback": "dead_bug_fallback_review_v03.webp",
+  "fallbackSourceIndices": [
+    1,
+    4,
+    7
+  ],
+  "notes": [
+    "Seven selected source poses, 13 displayed steps. Controlled return reuses outward poses; no additional anatomical frames invented.",
+    "Contralateral far-arm/near-leg extension; only this side is demonstrated. End poses are close. Small source registration differences remain.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

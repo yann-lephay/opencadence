@@ -1,0 +1,353 @@
+{
+  "ok": true,
+  "scope": "Coverage and technical metadata only; no visual, professional or release approval.",
+  "counts": {
+    "canonical": 42,
+    "records": 42,
+    "videos": 42,
+    "probedVideos": 42
+  },
+  "statuses": {
+    "visual_candidate": 40,
+    "needs_fix": 2
+  },
+  "videos": [
+    {
+      "movementId": "assisted_split_squat",
+      "path": "assisted_split_squat/review-v02/assisted_split_squat_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "band_assisted_pull_up",
+      "path": "band_assisted_pull_up/review-v03/band_assisted_pull_up_review_v03.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "band_good_morning",
+      "path": "band_good_morning/review-v03/band_good_morning_review_v03.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "band_lat_pulldown_over_bar",
+      "path": "band_lat_pulldown_over_bar/review-v02/band_lat_pulldown_over_bar_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "band_overhead_press",
+      "path": "band_overhead_press/review-v03/band_overhead_press_review_v03.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "bent_over_dumbbell_row",
+      "path": "bent_over_dumbbell_row/review-v02/bent_over_dumbbell_row_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "chair_sit_to_stand",
+      "path": "chair_sit_to_stand/review-v02/chair_sit_to_stand_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "dead_bug",
+      "path": "dead_bug/review-v03/dead_bug_review_v03.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "dip_bar_inverted_row",
+      "path": "dip_bar_inverted_row/review-v03/dip_bar_inverted_row_review_v03.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "double_dumbbell_front_squat",
+      "path": "double_dumbbell_front_squat/review-v04/double_dumbbell_front_squat_review_v04.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "dumbbell_biceps_curl",
+      "path": "dumbbell_biceps_curl/review-v02/dumbbell_biceps_curl_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "dumbbell_floor_press",
+      "path": "dumbbell_floor_press/review-v04/dumbbell_floor_press_review_v04.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "dumbbell_hip_thrust",
+      "path": "dumbbell_hip_thrust/review-v04/dumbbell_hip_thrust_review_v04.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "dumbbell_lateral_raise",
+      "path": "dumbbell_lateral_raise/review-v02/dumbbell_lateral_raise_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "dumbbell_romanian_deadlift",
+      "path": "dumbbell_romanian_deadlift/review-v03/dumbbell_romanian_deadlift_review_v03.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "easy_rower_intervals",
+      "path": "easy_rower_intervals/review-v03/easy_rower_intervals_review_v03.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "eccentric_pull_up",
+      "path": "eccentric_pull_up/review-v03/eccentric_pull_up_review_v03.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "elevated_front_plank",
+      "path": "elevated_front_plank/review-v02/elevated_front_plank_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "farmer_carry",
+      "path": "farmer_carry/review-v03/farmer_carry_review_v03.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "front_plank",
+      "path": "front_plank/review-v02/front_plank_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "glute_bridge",
+      "path": "glute_bridge/review-v02/glute_bridge_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "goblet_squat",
+      "path": "goblet_squat/review-v03/goblet_squat_review_v03.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "incline_push_up",
+      "path": "incline_push_up/review-v02/incline_push_up_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "kettlebell_deadlift",
+      "path": "kettlebell_deadlift/review-v04/kettlebell_deadlift_review_v04.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "kickstand_romanian_deadlift",
+      "path": "kickstand_romanian_deadlift/review-v03/kickstand_romanian_deadlift_review_v03.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "low_step_up",
+      "path": "low_step_up/review-v03/low_step_up_review_v03.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "pull_up",
+      "path": "pull_up/review-v04/pull_up_review_v04.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "push_up",
+      "path": "push_up/review-v02/push_up_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "reverse_lunge",
+      "path": "reverse_lunge/review-v04/reverse_lunge_review_v04.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "seated_band_row",
+      "path": "seated_band_row/review-v03/seated_band_row_review_v03.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "seated_dumbbell_overhead_press",
+      "path": "seated_dumbbell_overhead_press/review-v02/seated_dumbbell_overhead_press_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "side_plank",
+      "path": "side_plank/review-v02/side_plank_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "single_arm_dumbbell_floor_press",
+      "path": "single_arm_dumbbell_floor_press/review-v03/single_arm_dumbbell_floor_press_review_v03.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "single_arm_overhead_press",
+      "path": "single_arm_overhead_press/review-v02/single_arm_overhead_press_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "split_squat",
+      "path": "split_squat/review-v02/split_squat_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "squat",
+      "path": "squat/review-v02/squat_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "suitcase_carry",
+      "path": "suitcase_carry/review-v03/suitcase_carry_review_v03.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "suitcase_march",
+      "path": "suitcase_march/review-v03/suitcase_march_review_v03.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "supported_calf_raise",
+      "path": "supported_calf_raise/review-v02/supported_calf_raise_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "supported_one_arm_row",
+      "path": "supported_one_arm_row/review-v02/supported_one_arm_row_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "supported_single_leg_calf_raise",
+      "path": "supported_single_leg_calf_raise/review-v02/supported_single_leg_calf_raise_review_v02.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    },
+    {
+      "movementId": "wall_hip_hinge",
+      "path": "wall_hip_hinge/review-v04/wall_hip_hinge_review_v04.mp4",
+      "duration": 4,
+      "width": 612,
+      "height": 612,
+      "codec": "h264"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "id": "dead_bug",
+    "kind": "cycle",
+    "outputDirectory": "review-user-keyposes-v01",
+    "sources": [
+      "user-redo-2026-09-06-b/center.png",
+      "user-redo-2026-09-06-b/side-a.png",
+      "user-redo-2026-09-06-b/side-b.png"
+    ],
+    "sequence": [
+      0,
+      1,
+      0,
+      2
+    ],
+    "fallbackIndices": [
+      0,
+      1,
+      2
+    ],
+    "durationSeconds": 6,
+    "visiblyDistinctPoses": 3,
+    "reversePoseReuse": false,
+    "status": "keypose_slideshow_not_finished_demonstration",
+    "notes": [
+      "Diagnostic slideshow of center and two opposite contralateral endpoint poses. No movement intermediates selected.",
+      "Six seconds, four displayed steps, three unique poses. Not a fluid demonstration, not a prescribed exercise tempo, not the requested12+image target.",
+      "Generated overhead view makes opposing pairs readable but cannot establish limb-floor clearance or lumbar position.",
+      "No spatial mirroring, no interpolation. Each side is separately generated. Small torso and scene differences remain.",
+      "Not integrated; awaiting user angle review and further valid transitions."
+    ]
+  }
+]

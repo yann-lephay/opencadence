@@ -1,0 +1,851 @@
+--- before/ios/CadenceEngine/Sources/CadenceEngine/CadenceEngineV2.swift
++++ after/ios/CadenceEngine/Sources/CadenceEngine/CadenceEngineV2.swift
+@@ -1,6 +1,27 @@
+ import Foundation
+ 
+ public extension CadenceEngine {
++    /// Explicit opt-in for the local simulation only. Never used by the app dispatcher.
++    @_spi(AutomaticPolicyExperiment)
++    static func decideAutomaticExperiment(
++        request: V2EngineRequest,
++        configuration: V2EngineConfiguration,
++        sizing: V2AutomaticSizingExperiment
++    ) -> V2EngineResult {
++        switch request {
++        case let .sessionDecision(input, now):
++            return .sessionDecision(CadenceEngineV2.decideNextSession(
++                input: input, now: now, configuration: configuration, experimentalSizing: sizing
++            ))
++        case let .activeSessionTransition(input):
++            return .activeSessionTransition(CadenceEngineV2.reduceActiveSession(
++                input: input, configuration: configuration, preserveUnstartedAfterEstimate: true
++            ))
++        case .progressionTransition:
++            return decideV2(request: request, configuration: configuration)
++        }
++    }
++
+     static func decideV2(
+         request: V2EngineRequest,
+         configuration: V2EngineConfiguration
+@@ -9,9 +30,9 @@
+     }
+ }
+ 
+-// Internal bench switch only: the public dispatcher never supplies this value.
++// Simulation-only SPI: the normal public dispatcher never supplies this value.
+ // No persisted policy or application default is changed by the experiment.
+-enum V2AutomaticSizingExperiment: String {
++@_spi(AutomaticPolicyExperiment) public enum V2AutomaticSizingExperiment: String, Sendable {
+     case catalogMaximum
+     case catalogMinimum
+     case capAtTwo
+@@ -1053,6 +1074,7 @@
+             .filter {
+                 $0.catalogVersion == configuration.catalogVersion
+                     && $0.decisionPolicyVersion == configuration.decisionPolicyVersion
++                    && (!($0.completedExerciseIds ?? []).isEmpty || !($0.references ?? []).isEmpty)
+             }
+             .sorted { (parseDate($0.endedAt) ?? .distantPast) > (parseDate($1.endedAt) ?? .distantPast) }
+             .prefix(configuration.policy.historyDepthCompletedSessions)
+--- before/ios/CadenceEngine/Sources/CadenceEngine/V2Models.swift
++++ after/ios/CadenceEngine/Sources/CadenceEngine/V2Models.swift
+@@ -311,11 +311,59 @@
+     }
+ }
+ 
++public enum V2HistoryEvidenceSource: String, Codable, Equatable, Sendable {
++    case nativeConfirmed
++    case syntheticScenario
++}
++
++public struct V2ConfirmedSetEvidence: Codable, Equatable, Sendable {
++    public let eventID: String?
++    public let repetitions: Int
++    public let loadKg: Double?
++    public let loadOptionID: String?
++    public let completedAt: String
++
++    public init(eventID: String?, repetitions: Int, loadKg: Double? = nil, loadOptionID: String? = nil, completedAt: String) {
++        self.eventID = eventID
++        self.repetitions = repetitions
++        self.loadKg = loadKg
++        self.loadOptionID = loadOptionID
++        self.completedAt = completedAt
++    }
++}
++
++/// Recorded facts only. This is not a capacity, tolerance or fatigue estimate.
++public struct V2ConfirmedWorkEvidence: Codable, Equatable, Sendable {
++    public let exerciseId: String
++    public let progressionContext: String
++    /// Final prescription retained by the snapshot, after any removal of unstarted work.
++    public let plannedSets: Int
++    public let targetUnit: V2TargetUnit
++    public let confirmedSets: [V2ConfirmedSetEvidence]
++    public let wasSkipped: Bool
++    public let interruptedBySafetySignal: Bool
++    public let source: V2HistoryEvidenceSource
++
++    public init(exerciseId: String, progressionContext: String, plannedSets: Int, targetUnit: V2TargetUnit,
++                confirmedSets: [V2ConfirmedSetEvidence], wasSkipped: Bool, interruptedBySafetySignal: Bool,
++                source: V2HistoryEvidenceSource) {
++        self.exerciseId = exerciseId
++        self.progressionContext = progressionContext
++        self.plannedSets = plannedSets
++        self.targetUnit = targetUnit
++        self.confirmedSets = confirmedSets
++        self.wasSkipped = wasSkipped
++        self.interruptedBySafetySignal = interruptedBySafetySignal
++        self.source = source
++    }
++}
++
+ public struct V2HistoryEntry: Codable, Equatable, Sendable {
+     public let endedAt: String
+     public let completedExerciseIds: [String]?
+     public let references: [V2Reference]?
+     public let restObservations: [V2RestObservation]?
++    public let confirmedWorkEvidence: [V2ConfirmedWorkEvidence]?
+     public let catalogVersion: String
+     public let decisionPolicyVersion: String
+ 
+@@ -324,6 +372,7 @@
+         completedExerciseIds: [String]? = nil,
+         references: [V2Reference]? = nil,
+         restObservations: [V2RestObservation]? = nil,
++        confirmedWorkEvidence: [V2ConfirmedWorkEvidence]? = nil,
+         catalogVersion: String,
+         decisionPolicyVersion: String
+     ) {
+@@ -331,6 +380,7 @@
+         self.completedExerciseIds = completedExerciseIds
+         self.references = references
+         self.restObservations = restObservations
++        self.confirmedWorkEvidence = confirmedWorkEvidence
+         self.catalogVersion = catalogVersion
+         self.decisionPolicyVersion = decisionPolicyVersion
+     }
+--- before/ios/CadenceEngine/Sources/CadenceSimulator/main.swift
++++ after/ios/CadenceEngine/Sources/CadenceSimulator/main.swift
+@@ -1,10 +1,22 @@
+-import CadenceEngine
++@_spi(AutomaticPolicyExperiment) import CadenceEngine
+ import Foundation
+ 
+ enum RhythmPolicy: String, CaseIterable {
+     case strictTimer = "strict_timer"
+     case fullyFree = "fully_free"
+     case guidedUserControlled = "guided_user_controlled"
++    case autoMax = "auto_max"
++    case autoMin = "auto_min"
++    case autoTwo = "auto_two"
++
++    var automaticSizing: V2AutomaticSizingExperiment? {
++        switch self {
++        case .autoMax: .catalogMaximum
++        case .autoMin: .catalogMinimum
++        case .autoTwo: .capAtTwo
++        default: nil
++        }
++    }
+ }
+ 
+ enum AdherenceCurve {
+@@ -41,14 +53,25 @@
+     let preSessionStopProbability: Double
+     let duringSessionStopProbability: Double
+     let persistentRefusals: [String]
++    var hiatusDays: Range<Int>? = nil
++    var inventoryChangeDay: Int? = nil
++    var changedInventory: [V2InventoryItem]? = nil
+ }
+ 
+ struct Options {
+     var weeks = 12
+     var seeds = 20
+-}
+-
+-struct Metrics {
++    var seedStart = 1
++    var outputJSON: String? = nil
++    var contrasts = false
++    var automatic = false
++    var legacyHistoryProjection = false
++    var tracePersonas: Set<String> = []
++    var traceSeeds = 1
++    var traceLimit = 1_000
++}
++
++struct Metrics: Codable {
+     var opportunities = 0
+     var sessionsStarted = 0
+     var sessionsGenerated = 0
+@@ -112,6 +135,7 @@
+     let confirmedByExercise: [String: Int]
+     let repetitionsByExercise: [String: [Int]]
+     let restObservations: [V2RestObservation]
++    let completedAtOffsetsByExercise: [String: [Int]]
+     let finalPrescribedSetsByExercise: [String: Int]
+     let actualSeconds: Int
+     let engineRemovedSets: Int
+@@ -119,26 +143,83 @@
+     let rushedStarts: Int
+     let interrupted: Bool
+     let safetyStopped: Bool
++    let safetyStoppedExerciseID: String?
++}
++
++struct SimulationRun: Codable {
++    let policy: String
++    let persona: String
++    let seed: Int
++    let metrics: Metrics
++}
++
++struct SessionTrace: Codable {
++    let policy: String
++    let persona: String
++    let seed: UInt64
++    let day: Int
++    let startedAt: String
++    let decision: String
++    let mode: String
++    let reasons: [V2Reason]
++    let estimatedSeconds: Int
++    let observationReferenceSeconds: Int
++    let plan: [V2PlanItem]
++    let historyBefore: [V2HistoryEntry]
++    let historyWritten: V2HistoryEntry?
++    let progressionReasons: [String: [V2Reason]]
++    let actualSeconds: Int?
++    let interruptionCause: String?
++    let todayInventory: [V2InventoryItem]
++}
++
++struct SimulationReport: Codable {
++    let schemaVersion: Int
++    let evidenceSource: String
++    let catalogVersion: String
++    let decisionPolicyVersion: String
++    let weeks: Int
++    let seedStart: Int
++    let seeds: Int
++    let automatic: Bool
++    let legacyHistoryProjection: Bool
++    let tracePersonas: [String]
++    let traceSeeds: Int
++    let contrasts: Bool
++    let traceLimit: Int
++    let traceLimitReached: Bool
++    let runs: [SimulationRun]
++    let traces: [SessionTrace]
+ }
+ 
+ let configuration = V2EngineConfiguration.productPreview
+ let options = parseOptions(CommandLine.arguments)
+-let personas = referencePersonas()
++let personas = referencePersonas() + (options.contrasts ? contrastPersonas() : [])
++let policies = RhythmPolicy.allCases.filter { ($0.automaticSizing != nil) == options.automatic }
+ let wallStart = ContinuousClock.now
+-var totals = Dictionary(uniqueKeysWithValues: RhythmPolicy.allCases.map { ($0, Metrics()) })
++var totals = Dictionary(uniqueKeysWithValues: policies.map { ($0, Metrics()) })
+ var guidedByPersona: [String: Metrics] = [:]
+-
+-for policy in RhythmPolicy.allCases {
++var runs: [SimulationRun] = []
++var traces: [SessionTrace] = []
++
++for policy in policies {
+     for persona in personas {
+-        for seed in 1...options.seeds {
++        for seed in options.seedStart..<(options.seedStart + options.seeds) {
++            let traceSelected = options.outputJSON != nil
++                && (options.tracePersonas.isEmpty ? persona.id == personas.first?.id : options.tracePersonas.contains(persona.id))
++                && seed < options.seedStart + options.traceSeeds
+             let metrics = simulate(
+                 persona: persona,
+                 policy: policy,
+                 weeks: options.weeks,
+                 seed: UInt64(seed),
+-                configuration: configuration
++                configuration: configuration,
++                legacyHistoryProjection: options.legacyHistoryProjection,
++                traceLimit: traceSelected ? options.traceLimit : 0,
++                traces: &traces
+             )
+             totals[policy, default: Metrics()].merge(metrics)
++            runs.append(SimulationRun(policy: policy.rawValue, persona: persona.id, seed: seed, metrics: metrics))
+             if policy == .guidedUserControlled {
+                 guidedByPersona[persona.id, default: Metrics()].merge(metrics)
+             }
+@@ -147,16 +228,34 @@
+ }
+ 
+ let wallElapsed = wallStart.duration(to: .now)
+-printReport(
+-    options: options,
+-    personas: personas,
+-    totals: totals,
+-    guidedByPersona: guidedByPersona,
+-    wallElapsed: wallElapsed
+-)
+-
+-if totals.values.contains(where: { !$0.invariantViolations.isEmpty }) {
+-    exit(1)
++printReport(options: options, personas: personas, totals: totals,
++            guidedByPersona: guidedByPersona, wallElapsed: wallElapsed)
++if let outputPath = options.outputJSON {
++    let report = SimulationReport(
++        schemaVersion: 1, evidenceSource: "syntheticScenario", catalogVersion: configuration.catalogVersion,
++        decisionPolicyVersion: configuration.decisionPolicyVersion, weeks: options.weeks,
++        seedStart: options.seedStart, seeds: options.seeds, automatic: options.automatic,
++        legacyHistoryProjection: options.legacyHistoryProjection, tracePersonas: options.tracePersonas.sorted(), traceSeeds: options.traceSeeds,
++        contrasts: options.contrasts, traceLimit: options.traceLimit,
++        traceLimitReached: traces.count >= options.traceLimit, runs: runs, traces: traces
++    )
++    do {
++        let encoder = JSONEncoder()
++        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
++        try encoder.encode(report).write(to: URL(fileURLWithPath: outputPath), options: .atomic)
++        print("JSON reproductible : \(outputPath) — \(traces.count) traces synthétiques")
++    } catch {
++        fputs("Écriture JSON impossible : \(error)\n", stderr)
++        exit(2)
++    }
++}
++if totals.values.contains(where: { !$0.invariantViolations.isEmpty }) { exit(1) }
++
++func decide(_ request: V2EngineRequest, policy: RhythmPolicy, configuration: V2EngineConfiguration) -> V2EngineResult {
++    if let sizing = policy.automaticSizing {
++        return CadenceEngine.decideAutomaticExperiment(request: request, configuration: configuration, sizing: sizing)
++    }
++    return CadenceEngine.decideV2(request: request, configuration: configuration)
+ }
+ 
+ func simulate(
+@@ -164,7 +263,10 @@
+     policy: RhythmPolicy,
+     weeks: Int,
+     seed: UInt64,
+-    configuration: V2EngineConfiguration
++    configuration: V2EngineConfiguration,
++    legacyHistoryProjection: Bool,
++    traceLimit: Int,
++    traces: inout [SessionTrace]
+ ) -> Metrics {
+     var metrics = Metrics()
+     var state = SimulationState()
+@@ -176,6 +278,7 @@
+         guard persona.opportunityWeekdays.contains(weekday) else { continue }
+         metrics.opportunities += 1
+         let week = day / 7
++        if persona.hiatusDays?.contains(day) == true { continue }
+         let adherence = persona.adherence.probability(week: week)
+         guard deterministicUnit(seed: seed, persona: persona.id, day: day, channel: 1) < adherence else {
+             continue
+@@ -197,9 +300,11 @@
+             day: day,
+             channel: 3
+         ) < persona.equipmentAbsenceProbability
++        let persistentInventory = (persona.inventoryChangeDay.map { day >= $0 } == true)
++            ? (persona.changedInventory ?? persona.inventory) : persona.inventory
+         let todayInventory = equipmentMissing
+-            ? persona.inventory.filter { $0.category == "bodyweight" }
+-            : persona.inventory
++            ? persistentInventory.filter { $0.category == "bodyweight" }
++            : persistentInventory
+         let floorUnavailable = deterministicUnit(
+             seed: seed,
+             persona: persona.id,
+@@ -237,15 +342,15 @@
+         ) < persona.preSessionStopProbability
+         let input = V2SessionDecisionInput(
+             request: V2SessionRequest(durationMinutes: duration, mode: mode),
+-            persistentInventory: persona.inventory,
++            persistentInventory: persistentInventory,
+             todayInventory: todayInventory,
+             todaySupports: supports,
+             history: Array(state.history.suffix(configuration.policy.historyDepthCompletedSessions)),
+             refusals: refusals,
+             declaredCurrentHealthSignal: preSessionStop
+         )
+-        guard case let .sessionDecision(initialDecision) = CadenceEngine.decideV2(
+-            request: .sessionDecision(input, now: now),
++        guard case let .sessionDecision(initialDecision) = decide(
++            .sessionDecision(input, now: now), policy: policy,
+             configuration: configuration
+         ) else {
+             metrics.recordViolation("unexpected_engine_result")
+@@ -257,21 +362,31 @@
+            deterministicUnit(seed: seed, persona: persona.id, day: day, channel: 6) < 0.75 {
+             let recalibrationInput = V2SessionDecisionInput(
+                 request: V2SessionRequest(durationMinutes: duration, mode: .recalibration),
+-                persistentInventory: persona.inventory,
++                persistentInventory: persistentInventory,
+                 todayInventory: todayInventory,
+                 todaySupports: supports,
+                 history: Array(state.history.suffix(configuration.policy.historyDepthCompletedSessions)),
+                 refusals: refusals,
+                 declaredCurrentHealthSignal: preSessionStop
+             )
+-            guard case let .sessionDecision(recalibrationDecision) = CadenceEngine.decideV2(
+-                request: .sessionDecision(recalibrationInput, now: now),
++            guard case let .sessionDecision(recalibrationDecision) = decide(
++                .sessionDecision(recalibrationInput, now: now), policy: policy,
+                 configuration: configuration
+             ) else {
+                 metrics.recordViolation("unexpected_recalibration_result")
+                 continue
+             }
+             decision = recalibrationDecision
++        }
++        let historyBefore = Array(state.history.suffix(configuration.policy.historyDepthCompletedSessions))
++        let observationReferenceSeconds = policy.automaticSizing == nil ? duration * 60 : decision.estimatedSeconds
++        if decision.decision != .generateSession, traces.count < traceLimit {
++            traces.append(SessionTrace(policy: policy.rawValue, persona: persona.id, seed: seed, day: day,
++                startedAt: isoDate(now), decision: decision.decision.rawValue, mode: decision.mode.rawValue,
++                reasons: decision.reasons, estimatedSeconds: decision.estimatedSeconds,
++                observationReferenceSeconds: observationReferenceSeconds, plan: decision.plan,
++                historyBefore: historyBefore, historyWritten: nil, progressionReasons: [:], actualSeconds: nil,
++                interruptionCause: preSessionStop ? "explicit_safety_signal" : nil, todayInventory: todayInventory))
+         }
+         if decision.createsDebt { metrics.recordViolation("session_created_debt") }
+         if decision.automaticProgression { metrics.recordViolation("session_progressed_automatically") }
+@@ -309,7 +424,7 @@
+             plan: decision.plan,
+             persona: persona,
+             policy: policy,
+-            durationSeconds: duration * 60,
++            durationSeconds: observationReferenceSeconds,
+             day: day,
+             seed: seed,
+             configuration: configuration
+@@ -319,7 +434,7 @@
+         metrics.strictAbandonedSets += execution.strictAbandonedSets
+         metrics.rushedStarts += execution.rushedStarts
+         metrics.totalActualSeconds += execution.actualSeconds
+-        metrics.overtimeSeconds += max(0, execution.actualSeconds - duration * 60)
++        metrics.overtimeSeconds += max(0, execution.actualSeconds - observationReferenceSeconds)
+         if execution.interrupted {
+             metrics.sessionsInterrupted += 1
+         } else if execution.safetyStopped {
+@@ -328,6 +443,7 @@
+             metrics.sessionsCompleted += 1
+         }
+ 
++        var progressionReasons: [String: [V2Reason]] = [:]
+         var completedExerciseIds: [String] = []
+         var completedReferences: [V2Reference] = []
+         for item in decision.plan {
+@@ -369,6 +485,7 @@
+                 metrics.recordViolation("unexpected_progression_result")
+                 continue
+             }
++            progressionReasons[item.progressionContext] = progression.reasons
+             validateProgression(
+                 progression,
+                 inventory: todayInventory,
+@@ -395,16 +512,46 @@
+             }
+         }
+ 
+-        state.history.append(V2HistoryEntry(
++        let confirmedWork = decision.plan.compactMap { item -> V2ConfirmedWorkEvidence? in
++            guard let exercise = configuration.catalog[item.exerciseId] else { return nil }
++            let repetitions = execution.repetitionsByExercise[item.exerciseId, default: []]
++            let offsets = execution.completedAtOffsetsByExercise[item.exerciseId, default: []]
++            let sets = repetitions.enumerated().map { index, repetitions in
++                V2ConfirmedSetEvidence(
++                    eventID: "synthetic:\(policy.rawValue):\(persona.id):\(seed):\(day):\(item.exerciseId):\(index)",
++                    repetitions: repetitions, loadKg: item.load?.kg, loadOptionID: item.load?.optionID,
++                    completedAt: isoDate(now.addingTimeInterval(Double(offsets[index])))
++                )
++            }
++            return V2ConfirmedWorkEvidence(
++                exerciseId: item.exerciseId, progressionContext: item.progressionContext,
++                plannedSets: item.sets, targetUnit: exercise.resolvedTargetUnit, confirmedSets: sets,
++                wasSkipped: false, interruptedBySafetySignal: execution.safetyStoppedExerciseID == item.exerciseId,
++                source: .syntheticScenario
++            )
++        }
++        let historyEntry = V2HistoryEntry(
+             endedAt: isoDate(now.addingTimeInterval(Double(execution.actualSeconds))),
+             completedExerciseIds: completedExerciseIds,
+             references: completedReferences.sorted {
+                 ($0.exerciseId, $0.progressionContext) < ($1.exerciseId, $1.progressionContext)
+             },
+             restObservations: execution.restObservations,
++            confirmedWorkEvidence: legacyHistoryProjection ? nil : confirmedWork,
+             catalogVersion: configuration.catalogVersion,
+             decisionPolicyVersion: configuration.decisionPolicyVersion
+-        ))
++        )
++        state.history.append(historyEntry)
++        if traces.count < traceLimit {
++            traces.append(SessionTrace(policy: policy.rawValue, persona: persona.id, seed: seed, day: day,
++                startedAt: isoDate(now), decision: decision.decision.rawValue, mode: decision.mode.rawValue,
++                reasons: decision.reasons, estimatedSeconds: decision.estimatedSeconds,
++                observationReferenceSeconds: observationReferenceSeconds, plan: decision.plan,
++                historyBefore: historyBefore, historyWritten: historyEntry, progressionReasons: progressionReasons, actualSeconds: execution.actualSeconds,
++                interruptionCause: execution.safetyStopped ? "explicit_safety_signal" : (execution.strictAbandonedSets > 0 ? "strict_time_limit" : (execution.interrupted ? "unknown" : nil)),
++                todayInventory: todayInventory))
++        }
++
+     }
+     return metrics
+ }
+@@ -421,6 +568,7 @@
+     var remaining = plan
+     var confirmedByExercise: [String: Int] = [:]
+     var repetitionsByExercise: [String: [Int]] = [:]
++    var completedAtOffsetsByExercise: [String: [Int]] = [:]
+     var restObservations: [V2RestObservation] = []
+     var finalPrescribedSetsByExercise = Dictionary(
+         uniqueKeysWithValues: plan.map { ($0.exerciseId, $0.sets) }
+@@ -432,6 +580,7 @@
+     var rushedStarts = 0
+     var interrupted = false
+     var safetyStopped = false
++    var safetyStoppedExerciseID: String?
+     let interruption = deterministicUnit(seed: seed, persona: persona.id, day: day, channel: 20)
+         < persona.interruptionProbability
+     let plannedSetCount = max(1, plan.reduce(0) { $0 + $1.sets })
+@@ -523,6 +672,8 @@
+                 succeeds ? item.targetReps : max(1, item.targetReps - 1)
+             )
+ 
++            completedAtOffsetsByExercise[item.exerciseId, default: []].append(actualSeconds)
++
+             let unstartedCurrent = item.sets - completedSets
+             let unstarted = (unstartedCurrent > 0 ? [withSets(item, unstartedCurrent)] : []) + remaining
+             if healthStopIndex == globalSetIndex {
+@@ -532,11 +683,13 @@
+                     confirmedByExercise: confirmedByExercise,
+                     plan: plan,
+                     unstarted: unstarted,
+-                    configuration: configuration
++                    configuration: configuration,
++                    policy: policy
+                 )
+                 precondition(transition.decision == .stopCurrentMovement)
+                 precondition(transition.confirmedImmutable && !transition.createsDebt)
+                 safetyStopped = true
++                safetyStoppedExerciseID = item.exerciseId
+                 break executionLoop
+             }
+             if interruptionIndex == globalSetIndex {
+@@ -567,7 +720,8 @@
+                     confirmedByExercise: confirmedByExercise,
+                     plan: plan,
+                     unstarted: remaining,
+-                    configuration: configuration
++                    configuration: configuration,
++                    policy: policy
+                 )
+                 precondition(transition.decision == .activeSessionTransition)
+                 precondition(transition.confirmedImmutable && !transition.createsDebt)
+@@ -587,13 +741,15 @@
+         confirmedByExercise: confirmedByExercise,
+         repetitionsByExercise: repetitionsByExercise,
+         restObservations: restObservations,
++        completedAtOffsetsByExercise: completedAtOffsetsByExercise,
+         finalPrescribedSetsByExercise: finalPrescribedSetsByExercise,
+         actualSeconds: actualSeconds,
+         engineRemovedSets: engineRemovedSets,
+         strictAbandonedSets: strictAbandonedSets,
+         rushedStarts: rushedStarts,
+         interrupted: interrupted,
+-        safetyStopped: safetyStopped
++        safetyStopped: safetyStopped,
++        safetyStoppedExerciseID: safetyStoppedExerciseID
+     )
+ }
+ 
+@@ -606,7 +762,8 @@
+         restSeconds: item.restSeconds,
+         load: item.load,
+         referenceStatus: item.referenceStatus,
+-        progressionContext: item.progressionContext
++        progressionContext: item.progressionContext,
++        targetUnit: item.targetUnit
+     )
+ }
+ 
+@@ -616,7 +773,8 @@
+     confirmedByExercise: [String: Int],
+     plan: [V2PlanItem],
+     unstarted: [V2PlanItem],
+-    configuration: V2EngineConfiguration
++    configuration: V2EngineConfiguration,
++    policy: RhythmPolicy
+ ) -> V2ActiveTransitionDecision {
+     let confirmed = confirmedByExercise.compactMap { exerciseId, sets -> V2ConfirmedWork? in
+         guard let item = plan.first(where: { $0.exerciseId == exerciseId }) else { return nil }
+@@ -640,8 +798,8 @@
+             progressionContext: $0.progressionContext
+         )
+     }
+-    guard case let .activeSessionTransition(decision) = CadenceEngine.decideV2(
+-        request: .activeSessionTransition(V2ActiveTransitionInput(
++    guard case let .activeSessionTransition(decision) = decide(
++        .activeSessionTransition(V2ActiveTransitionInput(
+             action: action,
+             catalogVersion: configuration.catalogVersion,
+             decisionPolicyVersion: configuration.decisionPolicyVersion,
+@@ -650,7 +808,7 @@
+             confirmed: confirmed,
+             unstarted: unstartedWork
+         )),
+-        configuration: configuration
++        policy: policy, configuration: configuration
+     ) else {
+         preconditionFailure("Résultat de transition active inattendu")
+     }
+@@ -882,6 +1040,30 @@
+     ]
+ }
+ 
++func contrastPersonas() -> [Persona] {
++    let reference = referencePersonas()[0]
++    func profile(_ id: String, _ title: String, success: Double = 0.76,
++                 interruptions: Double = 0.04, hiatus: Range<Int>? = nil,
++                 inventoryChangeDay: Int? = nil, changedInventory: [V2InventoryItem]? = nil) -> Persona {
++        Persona(id: id, title: title, opportunityWeekdays: reference.opportunityWeekdays,
++                adherence: .stable(0.88), durations: reference.durations, inventory: reference.inventory,
++                paceMultiplier: reference.paceMultiplier, restMultiplier: reference.restMultiplier,
++                interruptionProbability: interruptions, equipmentAbsenceProbability: 0,
++                floorUnavailableProbability: 0, lightModeProbability: 0,
++                successfulSetProbability: success, preSessionStopProbability: 0,
++                duringSessionStopProbability: 0, persistentRefusals: [], hiatusDays: hiatus,
++                inventoryChangeDay: inventoryChangeDay, changedInventory: changedInventory)
++    }
++    return [
++        profile("stagnation", "Stagnation synthétique", success: 0),
++        profile("unknown_interruptions", "Interruptions de cause inconnue", interruptions: 0.45),
++        profile("return_after_90_days", "Reprise après 90 jours sans séance", hiatus: 28..<118),
++        profile("equipment_change", "Changement durable de matériel", inventoryChangeDay: 56,
++                changedInventory: [V2InventoryItem(category: "bodyweight", units: 1),
++                                   V2InventoryItem(category: "kettlebell", units: 1, perUnitWeightsKg: [8, 12])])
++    ]
++}
++
+ func parseOptions(_ arguments: [String]) -> Options {
+     var options = Options()
+     var index = 1
+@@ -895,10 +1077,36 @@
+                   let value = Int(arguments[index + 1]), value > 0 {
+             options.seeds = value
+             index += 2
++        } else if argument == "--seed-start", arguments.indices.contains(index + 1),
++                  let value = Int(arguments[index + 1]), (1...1_000_000).contains(value) {
++            options.seedStart = value; index += 2
++        } else if argument == "--output-json", arguments.indices.contains(index + 1) {
++            options.outputJSON = arguments[index + 1]; index += 2
++        } else if argument == "--trace-personas", arguments.indices.contains(index + 1) {
++            options.tracePersonas = Set(arguments[index + 1].split(separator: ",").map(String.init)); index += 2
++        } else if argument == "--trace-seeds", arguments.indices.contains(index + 1),
++                  let value = Int(arguments[index + 1]), (1...10).contains(value) {
++            options.traceSeeds = value; index += 2
++        } else if argument == "--trace-limit", arguments.indices.contains(index + 1),
++                  let value = Int(arguments[index + 1]), (1...10_000).contains(value) {
++            options.traceLimit = value; index += 2
++        } else if argument == "--automatic" {
++            options.automatic = true; index += 1
++        } else if argument == "--legacy-history-projection" {
++            options.legacyHistoryProjection = true; index += 1
++        } else if argument == "--contrasts" {
++            options.contrasts = true; index += 1
+         } else {
+             fputs("Argument invalide : \(argument)\n", stderr)
+             exit(2)
+         }
++    }
++    guard options.weeks <= 104, options.seeds <= 1_000 else {
++        fputs("Bornes de simulation : 104 semaines et 1 000 graines maximum.\n", stderr); exit(2)
++    }
++    let validIDs = Set((referencePersonas() + (options.contrasts ? contrastPersonas() : [])).map(\.id))
++    guard options.tracePersonas.isSubset(of: validIDs) else {
++        fputs("Profil de trace inconnu pour ce lot.\n", stderr); exit(2)
+     }
+     return options
+ }
+@@ -957,16 +1165,17 @@
+     guidedByPersona: [String: Metrics],
+     wallElapsed: Duration
+ ) {
+-    let projectedYears = Double(options.weeks * options.seeds * personas.count * RhythmPolicy.allCases.count) / 52
++    let projectedYears = Double(options.weeks * options.seeds * personas.count * 3) / 52
+     print("# Simulation accélérée La Bonne Séance V2")
+     print("")
+     print("Projection : \(personas.count) profils × \(options.seeds) graines × \(options.weeks) semaines × 3 politiques")
++    print("Graines : \(options.seedStart)...\(options.seedStart + options.seeds - 1) ; contrastes : \(options.contrasts) ; automatique : \(options.automatic)")
+     print("Temps virtuel cumulé : \(decimal(projectedYears)) années-personnes-politiques")
+     print("Temps de calcul réel : \(wallElapsed)")
+     print("")
+     print("| Politique | Séances | Séries réalisées | Dépassement moyen | Départs pressés / 100 séances | Retraits moteur / 100 | Séries abandonnées par limite stricte / 100 | Stabilité | Violations |")
+     print("|---|---:|---:|---:|---:|---:|---:|---:|---:|")
+-    for policy in RhythmPolicy.allCases {
++    for policy in RhythmPolicy.allCases where totals[policy] != nil {
+         let metrics = totals[policy, default: Metrics()]
+         let sessions = max(1, metrics.sessionsGenerated)
+         let overtimeMinutes = Double(metrics.overtimeSeconds) / 60 / Double(sessions)
+@@ -978,6 +1187,7 @@
+         print("| \(policy.rawValue) | \(metrics.sessionsGenerated) | \(percentage(metrics.confirmedSets, metrics.plannedSets)) | \(decimal(overtimeMinutes)) min | \(decimal(rushed)) | \(decimal(removed)) | \(decimal(strictAbandoned)) | \(stability) | \(violations) |")
+     }
+     print("")
++    if !options.automatic {
+     print("## Politique guidée, par profil")
+     print("")
+     print("| Profil | Séances générées | Terminées | Interrompues | Séries réalisées | Dépassement moyen | Progressions répétitions / charge |")
+@@ -989,10 +1199,13 @@
+         print("| \(persona.title) | \(metrics.sessionsGenerated) | \(metrics.sessionsCompleted) | \(metrics.sessionsInterrupted) | \(percentage(metrics.confirmedSets, metrics.plannedSets)) | \(decimal(overtime)) min | \(metrics.repetitionProgressions) / \(metrics.loadProgressions) |")
+     }
+     print("")
++    }
+     let strict = totals[.strictTimer, default: Metrics()]
+     let free = totals[.fullyFree, default: Metrics()]
+     let guided = totals[.guidedUserControlled, default: Metrics()]
+-    if guided.invariantViolations.isEmpty,
++    if options.automatic {
++        print("Trois volumes automatiques expérimentaux : aucun volume retenu par défaut. La durée estimée est une observation, jamais un quota de retrait.")
++    } else if guided.invariantViolations.isEmpty,
+        guided.rushedStarts == 0,
+        guided.overtimeSeconds < free.overtimeSeconds,
+        guided.strictAbandonedSets < strict.strictAbandonedSets {
+--- before/ios/OpenCadence/OpenCadence/Services/WorkoutEngineBridge.swift
++++ after/ios/OpenCadence/OpenCadence/Services/WorkoutEngineBridge.swift
+@@ -33,6 +33,7 @@
+         todayInventory: [EquipmentItem]? = nil,
+         durationMinutes: Int,
+         completedWorkouts: [CompletedWorkoutRecord] = [],
++        historyEvidenceSource: V2HistoryEvidenceSource = .nativeConfirmed,
+         calibrations: Calibrations? = nil,
+         calibrationIsExplicit: Bool = false,
+         limitations: [Limitation] = [],
+@@ -75,7 +76,7 @@
+         let payloads = completedWorkouts
+             .compactMap(\.payload)
+             .sorted { $0.endedAt < $1.endedAt }
+-        let history = migratedV2History(from: payloads)
++        let history = migratedV2History(from: payloads, source: historyEvidenceSource)
+         let effectiveTodayInventory = todayInventory ?? inventory
+         let configuration: V2EngineConfiguration = engineVersion == .releaseV2
+             ? .releaseV2
+@@ -288,14 +289,42 @@
+     }
+ 
+     static func migratedV2History(
+-        from payloads: [CompletedWorkoutPayload]
++        from payloads: [CompletedWorkoutPayload],
++        source: V2HistoryEvidenceSource = .nativeConfirmed
+     ) -> [V2HistoryEntry] {
+         let configuration = V2EngineConfiguration.productPreview
+         var exposuresByContext: [String: [V2Exposure]] = [:]
+-        return payloads.compactMap { payload in
+-            if let context = payload.snapshot.v2Context,
+-               context.catalogVersion == configuration.catalogVersion,
+-               context.decisionPolicyVersion == configuration.decisionPolicyVersion {
++        return payloads.sorted { $0.endedAt < $1.endedAt }.compactMap { payload in
++            if let context = payload.snapshot.v2Context {
++                let evidence = context.plan.compactMap { item -> V2ConfirmedWorkEvidence? in
++                    let results = payload.snapshot.recordedSets.filter { $0.exerciseKey == item.exerciseId }
++                    guard !results.isEmpty else { return nil }
++                    return V2ConfirmedWorkEvidence(
++                        exerciseId: item.exerciseId, progressionContext: item.progressionContext,
++                        plannedSets: item.sets, targetUnit: item.resolvedTargetUnit,
++                        confirmedSets: results.map { result in
++                            V2ConfirmedSetEvidence(eventID: result.eventID, repetitions: result.repetitions,
++                                loadKg: result.perUnitWeightKg, loadOptionID: result.loadOptionID,
++                                completedAt: result.completedAt.ISO8601Format())
++                        },
++                        wasSkipped: payload.snapshot.skippedExerciseKeys.contains(item.exerciseId),
++                        interruptedBySafetySignal: payload.snapshot.recordedSafetyEvents.contains { $0.exerciseKey == item.exerciseId },
++                        source: source)
++                }
++                guard context.catalogVersion == configuration.catalogVersion,
++                      context.decisionPolicyVersion == configuration.decisionPolicyVersion else {
++                    guard !evidence.isEmpty else { return nil }
++                    let recordedRests = context.plan.flatMap { item in
++                        payload.snapshot.recordedSets.filter { $0.exerciseKey == item.exerciseId }.compactMap { result -> V2RestObservation? in
++                            guard let planned = result.plannedRestSeconds, let actual = result.actualRestSeconds else { return nil }
++                            return V2RestObservation(progressionContext: item.progressionContext, plannedSeconds: planned, actualSeconds: actual)
++                        }
++                    }
++                    return V2HistoryEntry(endedAt: payload.endedAt.ISO8601Format(),
++                        restObservations: recordedRests.isEmpty ? nil : recordedRests,
++                        confirmedWorkEvidence: evidence, catalogVersion: context.catalogVersion,
++                        decisionPolicyVersion: context.decisionPolicyVersion)
++                }
+                 var completedExerciseIDs: [String] = []
+                 var references: [V2Reference] = []
+                 var restObservations: [V2RestObservation] = []
+@@ -346,7 +375,7 @@
+                         interruptedBySafetySignal: interruptedBySafetySignal
+                     )
+                     exposuresByContext[item.progressionContext, default: []].append(exposure)
+-                    guard allSetsRecorded else { continue }
++                    guard allSetsRecorded && loadIsComparable && !wasSkipped && !interruptedBySafetySignal else { continue }
+ 
+                     let previous = V2Prescription(
+                         exerciseId: item.exerciseId,
+@@ -380,12 +409,14 @@
+                     )
+                 }
+ 
+-                guard !completedExerciseIDs.isEmpty || !references.isEmpty else { return nil }
++                let previouslyEligible = !completedExerciseIDs.isEmpty || !references.isEmpty
++                guard previouslyEligible || !evidence.isEmpty else { return nil }
+                 return V2HistoryEntry(
+-                    endedAt: payload.historySession.endedAt,
++                    endedAt: payload.endedAt.ISO8601Format(),
+                     completedExerciseIds: stableUnique(completedExerciseIDs),
+                     references: references.isEmpty ? nil : references,
+                     restObservations: restObservations.isEmpty ? nil : restObservations,
++                    confirmedWorkEvidence: evidence.isEmpty ? nil : evidence,
+                     catalogVersion: context.catalogVersion,
+                     decisionPolicyVersion: context.decisionPolicyVersion
+                 )
+--- before/ios/OpenCadence/OpenCadence/Models/AppModels.swift
++++ after/ios/OpenCadence/OpenCadence/Models/AppModels.swift
+@@ -289,6 +289,8 @@
+     var plan: [V2PlanItem]
+     let inventory: [V2InventoryItem]
+     let supports: [String]
++    // Explicit experiment only; missing/false retains the historical time budget.
++    var automaticDurationExperiment: Bool? = nil
+ }
+ 
+ struct ActiveWorkoutSnapshot: Codable, Equatable {
+--- before/ios/OpenCadence/OpenCadence/Services/ActiveSessionCoordinator.swift
++++ after/ios/OpenCadence/OpenCadence/Services/ActiveSessionCoordinator.swift
+@@ -1,4 +1,4 @@
+-import CadenceEngine
++@_spi(AutomaticPolicyExperiment) import CadenceEngine
+ import Foundation
+ import SwiftData
+ 
+@@ -468,8 +468,7 @@
+                 progressionContext: item.progressionContext
+             )
+         }
+-        let result = CadenceEngine.decideV2(
+-            request: .activeSessionTransition(
++        let request = V2EngineRequest.activeSessionTransition(
+                 V2ActiveTransitionInput(
+                     action: .finishOnTime,
+                     catalogVersion: context.catalogVersion,
+@@ -479,9 +478,10 @@
+                     confirmed: confirmed,
+                     unstarted: unstarted
+                 )
+-            ),
+-            configuration: .productPreview
+-        )
++            )
++        let result = context.automaticDurationExperiment == true
++            ? CadenceEngine.decideAutomaticExperiment(request: request, configuration: .productPreview, sizing: .catalogMaximum)
++            : CadenceEngine.decideV2(request: request, configuration: .productPreview)
+         guard case let .activeSessionTransition(transition) = result,
+               transition.decision == .activeSessionTransition else { return snapshot }
+ 

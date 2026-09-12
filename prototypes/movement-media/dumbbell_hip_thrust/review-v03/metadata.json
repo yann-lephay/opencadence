@@ -1,0 +1,78 @@
+{
+  "movementId": "dumbbell_hip_thrust",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "sources": [
+    "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+    "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+    "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+    "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+    "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+    "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+    "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png",
+    "rework-2026-09-05/dumbbell_hip_thrust_phases_v02.png"
+  ],
+  "boardCellIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "boardCellCrops": [
+    "424x424+11+11",
+    "424x424+454+11",
+    "424x424+897+11",
+    "424x424+1340+11",
+    "424x424+11+454",
+    "424x424+454+454",
+    "424x424+897+454",
+    "424x424+1340+454"
+  ],
+  "uniqueSourceFrames": 8,
+  "visiblyDistinctPoses": 8,
+  "displayedSteps": 15,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    7,
+    6,
+    5,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "dumbbell_hip_thrust_review_v03.mp4",
+  "poster": "dumbbell_hip_thrust_poster_review_v03.webp",
+  "fallback": "dumbbell_hip_thrust_fallback_review_v03.webp",
+  "fallbackSourceIndices": [
+    1,
+    4,
+    8
+  ],
+  "notes": [
+    "New source reviewed independently by floor_press_visual_qc, explicit phase order selected.",
+    "Static poses assembled with fixed crop scale. Reused return poses are not additional unique poses.",
+    "No clinical approval or iOS manifest promotion.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

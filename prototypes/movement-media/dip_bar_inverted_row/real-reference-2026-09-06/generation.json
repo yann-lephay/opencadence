@@ -1,0 +1,29 @@
+{
+  "date": "2026-09-06",
+  "tool": "imagegen built-in",
+  "status": "keypose_candidate_for_user_review_not_release",
+  "source": {
+    "page": "https://www.self.com/gallery/best-pulling-exercises",
+    "credit": "Katie Thompson / SELF",
+    "media": "https://media.self.com/photos/66048a98450428892e083ec8/master/w_1024%2Cc_limit/Landyn-inverted-row-legs-straight.gif",
+    "frameIndices": [
+      0,
+      9
+    ],
+    "referenceUse": "Downloaded to temporary location as explicit generation input, not bundled app asset. No commercial license confirmed.",
+    "otherConsulted": "https://tarzanweb.jp/post-281206",
+    "otherNotUsedReason": "Bent-knee variant differs from current straight-leg target."
+  },
+  "attempts": [
+    {
+      "file": "keyposes-v01.png",
+      "prompt": "Use case: scientific-educational. Create a TWO-PANEL photographic exercise reference for La Bonne Séance, two equal square pictures SIDE BY SIDE. Use input1 for the LOW pose and input2 for the HIGH pose of an inverted row on parallel dip bars. These are real movement references: preserve their functional relationships faithfully, especially the separate near/far handgrips, arm attachment, fixed bar geometry, bent elbows in high pose, straight arms in low pose, heels on floor, body elevated. Keep the same viewing direction as references, head LEFT and feet RIGHT. Do not change bar orientation to force a different perspective. The foreground arm is INSIDE the near stand, its closed hand holds the near handle and its elbow bends down alongside ribs at the high position. The far hand holds the far stand. Tubes never pass through limbs. Both stands identical and fixed across frames; body proportions/limb lengths identical, heels and hand contacts consistent across frames.\nCreate a NEW ordinary athletic adult WOMAN with tied dark hair, no tattoos, dark inkgreen#012F2B T-shirt and plum#59114D leggings, plain cream/green flat shoes. Do not reproduce the reference person's identity, tattoos, orange shirt, white shorts or yellow shoes. Create our own warmly lit home scene: cream#F4EEE4 plaster wall, wooden floor, darkgreen mat, a modest orange#E98A15 accent at distant edge. Metal stands dark inkgreen with no logos. Fine warm1990s printed photograph texture, no grain obscuring elbows or hands. New composition with full body and standfeet visible and 8% margins; matching camera/scale/layout in both panels. Retain evidence-based body and apparatus positioning from input photos, not their exact decor or identity. No text, no arrows, no watermark, no numbers. Thin cream gutter. Two stills for visual review, NOT a claim of validated exercise.",
+      "result": "Poses clearer but feet/equipment cropped."
+    },
+    {
+      "file": "keyposes-v02.png",
+      "prompt": "Use case: precise-object-edit. Keep the TWO women/poses, faces, limbs, clothing and bar grip relationships of this image unchanged. Fix ONLY FRAMING: both panels must show COMPLETE shoes, heels and every rubber equipment foot, with generous8% clear scene margin on all sides. Expand/outpaint the scene rather than cropping any body part or stretching anatomy. Match scale between both panels. Return two EQUAL SQUARE panels side by side in one WIDE 2:1 image, with thin cream border/gutter, no giant white area above or below. Preserve same warmcream wall/woodfloor/greenmat and clothes. Do not redesign the body or the exercise. Subtle vintage printed-photo texture, never obscuring hands/elbows. No text, watermarks or extra objects.",
+      "result": "Full-body two endpoint candidate; three-quarter view as realreference, not strictprofile. Pending user review."
+    }
+  ]
+}

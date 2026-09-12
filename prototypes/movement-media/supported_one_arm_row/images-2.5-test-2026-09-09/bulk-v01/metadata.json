@@ -1,0 +1,27 @@
+{
+  "movementId": "supported_one_arm_row",
+  "status": "visual_candidate_not_release",
+  "generationMethod": "single_3x3_contact_sheet",
+  "modelSurface": "Codex built-in image tool after Images 2.5 rollout",
+  "exactModelExposed": false,
+  "uniqueSourceFrames": 9,
+  "visiblyDistinctPoses": 9,
+  "displayedSteps": 16,
+  "sequenceSourceIndices": [1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "supported_one_arm_row_bulk_v01.mp4",
+  "contactSheet": "contact-sheet-3x3.png",
+  "notes": [
+    "Single bulk generation; no per-frame generative edits.",
+    "Nine forward poses are replayed in reverse; the first pose is reached again when the video loops.",
+    "Visual candidate only. Requires explicit motion and technical review before any product integration."
+  ]
+}
+

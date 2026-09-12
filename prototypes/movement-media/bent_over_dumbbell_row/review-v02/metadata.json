@@ -1,0 +1,56 @@
+{
+  "movementId": "bent_over_dumbbell_row",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "sources": [
+    "stop-motion-v01-candidates/bent_over_dumbbell_row_contact_sheet_v02.png",
+    "stop-motion-v01-candidates/bent_over_dumbbell_row_contact_sheet_v02.png",
+    "stop-motion-v01-candidates/bent_over_dumbbell_row_contact_sheet_v02.png",
+    "stop-motion-v01-candidates/bent_over_dumbbell_row_contact_sheet_v02.png"
+  ],
+  "boardCellIndices": [
+    5,
+    6,
+    7,
+    8
+  ],
+  "boardCellCrops": [
+    "306x332+5+346",
+    "308x332+316+346",
+    "307x332+630+346",
+    "307x332+942+346"
+  ],
+  "uniqueSourceFrames": 4,
+  "visiblyDistinctPoses": 4,
+  "displayedSteps": 7,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "bent_over_dumbbell_row_review_v02.mp4",
+  "poster": "bent_over_dumbbell_row_poster_review_v02.webp",
+  "fallback": "bent_over_dumbbell_row_fallback_review_v02.webp",
+  "fallbackSourceIndices": [
+    1,
+    2,
+    4
+  ],
+  "notes": [
+    "Explicit board-cell selections received after independent visual review. Cell boundaries follow the actual grid, not an assumed equal-height grid. Full cell fitted inside a square; no anatomical interpolation or body crop.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

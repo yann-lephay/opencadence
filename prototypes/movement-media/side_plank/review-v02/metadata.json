@@ -1,0 +1,33 @@
+{
+  "movementId": "side_plank",
+  "status": "review_candidate_not_release",
+  "motionKind": "isometric",
+  "sources": [
+    "candidate-v01/side_plank_hold.png"
+  ],
+  "uniqueSourceFrames": 1,
+  "visiblyDistinctPoses": 1,
+  "displayedSteps": 1,
+  "sequenceSourceIndices": [
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": false,
+  "interpolatedFrames": 0,
+  "video": "side_plank_review_v02.mp4",
+  "poster": "side_plank_poster_review_v02.webp",
+  "fallback": "side_plank_fallback_review_v02.webp",
+  "fallbackSourceIndices": [
+    1
+  ],
+  "notes": [
+    "Static hold demonstration, not a repetition or breathing animation.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

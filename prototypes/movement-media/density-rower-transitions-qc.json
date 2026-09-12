@@ -1,0 +1,111 @@
+{
+  "movementId": "easy_rower_intervals",
+  "reviewedAt": "2026-09-05",
+  "reviewer": "assemble_gait_independent",
+  "scope": "Independent visual comparison of eight original transitions-v02 PNGs and three targeted corrections against catch/drive/finish/recovery-v01 keys. No rendering or asset edits.",
+  "verdict": "partial_selection_only",
+  "newTransitionsRecommended": ["drive-open.png", "arms-away-final.png", "recovery-middle.png"],
+  "distinctSourceCountRecommended": 7,
+  "simpleChronologicalSequence": [
+    "catch-v01.png",
+    "drive-v01.png",
+    "transitions-v02/drive-open.png",
+    "finish-v01.png",
+    "transitions-v02/arms-away-final.png",
+    "recovery-v01.png",
+    "transitions-v02/recovery-middle.png"
+  ],
+  "staticPoseReuseRequired": false,
+  "fallbackRecommendation": ["catch-v01.png", "finish-v01.png", "recovery-v01.png"],
+  "sourceDecisions": {
+    "drive-early.png": {
+      "decision": "reject_mechanical_drift",
+      "observations": ["A new horizontal extension appears between the original rail junction and diagonal front beam.", "Footplate and shoes move conspicuously left while front and rear floor supports remain fixed."]
+    },
+    "drive-middle.png": {
+      "decision": "reject_mechanical_drift",
+      "observations": ["The footplate upper corner is approximately 50 pixels left of the retained keys at 1536-pixel source width.", "The diagonal beam reaches a different junction. This cannot be explained by seat travel."]
+    },
+    "drive-open.png": {
+      "decision": "keep_visual_candidate",
+      "observations": ["Adds an arms-straight, legs-extended torso-opening phase before finish.", "Footplate, flywheel, floor supports and framing remain visually close to retained keys.", "No obvious new grip discontinuity or clipping."]
+    },
+    "drive-pull.png": {
+      "decision": "exclude_near_duplicate",
+      "observations": ["Handle is already at the lower chest and elbows drawn back, almost the existing finish pose.", "Does not supply a meaningful middle arm-pull phase and would pad source count."]
+    },
+    "recovery-arms-away.png": {
+      "decision": "hold_not_selected",
+      "observations": ["Arms-away phase would be useful, but the seat visibly moves roughly 35–40 pixels farther left than finish while feet stay fixed and both knees remain essentially extended.", "This introduces an apparent leg-length/seat-travel change during what should chiefly be an arm release; do not label it mechanically stable."]
+    },
+    "recovery-body-over.png": {
+      "decision": "hold_not_selected",
+      "observations": ["Torso-forward, arms-straight phase would be useful before the knee recovery.", "Footplate and shoe assembly visibly shifts roughly 15–20 pixels right compared with retained keys; drift is smaller than drive-middle but still local, not a camera shift.", "Body proportions should be rechecked if this source is ever corrected; do not warp anatomy to repair it."]
+    },
+    "recovery-middle.png": {
+      "decision": "keep_visual_candidate",
+      "observations": ["Provides a seat position between recovery-v01 and catch, with more knee flexion and arms still extended.", "Footplate, machine supports, flywheel and framing stay visually close to reference.", "Prefer this one to recovery-late for a simpler monotonic seat progression."]
+    },
+    "recovery-late.png": {
+      "decision": "exclude_redundant_phase",
+      "observations": ["Almost the same knee/arm configuration as recovery-middle, but seat is slightly farther left, so filename order middle then late would reverse seat progression.", "Could be an alternative to middle, not an extra convincing distinct phase after it."]
+    },
+    "body-over-fixed-from-arms.png": {
+      "decision": "hold_not_selected",
+      "observations": ["Footplate drift is corrected relative to recovery-body-over.", "Seat remains at the excessive rearward location inherited from recovery-arms-away, so this does not repair the transition from finish.", "Torso mainly returns towards vertical rather than supplying a clearly forward body-over phase."]
+    },
+    "arms-away-final.png": {
+      "decision": "keep_visual_candidate",
+      "observations": ["Compared directly with finish-v01: seat, thighs, lower legs and footplate remain visually in place while elbows extend and handle moves away from the torso.", "Adds a useful distinct recovery phase with arms extended before knee flexion.", "Framing, flywheel, floor supports, identity and palette are consistent. No obvious new grip discontinuity."]
+    },
+    "body-over-final.png": {
+      "decision": "hold_not_selected",
+      "observations": ["Footplate, feet and fixed machine remain visually close to finish.", "Left seat edge nevertheless shifts roughly 33 pixels left at 1536-pixel source width while knees remain essentially extended, repeating an unwanted rearward seat/leg-length change during torso rotation.", "Torso is nearer vertical/slightly forward, but the useful phase does not justify reintroducing this mechanical continuity defect."]
+    }
+  },
+  "measurementCaveat": "Pixel differences above are approximate visual landmark estimates on full-resolution 1536-wide sources, not calibrated anatomical measurements.",
+  "renderedV02Review": {
+    "directory": "easy_rower_intervals/review-density-v02",
+    "selectionAdvice": "prefer_v02_over_v01_as_visual_candidate",
+    "releaseApproval": false,
+    "evidenceInspected": [
+      "metadata.json",
+      "contact-sheet.png",
+      "easy_rower_intervals_fallback_review_density_v02.webp",
+      "timeline.ffconcat",
+      "ffprobe actual MP4 stream and duration",
+      "full MP4 decode to null",
+      "actual decoded MP4 frames 0, 54, 72 and 119 viewed as a 2x2 sheet through a pipe; no artifact files created"
+    ],
+    "technicalResult": {
+      "codec": "h264",
+      "width": 612,
+      "height": 612,
+      "fps": 30,
+      "encodedFrames": 120,
+      "durationSeconds": 4,
+      "fullDecodeErrors": 0,
+      "firstPoseHoldSeconds": 0.6,
+      "otherPoseHoldSecondsApprox": 0.566666667
+    },
+    "order": "Seven sources appear in the recommended chronological order: catch, drive, open, finish, arms away, knee recovery, late knee recovery. No reversed stroke or added duplicate pose is used.",
+    "fallback": "Visible three-panel fallback correctly uses catch, finish and recovery (source indices 1,4,6); no rejected source is present and the complete machine remains in frame. It remains a sparse orientation aid, not all seven movement phases.",
+    "loop": "Last encoded frame is the intermediate recovery approaching catch. Returning to the first frame continues seat travel forward and knee flexion rather than reversing direction. Equipment/framing remain visually stable. End and start postures are not identical: this is an intentional stop-motion step, not a seamless continuous-video joint.",
+    "improvementOverV01": "The added opening, arms-away and intermediate recovery poses make the return sequence more legible. In particular arms are visibly re-extended before the knees fold, which four-key v01 did not isolate.",
+    "limits": [
+      "Catch-to-drive still skips much of the leg push and remains the largest spatial jump.",
+      "Arms-away-to-recovery combines a sizeable torso change with knee flexion because the isolated body-over additions were rejected.",
+      "Seven poses held about 0.57 seconds each remain visibly stepped; 30 encoded fps does not mean 30 anatomical poses per second.",
+      "The final-to-first transition remains noticeable even though its direction is coherent.",
+      "This review used decoded static frame samples and a complete technical decode, not a real-time human smoothness assessment on an iPhone.",
+      "Choose v02 for later global visual review, not publication or professional movement validation."
+    ]
+  },
+  "remainingLimits": [
+    "Catch to drive remains sparsely sampled because both proposed early drive transitions fail fixed-machine checks.",
+    "Seven distinct poses do not satisfy the desired 12-pose density target.",
+    "Arms extending before knee recovery are now explicit; isolated torso rotation is still sparsely sampled because body-over corrections were not accepted.",
+    "Rendered video order, duration, loop direction and fallback checked in renderedV02Review; real-time user smoothness review remains pending.",
+    "Warm cream/green/wood-orange identity remains coherent, but this is visual prototype QC, not biomechanical certification or release approval."
+  ]
+}

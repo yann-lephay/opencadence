@@ -1,0 +1,41 @@
+{
+  "weeks": 24,
+  "exploration": [
+    1,
+    5
+  ],
+  "control": [
+    6,
+    10
+  ],
+  "profiles": [
+    "regular",
+    "stagnation",
+    "unknown_interruptions",
+    "target_attained_no_effort",
+    "too_easy",
+    "equipment_ceiling",
+    "variable_frequency",
+    "return_chosen",
+    "return_no_answer",
+    "return_external_declared",
+    "return_external_unknown",
+    "missing_facts",
+    "stale_reference",
+    "context_change",
+    "explicit_volume_excess",
+    "initial_too_hard",
+    "discovery",
+    "historical_three_unanswered",
+    "historical_three_explicit",
+    "absent_response",
+    "explicit_stop"
+  ],
+  "sourceSHA256": {
+    "docs/80-20-DOSE-EXPERIMENT.md": "91dfae4817c5e9b765632a6d03152b07083ce3318ba92a22a97f9af05b7e4ace",
+    "ios/CadenceEngine/Sources/CadenceEngine/CadenceEngineV2.swift": "a7aa287db7c2ba93a6e8bf879059d14190cd294ccc322b55f18223b56fbdda1b",
+    "ios/CadenceEngine/Sources/CadenceEngine/DoseExperiment.swift": "4581d7bee0cd8c765895a5812f311c09b972b0ac4d2b1ae21442d363522143a4",
+    "ios/CadenceEngine/Sources/CadenceSimulator/main.swift": "2a88be0161a54c4df490b94479a0f5f091b7e6134d7b9fe14e4e2036a5012897"
+  },
+  "reasonForReplay": "Correct stale unperformed progression reference; unchanged profiles/seeds/thresholds"
+}

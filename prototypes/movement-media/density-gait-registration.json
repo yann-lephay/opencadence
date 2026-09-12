@@ -1,0 +1,111 @@
+{
+  "date": "2026-09-05",
+  "movementId": "suitcase_march",
+  "sourceDirectory": "suitcase_march/review-density-v01/frames",
+  "workingCanvas": [
+    612,
+    612
+  ],
+  "transformFormula": "x_out = scale*x_in + dx; y_out = scale*y_in + dy",
+  "transforms": [
+    {
+      "n": 1,
+      "s": 1,
+      "dx": 0,
+      "dy": 0
+    },
+    {
+      "n": 2,
+      "s": 0.95645,
+      "dx": 8.5,
+      "dy": 6.5226
+    },
+    {
+      "n": 3,
+      "s": 0.95645,
+      "dx": 13,
+      "dy": 6.5226
+    },
+    {
+      "n": 4,
+      "s": 1,
+      "dx": 0,
+      "dy": 0
+    },
+    {
+      "n": 5,
+      "s": 1,
+      "dx": 0,
+      "dy": 0
+    },
+    {
+      "n": 6,
+      "s": 1,
+      "dx": -10,
+      "dy": -2
+    },
+    {
+      "n": 7,
+      "s": 1,
+      "dx": 12,
+      "dy": -4
+    },
+    {
+      "n": 8,
+      "s": 0.9598,
+      "dx": 12.3,
+      "dy": 11.2814
+    },
+    {
+      "n": 9,
+      "s": 1,
+      "dx": 0,
+      "dy": 0
+    }
+  ],
+  "sharedCrop": {
+    "x": 14,
+    "y": 12,
+    "width": 578,
+    "height": 578
+  },
+  "sharedBorder": {
+    "pixels": 20,
+    "color": "#F4EEE4"
+  },
+  "intermediateSize": [
+    618,
+    618
+  ],
+  "rendererFinalSize": [
+    612,
+    612
+  ],
+  "interpolation": "Lanczos resampling for uniform image scale only, not temporal interpolation",
+  "bodyWarp": false,
+  "spatialMirror": false,
+  "generatedImages": 0,
+  "allDerivedFramesOpaque": true,
+  "manualAnchorsApproximate": {
+    "reference": {
+      "headTop": 18,
+      "supportSoleBottom": 555,
+      "matBottom": 589
+    },
+    "oldAddedFrames23": {
+      "headTop": 12,
+      "supportSoleBottom": 574,
+      "matBottom": 609
+    },
+    "afterGlobalTransformBeforeSharedCrop23": {
+      "headTop": 18,
+      "supportSoleBottom": 555.5,
+      "matBottom": 589
+    }
+  },
+  "remainingLimitations": [
+    "Mat geometry differs independently from body in source images; matching body scale cannot exactly match all corners.",
+    "Color and texture changes remain, especially sources 6/7; not altered because this correction allows registration only.",
+    "Shared crop removes virtual outside pixels and common cream frame restores margin; no anatomy clipped."
+  ]
+}

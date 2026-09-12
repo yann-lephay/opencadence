@@ -1,0 +1,76 @@
+{
+  "movementId": "pull_up",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "rework-2026-09-05/cycle-poses-v02.png",
+    "rework-2026-09-05/cycle-poses-v02.png",
+    "rework-2026-09-05/cycle-poses-v02.png",
+    "rework-2026-09-05/cycle-poses-v02.png",
+    "rework-2026-09-05/top-pose-v01.png",
+    "rework-2026-09-05/cycle-poses-v02.png",
+    "rework-2026-09-05/cycle-poses-v02.png",
+    "rework-2026-09-05/cycle-poses-v02.png",
+    "rework-2026-09-05/cycle-poses-v02.png"
+  ],
+  "boardCellIndices": [
+    1,
+    2,
+    3,
+    4,
+    null,
+    5,
+    6,
+    7,
+    8
+  ],
+  "boardCellCrops": [
+    "444x444+0+0",
+    "444x444+443+0",
+    "444x444+886+0",
+    "444x444+1329+0",
+    null,
+    "444x444+0+443",
+    "444x444+443+443",
+    "444x444+886+443",
+    "444x444+1329+443"
+  ],
+  "uniqueSourceFrames": 9,
+  "visiblyDistinctPoses": 7,
+  "displayedSteps": 10,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    4,
+    6,
+    7,
+    8,
+    9
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "pull_up_review_v03.mp4",
+  "poster": "pull_up_poster_review_v03.webp",
+  "fallback": "pull_up_fallback_review_v03.webp",
+  "fallbackSourceIndices": [
+    1,
+    5,
+    9
+  ],
+  "notes": [
+    "Separate corrected top establishes chin above bar. Whole-body image is preserved; no anatomical warp.",
+    "Left mounting bracket shifts slightly at corrected top, and bottom knee arrangement differs. Requires final continuity review; not release approval.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

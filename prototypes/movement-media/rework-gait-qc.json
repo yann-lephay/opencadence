@@ -1,0 +1,134 @@
+{
+  "scope": "Seven reworked movement previews; visual inspection of every selected source and rendered contact sheet, plus full ffmpeg decode. Not live playback, professional biomechanics or release approval.",
+  "date": "2026-09-05",
+  "appChanged": false,
+  "registryChanged": false,
+  "results": [
+    {
+      "movementId": "dead_bug",
+      "proposedStatus": "visual_candidate",
+      "verdict": "PASS_PROTOTYPE_WITH_RESERVES",
+      "directory": "dead_bug/review-v03",
+      "video": "dead_bug/review-v03/dead_bug_review_v03.mp4",
+      "poster": "dead_bug/review-v03/dead_bug_poster_review_v03.webp",
+      "fallback": "dead_bug/review-v03/dead_bug_fallback_review_v03.webp",
+      "sourceFrames": 7,
+      "visiblyDistinctPoses": 7,
+      "displayedSteps": 13,
+      "durationSeconds": 4,
+      "technicalDecode": "PASS",
+      "notes": [
+        "Seven selected source poses, 13 displayed steps. Controlled return reuses outward poses; no additional anatomical frames invented.",
+        "Contralateral far-arm/near-leg extension; only this side is demonstrated. End poses are close. Small source registration differences remain."
+      ]
+    },
+    {
+      "movementId": "low_step_up",
+      "proposedStatus": "visual_candidate",
+      "verdict": "PASS_PROTOTYPE_WITH_RESERVES",
+      "directory": "low_step_up/review-v03",
+      "video": "low_step_up/review-v03/low_step_up_review_v03.mp4",
+      "poster": "low_step_up/review-v03/low_step_up_poster_review_v03.webp",
+      "fallback": "low_step_up/review-v03/low_step_up_fallback_review_v03.webp",
+      "sourceFrames": 4,
+      "visiblyDistinctPoses": 4,
+      "displayedSteps": 7,
+      "durationSeconds": 4,
+      "technicalDecode": "PASS",
+      "notes": [
+        "Four clear key poses, seven displayed steps. Sparse stop-motion exception, not 12 unique poses.",
+        "Support foot flat on a low stable step. Full ascent then controlled descent illustrated using reversed selected stills; no added heel raise."
+      ]
+    },
+    {
+      "movementId": "farmer_carry",
+      "proposedStatus": "visual_candidate",
+      "verdict": "PASS_PROTOTYPE_WITH_RESERVES",
+      "directory": "farmer_carry/review-v03",
+      "video": "farmer_carry/review-v03/farmer_carry_review_v03.mp4",
+      "poster": "farmer_carry/review-v03/farmer_carry_poster_review_v03.webp",
+      "fallback": "farmer_carry/review-v03/farmer_carry_fallback_review_v03.webp",
+      "sourceFrames": 4,
+      "visiblyDistinctPoses": 4,
+      "displayedSteps": 4,
+      "durationSeconds": 4,
+      "technicalDecode": "PASS",
+      "notes": [
+        "Natural alternating gait: right lead, right support/left swing, left lead, left support/right swing.",
+        "No reversed or mirrored gait. Four key poses only; one second per pose at four seconds, visibly stepped preview. Slight framing variation remains."
+      ]
+    },
+    {
+      "movementId": "suitcase_carry",
+      "proposedStatus": "visual_candidate",
+      "verdict": "PASS_PROTOTYPE_WITH_RESERVES",
+      "directory": "suitcase_carry/review-v03",
+      "video": "suitcase_carry/review-v03/suitcase_carry_review_v03.mp4",
+      "poster": "suitcase_carry/review-v03/suitcase_carry_poster_review_v03.webp",
+      "fallback": "suitcase_carry/review-v03/suitcase_carry_fallback_review_v03.webp",
+      "sourceFrames": 4,
+      "visiblyDistinctPoses": 4,
+      "displayedSteps": 4,
+      "durationSeconds": 4,
+      "technicalDecode": "PASS",
+      "notes": [
+        "Natural alternating gait. Single dumbbell remains in anatomical left hand (viewer right).",
+        "No reversed or mirrored gait. Four key poses only; one second per pose at four seconds, visibly stepped preview. Slight framing variation remains."
+      ]
+    },
+    {
+      "movementId": "suitcase_march",
+      "proposedStatus": "visual_candidate",
+      "verdict": "PASS_PROTOTYPE_WITH_RESERVES",
+      "directory": "suitcase_march/review-v03",
+      "video": "suitcase_march/review-v03/suitcase_march_review_v03.mp4",
+      "poster": "suitcase_march/review-v03/suitcase_march_poster_review_v03.webp",
+      "fallback": "suitcase_march/review-v03/suitcase_march_fallback_review_v03.webp",
+      "sourceFrames": 4,
+      "visiblyDistinctPoses": 4,
+      "displayedSteps": 5,
+      "durationSeconds": 4,
+      "technicalDecode": "PASS",
+      "notes": [
+        "Alternating knee lifts with neutral pose between sides. Single dumbbell remains anatomical right hand (viewer left).",
+        "Four unique poses and five displayed steps, not a dense animation. No mirrored or reversed gait."
+      ]
+    },
+    {
+      "movementId": "easy_rower_intervals",
+      "proposedStatus": "needs_fix",
+      "verdict": "A_CORRIGER",
+      "directory": "easy_rower_intervals/review-v03",
+      "video": "easy_rower_intervals/review-v03/easy_rower_intervals_review_v03.mp4",
+      "poster": "easy_rower_intervals/review-v03/easy_rower_intervals_poster_review_v03.webp",
+      "fallback": "easy_rower_intervals/review-v03/easy_rower_intervals_fallback_review_v03.webp",
+      "sourceFrames": 4,
+      "visiblyDistinctPoses": 4,
+      "displayedSteps": 4,
+      "durationSeconds": 4,
+      "technicalDecode": "PASS",
+      "notes": [
+        "DIAGNOSTIC ONLY: footplate shifts relative to machine rail/flywheel across phases. Do not promote as a correct rowing demonstration.",
+        "Chronological catch, drive, finish, recovery; no temporal reversal. Four sparse source poses."
+      ]
+    },
+    {
+      "movementId": "reverse_lunge",
+      "proposedStatus": "needs_fix",
+      "verdict": "A_CORRIGER",
+      "directory": "reverse_lunge/review-v03",
+      "video": "reverse_lunge/review-v03/reverse_lunge_review_v03.mp4",
+      "poster": "reverse_lunge/review-v03/reverse_lunge_poster_review_v03.webp",
+      "fallback": "reverse_lunge/review-v03/reverse_lunge_fallback_review_v03.webp",
+      "sourceFrames": 12,
+      "visiblyDistinctPoses": 10,
+      "displayedSteps": 12,
+      "durationSeconds": 4,
+      "technicalDecode": "PASS",
+      "notes": [
+        "DIAGNOSTIC ONLY: front foot and orange ground marker translate relative to the static furniture. Whole-frame alignment would move the background and cannot restore contact consistency.",
+        "12 selected source snapshots; 10 clearly different pose stages conservatively counted. Excludes near-floor pose 8 and duplicate standing cells 12,15,16. No anatomical warp or synthetic alignment applied."
+      ]
+    }
+  ]
+}

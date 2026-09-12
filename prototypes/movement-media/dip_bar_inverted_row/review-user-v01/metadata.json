@@ -1,0 +1,46 @@
+{
+  "movementId": "dip_bar_inverted_row",
+  "status": "user_review_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "user-redo-2026-09-06/start.png",
+    "user-redo-2026-09-06/middle.png",
+    "user-redo-2026-09-06/top.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": null,
+  "uniqueSourceFrames": 3,
+  "visiblyDistinctPoses": 3,
+  "displayedSteps": 5,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "dip_bar_inverted_row_review_user_v01.mp4",
+  "poster": "dip_bar_inverted_row_poster_review_user_v01.webp",
+  "fallback": "dip_bar_inverted_row_fallback_review_user_v01.webp",
+  "fallbackSourceIndices": [
+    1,
+    2,
+    3
+  ],
+  "notes": [
+    "Three separately reviewed keyposes, five displayed steps over4seconds. Deliberate sparse stop-motion; no interpolation or new return-phase anatomy.",
+    "Start is cropped from new contact sheet; middle and top generated independently from reference stills. Original rejected review-v03 retained.",
+    "Hands and hardware have residual source drift; source endpoints require user review. Not professional validation or integration approval.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "movementId": "push_up",
+  "status": "diagnostic_pending_user_not_density_complete",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "user-redo-2026-09-06/keyposes-v01.png",
+    "user-redo-2026-09-06/keyposes-v01.png",
+    "user-redo-2026-09-06/keyposes-v01.png",
+    "user-redo-2026-09-06/targeted-edit-v01.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": [
+    "616x616+8+8",
+    "616x616+630+8",
+    "616x616+8+630",
+    null
+  ],
+  "uniqueSourceFrames": 4,
+  "visiblyDistinctPoses": 4,
+  "displayedSteps": 7,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "push_up_review_user_v01.mp4",
+  "poster": "push_up_poster_review_user_v01.webp",
+  "fallback": "push_up_fallback_review_user_v01.webp",
+  "fallbackSourceIndices": [
+    1,
+    3,
+    4
+  ],
+  "notes": [
+    "Four selected keyposes; low anchor repaired after rejecting grounded pelvis in original board.",
+    "Seven displayed steps across four seconds. Requested 12+ useful images NOT achieved; density-board rejected for recurrent grounded pelvis and variable framing.",
+    "This is a depth/alignment diagnostic preview, not a finished replacement or professional validation. Small source backdrop/registration differences remain.",
+    "Same static poses reused on ascent, no interpolation.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "date": "2026-09-05",
+  "scope": "Three gait/march density experiments, two built-in image generations per movement maximum. No registry, renderer or app changes.",
+  "validation": "Every selected input and rendered contact sheet inspected. Full ffmpeg decode of all three MP4s passed. Not live playback or professional validation.",
+  "results": [
+    {
+      "movementId": "farmer_carry",
+      "proposedStatus": "visual_candidate",
+      "densityTargetReached": false,
+      "verdict": "PASS_PROTOTYPE_WITH_RESERVES",
+      "directory": "farmer_carry/review-density-v01",
+      "video": "farmer_carry/review-density-v01/farmer_carry_review_density_v01.mp4",
+      "poster": "farmer_carry/review-density-v01/farmer_carry_poster_review_density_v01.webp",
+      "fallback": "farmer_carry/review-density-v01/farmer_carry_fallback_review_density_v01.webp",
+      "sourceFrames": 6,
+      "visiblyDistinctPoses": 6,
+      "displayedSteps": 6,
+      "durationSeconds": 4,
+      "interpolatedFrames": 0,
+      "reversePoseReuse": false,
+      "spatialMirror": false,
+      "technicalDecode": "PASS",
+      "notes": [
+        "Two genuine contact/swing intermediates added to original four phases. Six source phases, not twelve.",
+        "Natural chronological alternating gait, no mirror or time reversal. Six steps across four seconds are still visibly sparse.",
+        "Small frame registration/scale and background-colour differences remain. User playback review remains necessary."
+      ]
+    },
+    {
+      "movementId": "suitcase_carry",
+      "proposedStatus": "visual_candidate",
+      "densityTargetReached": false,
+      "verdict": "PASS_PROTOTYPE_WITH_RESERVES",
+      "directory": "suitcase_carry/review-density-v01",
+      "video": "suitcase_carry/review-density-v01/suitcase_carry_review_density_v01.mp4",
+      "poster": "suitcase_carry/review-density-v01/suitcase_carry_poster_review_density_v01.webp",
+      "fallback": "suitcase_carry/review-density-v01/suitcase_carry_fallback_review_density_v01.webp",
+      "sourceFrames": 6,
+      "visiblyDistinctPoses": 6,
+      "displayedSteps": 6,
+      "durationSeconds": 4,
+      "interpolatedFrames": 0,
+      "reversePoseReuse": false,
+      "spatialMirror": false,
+      "technicalDecode": "PASS",
+      "notes": [
+        "Two genuine contact/swing intermediates added to original four phases. Six source phases, not twelve.",
+        "Natural chronological alternating gait, no mirror or time reversal. Six steps across four seconds are still visibly sparse.",
+        "Small frame registration/scale and background-colour differences remain. User playback review remains necessary."
+      ]
+    },
+    {
+      "movementId": "suitcase_march",
+      "proposedStatus": "visual_candidate",
+      "densityTargetReached": false,
+      "verdict": "PASS_PROTOTYPE_WITH_RESERVES",
+      "directory": "suitcase_march/review-density-v01",
+      "video": "suitcase_march/review-density-v01/suitcase_march_review_density_v01.mp4",
+      "poster": "suitcase_march/review-density-v01/suitcase_march_poster_review_density_v01.webp",
+      "fallback": "suitcase_march/review-density-v01/suitcase_march_fallback_review_density_v01.webp",
+      "sourceFrames": 9,
+      "visiblyDistinctPoses": 8,
+      "displayedSteps": 16,
+      "durationSeconds": 4,
+      "interpolatedFrames": 0,
+      "reversePoseReuse": true,
+      "spatialMirror": false,
+      "technicalDecode": "PASS",
+      "notes": [
+        "Correct left/right alternation and same viewer-left dumbbell.",
+        "Nine source snapshots / eight clearly distinct states / sixteen display steps. Static knee-height reuse on same-leg return explicitly accepted by parent; no reversed traveling gait.",
+        "New source scale, mat registration and colour differ slightly; main visual reserve. No claim of perfect fixed-camera stability.",
+        "Twelve distinct-pose target not reached."
+      ]
+    }
+  ]
+}

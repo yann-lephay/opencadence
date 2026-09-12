@@ -9,6 +9,13 @@ out/
 .env.local
 !.env.example
 
+# Swift / Xcode build products. Keep source projects and checked evidence only.
+**/.build/
+**/.swiftpm/
+**/.device-derived-data/
+**/.derived-device/
+**/xcuserdata/
+
 # Chaque installation garde son journal privé.
 data/state.json
 data/state.json.*

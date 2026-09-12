@@ -1,0 +1,8 @@
+◇ Test "Lifetime purchase survives store recreation and is removed after refund" started.
+2026-09-08 12:05:19.082892+0200 OpenCadence[92494:1783767] [SKTestSession] Error saving configuration file: Error Domain=SKInternalErrorDomain Code=3 "(null)"
+2026-09-08 12:05:19.083213+0200 OpenCadence[92494:1783767] [SKTestSession] Error setting value to 1 for identifier 2 for fr.opencadence.OpenCadence: Error Domain=SKInternalErrorDomain Code=3 "(null)"
+2026-09-08 12:05:19.083485+0200 OpenCadence[92494:1783767] [SKTestSession] Error deleting all transactions: Error Domain=SKInternalErrorDomain Code=3 "(null)"
+✘ Test "Lifetime purchase survives store recreation and is removed after refund" recorded an issue at LifetimePurchaseTests.swift:19:27: Expectation failed: (store → OpenCadence.SubscriptionStore).lifetimeProduct → nil → nil
+2026-09-08 12:05:19.199139+0200 OpenCadence[92494:1783767] [SKTestSession] Error deleting all transactions: Error Domain=SKInternalErrorDomain Code=3 "(null)"
+✘ Test "Lifetime purchase survives store recreation and is removed after refund" failed after 0.152 seconds with 1 issue.
+✘ Suite LifetimePurchaseTests failed after 0.152 seconds with 1 issue.

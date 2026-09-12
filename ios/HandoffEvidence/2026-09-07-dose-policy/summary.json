@@ -1,0 +1,392 @@
+{
+  "exploration": {
+    "runs": 210,
+    "weeks": 24,
+    "seeds": [
+      1,
+      5
+    ],
+    "totals": {
+      "auto_two": {
+        "comparableSessionPairs": 6675,
+        "confirmedSets": 53314,
+        "doseChanges": 0,
+        "engineRemovedSets": 0,
+        "equipmentLimits": 0,
+        "loadProgressions": 1495,
+        "noCleanSession": 0,
+        "opportunities": 7560,
+        "overtimeSeconds": 500076,
+        "plannedSets": 54240,
+        "previousMovementCount": 26700,
+        "progressionHolds": 17137,
+        "questionsConsumed": 0,
+        "repetitionProgressions": 8089,
+        "retainedMovements": 26680,
+        "rushedStarts": 0,
+        "safetyStops": 45,
+        "sessionsCompleted": 6564,
+        "sessionsGenerated": 6780,
+        "sessionsInterrupted": 171,
+        "sessionsStarted": 6780,
+        "strictAbandonedSets": 0,
+        "totalActualSeconds": 8169071,
+        "invariantViolations": 0
+      },
+      "dose_candidate": {
+        "comparableSessionPairs": 6675,
+        "confirmedSets": 53274,
+        "doseChanges": 55,
+        "engineRemovedSets": 0,
+        "equipmentLimits": 95,
+        "loadProgressions": 1495,
+        "noCleanSession": 0,
+        "opportunities": 7560,
+        "overtimeSeconds": 499462,
+        "plannedSets": 54200,
+        "previousMovementCount": 26700,
+        "progressionHolds": 17127,
+        "questionsConsumed": 150,
+        "repetitionProgressions": 8099,
+        "retainedMovements": 26680,
+        "rushedStarts": 0,
+        "safetyStops": 45,
+        "sessionsCompleted": 6564,
+        "sessionsGenerated": 6780,
+        "sessionsInterrupted": 171,
+        "sessionsStarted": 6780,
+        "strictAbandonedSets": 0,
+        "totalActualSeconds": 8163238,
+        "invariantViolations": 0
+      }
+    },
+    "tracePairs": 1356,
+    "feedbackAndModesIdentical": true,
+    "traceQuestionsOffered": 34,
+    "traceResponses": 30,
+    "tracePlansChanged": 255,
+    "profiles": {
+      "absent_response": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 1,
+        "responses": 0
+      },
+      "context_change": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      },
+      "discovery": {
+        "traces": 72,
+        "plansChanged": 25,
+        "questions": 1,
+        "responses": 1
+      },
+      "equipment_ceiling": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 12,
+        "responses": 12
+      },
+      "explicit_stop": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      },
+      "explicit_volume_excess": {
+        "traces": 72,
+        "plansChanged": 66,
+        "questions": 1,
+        "responses": 1
+      },
+      "historical_three_explicit": {
+        "traces": 72,
+        "plansChanged": 71,
+        "questions": 1,
+        "responses": 1
+      },
+      "historical_three_unanswered": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 1,
+        "responses": 0
+      },
+      "initial_too_hard": {
+        "traces": 72,
+        "plansChanged": 72,
+        "questions": 1,
+        "responses": 1
+      },
+      "missing_facts": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      },
+      "regular": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      },
+      "return_chosen": {
+        "traces": 33,
+        "plansChanged": 21,
+        "questions": 1,
+        "responses": 1
+      },
+      "return_external_declared": {
+        "traces": 33,
+        "plansChanged": 0,
+        "questions": 1,
+        "responses": 1
+      },
+      "return_external_unknown": {
+        "traces": 33,
+        "plansChanged": 0,
+        "questions": 1,
+        "responses": 0
+      },
+      "return_no_answer": {
+        "traces": 33,
+        "plansChanged": 0,
+        "questions": 1,
+        "responses": 0
+      },
+      "stagnation": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      },
+      "stale_reference": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      },
+      "target_attained_no_effort": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      },
+      "too_easy": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 12,
+        "responses": 12
+      },
+      "unknown_interruptions": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      },
+      "variable_frequency": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      }
+    }
+  },
+  "control": {
+    "runs": 210,
+    "weeks": 24,
+    "seeds": [
+      6,
+      10
+    ],
+    "totals": {
+      "auto_two": {
+        "comparableSessionPairs": 6675,
+        "confirmedSets": 53273,
+        "doseChanges": 0,
+        "engineRemovedSets": 0,
+        "equipmentLimits": 0,
+        "loadProgressions": 1495,
+        "noCleanSession": 0,
+        "opportunities": 7560,
+        "overtimeSeconds": 497268,
+        "plannedSets": 54240,
+        "previousMovementCount": 26700,
+        "progressionHolds": 17120,
+        "questionsConsumed": 0,
+        "repetitionProgressions": 8090,
+        "retainedMovements": 26680,
+        "rushedStarts": 0,
+        "safetyStops": 49,
+        "sessionsCompleted": 6567,
+        "sessionsGenerated": 6780,
+        "sessionsInterrupted": 164,
+        "sessionsStarted": 6780,
+        "strictAbandonedSets": 0,
+        "totalActualSeconds": 8160273,
+        "invariantViolations": 0
+      },
+      "dose_candidate": {
+        "comparableSessionPairs": 6675,
+        "confirmedSets": 53233,
+        "doseChanges": 55,
+        "engineRemovedSets": 0,
+        "equipmentLimits": 95,
+        "loadProgressions": 1495,
+        "noCleanSession": 0,
+        "opportunities": 7560,
+        "overtimeSeconds": 496813,
+        "plannedSets": 54200,
+        "previousMovementCount": 26700,
+        "progressionHolds": 17110,
+        "questionsConsumed": 150,
+        "repetitionProgressions": 8100,
+        "retainedMovements": 26680,
+        "rushedStarts": 0,
+        "safetyStops": 49,
+        "sessionsCompleted": 6567,
+        "sessionsGenerated": 6780,
+        "sessionsInterrupted": 164,
+        "sessionsStarted": 6780,
+        "strictAbandonedSets": 0,
+        "totalActualSeconds": 8154604,
+        "invariantViolations": 0
+      }
+    },
+    "tracePairs": 1356,
+    "feedbackAndModesIdentical": true,
+    "traceQuestionsOffered": 34,
+    "traceResponses": 30,
+    "tracePlansChanged": 255,
+    "profiles": {
+      "absent_response": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 1,
+        "responses": 0
+      },
+      "context_change": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      },
+      "discovery": {
+        "traces": 72,
+        "plansChanged": 25,
+        "questions": 1,
+        "responses": 1
+      },
+      "equipment_ceiling": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 12,
+        "responses": 12
+      },
+      "explicit_stop": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      },
+      "explicit_volume_excess": {
+        "traces": 72,
+        "plansChanged": 66,
+        "questions": 1,
+        "responses": 1
+      },
+      "historical_three_explicit": {
+        "traces": 72,
+        "plansChanged": 71,
+        "questions": 1,
+        "responses": 1
+      },
+      "historical_three_unanswered": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 1,
+        "responses": 0
+      },
+      "initial_too_hard": {
+        "traces": 72,
+        "plansChanged": 72,
+        "questions": 1,
+        "responses": 1
+      },
+      "missing_facts": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      },
+      "regular": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      },
+      "return_chosen": {
+        "traces": 33,
+        "plansChanged": 21,
+        "questions": 1,
+        "responses": 1
+      },
+      "return_external_declared": {
+        "traces": 33,
+        "plansChanged": 0,
+        "questions": 1,
+        "responses": 1
+      },
+      "return_external_unknown": {
+        "traces": 33,
+        "plansChanged": 0,
+        "questions": 1,
+        "responses": 0
+      },
+      "return_no_answer": {
+        "traces": 33,
+        "plansChanged": 0,
+        "questions": 1,
+        "responses": 0
+      },
+      "stagnation": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      },
+      "stale_reference": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      },
+      "target_attained_no_effort": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      },
+      "too_easy": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 12,
+        "responses": 12
+      },
+      "unknown_interruptions": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      },
+      "variable_frequency": {
+        "traces": 72,
+        "plansChanged": 0,
+        "questions": 0,
+        "responses": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,108 @@
+[
+  {
+    "id": "kickstand_romanian_deadlift",
+    "kind": "cycle",
+    "outputDirectory": "review-user-v01",
+    "sources": [
+      "user-redo-2026-09-06/standing-v01.png",
+      "review-v03/frames/pose_02.png",
+      "review-v03/frames/pose_03.png",
+      "review-v03/frames/pose_04.png",
+      "review-v03/frames/pose_06.png",
+      "review-v03/frames/pose_08.png",
+      "review-v03/frames/pose_09.png"
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      5,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "fallbackIndices": [
+      0,
+      3,
+      6
+    ],
+    "durationSeconds": 4,
+    "visiblyDistinctPoses": 7,
+    "reversePoseReuse": true,
+    "status": "user_correction_pending_visual_review",
+    "notes": [
+      "Original first and last standing images excluded for reversed leg identity. Newly generated standing pose uses frame02 as foot/hand-side reference. Six existing hinge poses retained; nonmonotonic and near-duplicate old states omitted.",
+      "Seven source images, thirteen steps. Generated endpoint has slight scale/decor differences; new sequence needs user review, no professional or release approval."
+    ]
+  },
+  {
+    "id": "single_arm_dumbbell_floor_press",
+    "kind": "cycle",
+    "outputDirectory": "review-user-v01",
+    "sources": [
+      "user-redo-2026-09-06/two-poses-v03.png",
+      "user-redo-2026-09-06/two-poses-v03.png"
+    ],
+    "crops": [
+      "620x1244+5+5",
+      "620x1244+629+5"
+    ],
+    "sequence": [
+      0,
+      1,
+      0,
+      1
+    ],
+    "fallbackIndices": [
+      0,
+      1
+    ],
+    "durationSeconds": 4,
+    "visiblyDistinctPoses": 2,
+    "reversePoseReuse": true,
+    "status": "user_correction_pending_visual_review",
+    "notes": [
+      "Rebuilt from elevated foot-end angle to show both arms; only two endpoints retained, one free arm on floor and same working arm holding one dumbbell.",
+      "Two portrait sources fitted in square without clipping the body. Two-position alternation twice in four seconds, not continuous trajectory. Previous side-view attempts not selected. Palette now more muted green; requires user visual review.",
+      "No professional or release approval, app/catalog/manifest unchanged."
+    ]
+  },
+  {
+    "id": "supported_calf_raise",
+    "kind": "cycle",
+    "outputDirectory": "review-user-v01",
+    "sources": [
+      "user-redo-2026-09-06/two-poses-v02.png",
+      "user-redo-2026-09-06/two-poses-v02.png"
+    ],
+    "crops": [
+      "864x857+15+15",
+      "864x857+895+15"
+    ],
+    "sequence": [
+      0,
+      1,
+      0,
+      1
+    ],
+    "fallbackIndices": [
+      0,
+      1
+    ],
+    "durationSeconds": 4,
+    "visiblyDistinctPoses": 2,
+    "reversePoseReuse": true,
+    "status": "user_correction_pending_visual_review",
+    "notes": [
+      "Old source and first edit rejected: extra third arm. New setup has two arms raised toward wall, no hanging duplicated limb; far hand partly occluded by body.",
+      "Support changes from one hand to two hands at wall, not a software catalog prescription change. Both heels low/high; two poses twice over four seconds. Small hand/foot registration differences remain.",
+      "No professional or release approval, app/catalog/manifest unchanged."
+    ]
+  }
+]

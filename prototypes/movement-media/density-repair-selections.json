@@ -1,0 +1,69 @@
+[
+  {
+    "id": "band_assisted_pull_up",
+    "kind": "cycle",
+    "outputDirectory": "review-density-v01",
+    "sources": [
+      "density-2026-09-05/reference-hang.png",
+      "density-2026-09-05/old-early-reference.png",
+      "density-2026-09-05/quarter-v02.png",
+      "density-2026-09-05/early-v01.png",
+      "density-2026-09-05/mid-v01.png",
+      "density-2026-09-05/top-v02.png"
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "visiblyDistinctPoses": 6,
+    "fallbackIndices": [
+      0,
+      3,
+      5
+    ],
+    "reversePoseReuse": true,
+    "notes": [
+      "Old early frame from previously inspected cycle sheet retained to bridge hanging-to-quarter gap; no old flawed top reused.",
+      "Six distinct poses selected, eleven displayed steps using explicit controlled return; target of twelve unique poses not reached.",
+      "Near-top and upper-mid requests did not create useful extra levels and were excluded."
+    ]
+  },
+  {
+    "id": "easy_rower_intervals",
+    "kind": "rowing",
+    "outputDirectory": "review-density-v01",
+    "sources": [
+      "density-2026-09-05/catch-v01.png",
+      "density-2026-09-05/drive-v01.png",
+      "density-2026-09-05/finish-v01.png",
+      "density-2026-09-05/recovery-v01.png"
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "visiblyDistinctPoses": 4,
+    "fallbackIndices": [
+      0,
+      2,
+      3
+    ],
+    "reversePoseReuse": false,
+    "notes": [
+      "Rigid footplate and frame now remain at matching locations; seat clearly slides independently.",
+      "Only four key phases, not a dense animation. Further intermediates would need a new authorized generation round beyond the two-iteration cap.",
+      "No reverse playback of drive to fake recovery."
+    ]
+  }
+]

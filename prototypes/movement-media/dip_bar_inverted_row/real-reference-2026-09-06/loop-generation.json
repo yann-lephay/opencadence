@@ -1,0 +1,33 @@
+{
+  "tool": "image_gen.imagegen",
+  "mode": "reference-guided image editing",
+  "attempts": [
+    {
+      "file": "loop-work/tween-attempt-v01.png",
+      "status": "rejected",
+      "reason": "Equipment/crop drift and pose overshoot",
+      "prompt": "Use case: scientific-educational, two intermediate exercise photos. Input1 is accepted LOW inverted-row pose; input2 is accepted HIGH pose. Create TWO EQUAL SQUARE panels side-by-side, output WIDE2:1. They must show the SAME woman, greenT-shirt/plumleggings/creamshoes, same room/mat/stands as input1. Only pose changes. LEFT panel:25% of way from low to high; elbows just beginning to bend, shoulders and hips slightly lifted. RIGHT panel:75% of way from low to high; elbows substantially bent but not as far as high reference, torso and hips higher. Genuine distinct intermediate positions, neither duplicate the endpoints. Preserve limb lengths, neararm inside near stand, one hand gripping each own rail and heels anchored. Body from shoulders through hips to legs moves as one long unit, no sitting or bridging. Use camera, crop, bar positions and hand-contact positions from INPUT1 exactly. Reference2 supplies final posture only, not different bar positions. Hands do not slide, feet do not slide, equipment does not change dimensions. Fine warm printed-photo retro style. Full person, shoes, mat and all equipment feet visible with same margins/scale in both frames. NO extra limbs, no rail through arms, no hand switching bars. No words,numbers,labels,arrows,watermark or whiteletterbox. Thin cream gutter. Two still photographs for review, no blur or superimposed motion."
+    },
+    {
+      "file": "loop-work/tween-attempt-v02.png",
+      "status": "rejected",
+      "reason": "Far hand not sufficiently represented",
+      "prompt": "Edit image1 only: one SINGLE photo of the same woman halfway up an inverted row. Image2 is final pose reference ONLY. Keep image1 exact camera, field of view, all bars, mat corners, floorwall line, plant, stool, handgrips and heel contacts. Change ONLY woman pose between fixed hands and heels. Raise shoulders/chest and hips approximately halfway toward image2. Elbows bend to an intermediate internal angle around135degrees, not90degrees. Near elbow moves down alongside ribs, hand stays at existing rail location; far arm remains behind. Spine/hips/legs remain in one long line; no waist crunch. Keep body size and lengths. DO NOT move, stretch or resize the rails. No zoom. Preserve original image1 lighting/texture/greenandplum colors. Return ONE squareish photo matching image1 composition, no grid, no border, no extraobjects, no text."
+    },
+    {
+      "file": "loop-work/tween-reference-v03.png",
+      "status": "preview_only",
+      "prompt": "Create TWO SQUARE photographic panels side-by-side. INPUT1 gives exact EARLY inverted-row posture; INPUT2 gives exact LATER posture. INPUT3 gives the WOMAN, clothing, room, darkgreen equipment, lighting, framing and brandstyle to reproduce. Replace male athlete/reference decor in images1and2 with the woman and creamwood environment of image3. Keep the actual elbow angles and hand-to-bar contacts shown in reference1 for leftpanel and reference2 for rightpanel. The later pose is not fully pulled up. VERY IMPORTANT two visible hands, each wrapped around its own top rail; do not omit the far hand or arm. Same woman with darkgreenTshirt, plumleggings, creamflatshoes, no tattoos. Same two separate dipbars. Headleft feetright. Body straight, heels grounded. Camera/scale/room/mat/handlocations/standpositions must match IMAGE3, not reference1 background. Grip remains at fixed position. Full body and every equipment foot visible. Restrained1990s warm printed-photo texture, no text or labels, no extra objects. These are two intermediate images for an existing sequence; do not redesign endpoints or invent alternative exercise. Source photos1/2 are poseguide only, do not reproduce the man's identity/tattoos/clothes."
+    }
+  ],
+  "reference": "https://www.self.com/gallery/best-pulling-exercises",
+  "credit": "Katie Thompson / SELF; rights not cleared",
+  "referencesUsed": "Real GIF frames 3 and 6 plus accepted branded low pose",
+  "registration": {
+    "early": "scale1.2 translate49,-3",
+    "late": "scale1.2 translate51,-2",
+    "high": "translate20,4",
+    "commonCrop": "746x746+52+70"
+  },
+  "review": "Four source images; first two nearly duplicate in amplitude, last two close. Not 12 distinct poses. Residual equipment and heel drift; not release approved."
+}

@@ -1,0 +1,137 @@
+{
+  "date": "2026-09-05",
+  "scope": "Seven regenerated bands and pulling movement previews; no app or release status changes.",
+  "validation": {
+    "sourcesInspected": true,
+    "renderedFallbacksInspected": true,
+    "fullVideoDecode": true,
+    "technicalStandard": "H264, 612x612, 30 fps, 120 encoded frames, four seconds, silent",
+    "limitations": [
+      "Visual source/selected-frame review plus encoding checks, not physical execution or professional validation.",
+      "Frame holds and re-used return poses are not newly generated anatomical poses.",
+      "All outputs remain review prototypes."
+    ]
+  },
+  "movements": [
+    {
+      "movementId": "band_good_morning",
+      "statusProposal": "visual_candidate",
+      "motionKind": "cycle",
+      "playback": "loop_review",
+      "video": "band_good_morning/review-v03/band_good_morning_review_v03.mp4",
+      "metadata": "band_good_morning/review-v03/metadata.json",
+      "sourceFrames": 6,
+      "visiblyDistinctPoses": 6,
+      "displayedSteps": 11,
+      "durationSeconds": 4,
+      "reservations": [
+        "Six selected hinge levels; early two and deepest two levels are close. Explicit controlled return reuses poses; it is not an independently generated return.",
+        "Orange band remains on upper back and under feet. Large initial angular increment remains a cadence reservation."
+      ],
+      "remainingAction": "Human cadence review: initial hinge angular step is larger than later steps."
+    },
+    {
+      "movementId": "band_overhead_press",
+      "statusProposal": "visual_candidate",
+      "motionKind": "cycle",
+      "playback": "loop_review",
+      "video": "band_overhead_press/review-v03/band_overhead_press_review_v03.mp4",
+      "metadata": "band_overhead_press/review-v03/metadata.json",
+      "sourceFrames": 6,
+      "visiblyDistinctPoses": 6,
+      "displayedSteps": 11,
+      "durationSeconds": 4,
+      "reservations": [
+        "Actual board is 5 columns by 3 rows, not 4 by 4. Six selected elevation levels; early levels are subtle.",
+        "Full portrait cells fitted in square without anatomy crop. Explicit controlled return; no generated interpolation."
+      ],
+      "remainingAction": "Human global visual review before any release approval."
+    },
+    {
+      "movementId": "dip_bar_inverted_row",
+      "statusProposal": "visual_candidate",
+      "motionKind": "cycle",
+      "playback": "loop_review",
+      "video": "dip_bar_inverted_row/review-v03/dip_bar_inverted_row_review_v03.mp4",
+      "metadata": "dip_bar_inverted_row/review-v03/metadata.json",
+      "sourceFrames": 10,
+      "visiblyDistinctPoses": 8,
+      "displayedSteps": 13,
+      "durationSeconds": 4,
+      "reservations": [
+        "Crop removes numeric labels only; bars, heels and head remain in frame. Selected forward and return poses, reusing high positions to bridge a missing return phase.",
+        "Small equipment and foot-position drift remains visible; prototype only."
+      ],
+      "remainingAction": "Human global visual review before any release approval."
+    },
+    {
+      "movementId": "seated_band_row",
+      "statusProposal": "visual_candidate",
+      "motionKind": "cycle",
+      "playback": "loop_review",
+      "video": "seated_band_row/review-v03/seated_band_row_review_v03.mp4",
+      "metadata": "seated_band_row/review-v03/metadata.json",
+      "sourceFrames": 4,
+      "visiblyDistinctPoses": 4,
+      "displayedSteps": 7,
+      "durationSeconds": 4,
+      "reservations": [
+        "Only four readable arm positions; seven displayed steps is a low-density exception, not twelve distinct poses.",
+        "Reordered cells 1,3,2,4. Orange band stays around feet; small shoe and torso framing drift remains."
+      ],
+      "remainingAction": "Four-pose low-density exception requires user acceptance; no twelve-pose claim."
+    },
+    {
+      "movementId": "pull_up",
+      "statusProposal": "visual_candidate",
+      "motionKind": "cycle",
+      "playback": "loop_review",
+      "video": "pull_up/review-v04/pull_up_review_v04.mp4",
+      "metadata": "pull_up/review-v04/metadata.json",
+      "sourceFrames": 9,
+      "visiblyDistinctPoses": 7,
+      "displayedSteps": 10,
+      "durationSeconds": 4,
+      "reservations": [
+        "Board crop uses actual panel coordinates x=14+440*column, y=14 or450, size424 square. This removes gutter-induced drift from the initial equal-grid preview.",
+        "Corrected top proportionally resized to424 square, translated +9px horizontally and -12px vertically on the complete image, without body deformation. All nine images receive identical24px cream border so head and equipment retain margins.",
+        "Chin-above-bar top retained. Slight width of wall brackets and knee arrangement still varies; prototype, not biomechanical or release validation."
+      ],
+      "remainingAction": "Human global visual review before any release approval."
+    },
+    {
+      "movementId": "band_assisted_pull_up",
+      "statusProposal": "needs_fix",
+      "motionKind": "cycle",
+      "playback": "loop_review",
+      "video": "band_assisted_pull_up/review-v03/band_assisted_pull_up_review_v03.mp4",
+      "metadata": "band_assisted_pull_up/review-v03/metadata.json",
+      "sourceFrames": 8,
+      "visiblyDistinctPoses": 6,
+      "displayedSteps": 9,
+      "durationSeconds": 4,
+      "reservations": [
+        "All original 444-square board crops receive 40 pixels of top canvas. Corrected top is proportionally resized to 444x485 then translated upward 8 pixels by cropping background and adding bottom canvas; no body deformation.",
+        "Band remains under one knee. Corrected top has chin above bar but torso/neck proportions and top-border continuity differ subtly; assembly remains needs_fix pending independent visual arbitration."
+      ],
+      "remainingAction": "Regenerate a high pose with fixed torso proportions and matching background, then review transition; do not promote current top solely for reaching chin height."
+    },
+    {
+      "movementId": "eccentric_pull_up",
+      "statusProposal": "visual_candidate",
+      "motionKind": "one_way",
+      "playback": "single_pass",
+      "video": "eccentric_pull_up/review-v03/eccentric_pull_up_review_v03.mp4",
+      "metadata": "eccentric_pull_up/review-v03/metadata.json",
+      "sourceFrames": 5,
+      "visiblyDistinctPoses": 5,
+      "displayedSteps": 5,
+      "durationSeconds": 4,
+      "reservations": [
+        "Single four-second descent only. No automatic loop, reversed ascent or concealed teleport to the starting position.",
+        "Small support stool remains visible, but access to starting position is not demonstrated. Replay must be an explicit separate action. Five distinct poses is below normal cycle-density target."
+      ],
+      "remainingAction": "Single descent only; require explicit replay and separate safe starting-position explanation."
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+[
+  {
+    "id": "reverse_lunge",
+    "kind": "cycle",
+    "outputDirectory": "review-density-v02",
+    "sources": [
+      "review-v04/frames/pose_01.png",
+      "density-2026-09-05/between-01-02.png",
+      "review-v04/frames/pose_02.png",
+      "density-2026-09-05/between-02-04.png",
+      "review-v04/frames/pose_04.png",
+      "density-2026-09-05/between-04-03.png",
+      "review-v04/frames/pose_03.png"
+    ],
+    "visiblyDistinctPoses": 7,
+    "sequence": [
+      0,
+      1,
+      2,
+      4,
+      3,
+      5,
+      6,
+      5,
+      3,
+      4,
+      2,
+      1,
+      0
+    ],
+    "fallbackIndices": [
+      0,
+      3,
+      6
+    ],
+    "reversePoseReuse": true,
+    "notes": [
+      "Seven useful movement phases after independent QC. Generated early flexion is deeper than old middle pose: explicit order corrects it.",
+      "Rear knee remains off floor; front foot substantially fixed. Thirteen displayed steps; return reuses reviewed static poses.",
+      "Prototype only, minor floor-line/crop variations retained for user cadence review."
+    ]
+  },
+  {
+    "id": "low_step_up",
+    "kind": "cycle",
+    "outputDirectory": "review-density-v02",
+    "sources": [
+      "review-v03/frames/pose_01.png",
+      "density-2026-09-05/between-01-02.png",
+      "density-2026-09-05/between-02-03.png",
+      "density-2026-09-05/top-corrected.png"
+    ],
+    "visiblyDistinctPoses": 4,
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      2,
+      1,
+      0
+    ],
+    "fallbackIndices": [
+      0,
+      1,
+      3
+    ],
+    "reversePoseReuse": true,
+    "notes": [
+      "Four useful phases, not six. Old top and old middle poses excluded due to heel-edge risk or redundant knee positions.",
+      "Corrected support heel remains fully on step. Main gain is contact quality; density remains seven steps and must not be called complete.",
+      "Whole-frame crop/step perspective differences remain a prototype reservation. No body deformation at assembly."
+    ]
+  }
+]

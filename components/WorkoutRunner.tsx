@@ -6,6 +6,7 @@ import {
   ChevronRight,
   CirclePause,
   CirclePlay,
+  CircleStop,
   Minus,
   Plus,
   RotateCcw,
@@ -72,11 +73,13 @@ function timerRange(item: WorkoutItem, setIndex: number) {
   return { min: target, max: target };
 }
 
-function buildSequence(workout: ActiveSession["workout"]) {
+function buildSequence(workout: ActiveSession["workout"], skippedItemIds: string[] = []) {
   const sequence: { itemIndex: number; setIndex: number }[] = [];
   const visitedPairs = new Set<string>();
+  const skipped = new Set(skippedItemIds);
 
   workout.items.forEach((item, itemIndex) => {
+    if (skipped.has(item.id)) return;
     if (!item.superset) {
       for (let setIndex = 0; setIndex < item.sets; setIndex += 1) {
         sequence.push({ itemIndex, setIndex });
@@ -87,7 +90,7 @@ function buildSequence(workout: ActiveSession["workout"]) {
     visitedPairs.add(item.superset);
     const pair = workout.items
       .map((entry, index) => ({ entry, index }))
-      .filter(({ entry }) => entry.superset === item.superset);
+      .filter(({ entry }) => entry.superset === item.superset && !skipped.has(entry.id));
     const rounds = Math.max(...pair.map(({ entry }) => entry.sets));
     for (let setIndex = 0; setIndex < rounds; setIndex += 1) {
       for (const paired of pair) {
@@ -105,6 +108,7 @@ export function WorkoutRunner({ session, onState, onClose }: RunnerProps) {
   const [itemIndex, setItemIndex] = useState(session.itemIndex);
   const [setIndex, setSetIndex] = useState(session.setIndex);
   const [progress, setProgress] = useState<Record<string, SetResult[]>>(session.progress);
+  const [skippedItemIds, setSkippedItemIds] = useState(session.skippedItemIds ?? []);
   const [restSeconds, setRestSeconds] = useState(0);
   const [restPaused, setRestPaused] = useState(false);
   const [review, setReview] = useState(false);
@@ -119,6 +123,7 @@ export function WorkoutRunner({ session, onState, onClose }: RunnerProps) {
   const [autoStartAfterRest, setAutoStartAfterRest] = useState(false);
   const [rowerResistance, setRowerResistance] = useState(4);
   const [rowerStrokes, setRowerStrokes] = useState(0);
+  const [endedEarly, setEndedEarly] = useState(false);
   const item = workout.items[itemIndex];
   const defaultValue = item?.targetValues?.[setIndex] ?? item?.targetValue ?? 0;
   const [actualValue, setActualValue] = useState(defaultValue);
@@ -129,7 +134,10 @@ export function WorkoutRunner({ session, onState, onClose }: RunnerProps) {
   const [loadKg, setLoadKg] = useState(
     item?.recommendedLoadKg ?? item?.loadOptions?.[0]?.totalKg ?? 0,
   );
-  const sequence = useMemo(() => buildSequence(workout), [workout]);
+  const sequence = useMemo(
+    () => buildSequence(workout, skippedItemIds),
+    [workout, skippedItemIds],
+  );
   const sequenceIndex = sequence.findIndex(
     (step) => step.itemIndex === itemIndex && step.setIndex === setIndex
   );
@@ -204,7 +212,8 @@ export function WorkoutRunner({ session, onState, onClose }: RunnerProps) {
     async (
       nextItemIndex: number,
       nextSetIndex: number,
-      nextProgress: Record<string, SetResult[]>
+      nextProgress: Record<string, SetResult[]>,
+      nextSkippedItemIds = skippedItemIds,
     ) => {
       try {
         const state = await patchState({
@@ -212,14 +221,54 @@ export function WorkoutRunner({ session, onState, onClose }: RunnerProps) {
           itemIndex: nextItemIndex,
           setIndex: nextSetIndex,
           progress: nextProgress,
+          skippedItemIds: nextSkippedItemIds,
         });
         onState(state);
       } catch {
         // Le prochain clic retentera l’enregistrement avec tout le progrès local.
       }
     },
-    [onState]
+    [onState, skippedItemIds]
   );
+
+  function skipExercise() {
+    if (!item) return;
+    setWorkTimerOn(false);
+    const nextSkippedItemIds = Array.from(new Set([...skippedItemIds, item.id]));
+    const currentSequence = buildSequence(workout, skippedItemIds);
+    const currentStepIndex = currentSequence.findIndex(
+      (step) => step.itemIndex === itemIndex && step.setIndex === setIndex,
+    );
+    const nextStep = currentSequence
+      .slice(Math.max(0, currentStepIndex + 1))
+      .find((step) => workout.items[step.itemIndex]?.id !== item.id);
+
+    setSkippedItemIds(nextSkippedItemIds);
+    if (!nextStep) {
+      setEndedEarly(true);
+      setReview(true);
+      void savePosition(itemIndex, setIndex, progress, nextSkippedItemIds);
+      return;
+    }
+
+    setItemIndex(nextStep.itemIndex);
+    setSetIndex(nextStep.setIndex);
+    setRestSeconds(15);
+    setRestPaused(false);
+    void savePosition(nextStep.itemIndex, nextStep.setIndex, progress, nextSkippedItemIds);
+  }
+
+  function stopSessionHere() {
+    setWorkTimerOn(false);
+    const unfinishedItemIds = workout.items
+      .filter((entry) => (progress[entry.id]?.length ?? 0) < entry.sets)
+      .map((entry) => entry.id);
+    const nextSkippedItemIds = Array.from(new Set([...skippedItemIds, ...unfinishedItemIds]));
+    setSkippedItemIds(nextSkippedItemIds);
+    setEndedEarly(true);
+    setReview(true);
+    void savePosition(itemIndex, setIndex, progress, nextSkippedItemIds);
+  }
 
   function completeSet() {
     if (!item) return;
@@ -279,6 +328,7 @@ export function WorkoutRunner({ session, onState, onClose }: RunnerProps) {
         ),
         note,
         progress,
+        skippedItemIds,
       });
       onState(state);
       onClose();
@@ -293,12 +343,28 @@ export function WorkoutRunner({ session, onState, onClose }: RunnerProps) {
         <header className="runner-topbar">
           <span className="brand-mark small">O</span>
           <span>Séance terminée</span>
-          <span className="runner-progress-text">100 %</span>
+          <span className="runner-progress-text">{completion} %</span>
         </header>
         <main className="review-panel">
           <div className="review-kicker"><Check size={16} /> Enregistrée dès validation</div>
-          <h1>Comment ton corps a répondu&nbsp;?</h1>
-          <p>Ces repères pilotent le volume et le rameur de la prochaine séance.</p>
+          <h1>{endedEarly || skippedItemIds.length ? "On s’arrête proprement." : "Comment ton corps a répondu\u00a0?"}</h1>
+          <p>
+            {endedEarly || skippedItemIds.length
+              ? "Seules les séries réellement faites seront comptées. Le reste pourra nourrir une prochaine séance sans créer de dette d’entraînement."
+              : "Ces repères pilotent le volume et le rameur de la prochaine séance."}
+          </p>
+
+          {skippedItemIds.length > 0 && (
+            <div className="skipped-summary">
+              <strong>Non terminé aujourd’hui</strong>
+              <span>
+                {workout.items
+                  .filter((entry) => skippedItemIds.includes(entry.id))
+                  .map((entry) => exerciseName(entry.exercise))
+                  .join(" · ")}
+              </span>
+            </div>
+          )}
 
           <label className="range-block">
             <span>
@@ -588,6 +654,16 @@ export function WorkoutRunner({ session, onState, onClose }: RunnerProps) {
             {side ? `Côté ${side} terminé` : item.variantId === "row-benchmark-4" ? "Enregistrer la distance" : "Série terminée"}
             <Check size={19} />
           </button>
+          <div className="runner-secondary-actions">
+            <button type="button" onClick={skipExercise}>
+              <SkipForward size={17} />
+              Exercice non réalisé
+            </button>
+            <button type="button" onClick={stopSessionHere}>
+              <CircleStop size={17} />
+              Arrêter la séance ici
+            </button>
+          </div>
           <p className="runner-hint">La technique décide de l’arrêt. Cible du jour&nbsp;: {explainRir(item.rirTarget)}.</p>
         </section>
       </main>

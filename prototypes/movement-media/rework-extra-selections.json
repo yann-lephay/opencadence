@@ -1,0 +1,60 @@
+[
+  {
+    "id": "kettlebell_deadlift",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/kettlebell_deadlift_keyposes_v01.png",
+      "rework-2026-09-05/kettlebell_deadlift_keyposes_v01.png",
+      "rework-2026-09-05/intermediate-low.png",
+      "rework-2026-09-05/intermediate-mid.png",
+      "rework-2026-09-05/kettlebell_deadlift_keyposes_v01.png",
+      "rework-2026-09-05/intermediate-high.png",
+      "rework-2026-09-05/kettlebell_deadlift_keyposes_v01.png"
+    ],
+    "crops": [
+      "614x614+8+8",
+      "614x614+632+8",
+      null,
+      null,
+      "614x614+8+632",
+      null,
+      "614x614+632+632"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      null,
+      null,
+      3,
+      null,
+      4
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      5,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "fallbackIndices": [
+      0,
+      3,
+      6
+    ],
+    "visiblyDistinctPoses": 7,
+    "reversePoseReuse": true,
+    "notes": [
+      "Seven selected source poses; return uses the same stills in reverse order, not new anatomy.",
+      "Mixed-source framing requires review. Professional validation and release approval remain absent."
+    ]
+  }
+]

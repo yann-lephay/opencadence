@@ -1,0 +1,75 @@
+{
+  "date": "2026-09-05",
+  "scope": "Two previously non-valid movement media, repaired using individual fixed-reference images.",
+  "generator": "built-in imagegen",
+  "generationCount": 11,
+  "iterationCapPerMovement": 2,
+  "iterationsUsed": {
+    "band_assisted_pull_up": 2,
+    "easy_rower_intervals": 2
+  },
+  "noFurtherGenerations": true,
+  "validation": {
+    "selectedSourceImagesInspected": true,
+    "renderedFallbacksInspected": true,
+    "fullVideoDecode": true,
+    "codec": "h264",
+    "width": 612,
+    "height": 612,
+    "fps": 30,
+    "durationSeconds": 4,
+    "encodedFrames": 120,
+    "appChanged": false,
+    "registryChanged": false,
+    "releaseApproved": false,
+    "professionalReview": "not_performed"
+  },
+  "movements": [
+    {
+      "movementId": "band_assisted_pull_up",
+      "statusProposal": "visual_candidate",
+      "visualVerdict": "PASS PROTOTYPE WITH RESERVATIONS",
+      "densityVerdict": "TARGET_NOT_MET",
+      "directory": "band_assisted_pull_up/review-density-v01",
+      "video": "band_assisted_pull_up/review-density-v01/band_assisted_pull_up_review_density_v01.mp4",
+      "sourceFrames": 6,
+      "visiblyDistinctPoses": 6,
+      "displayedSteps": 11,
+      "durationSeconds": 4,
+      "repairEvidence": [
+        "Whole torso and pelvis rise together, unlike prior top correction.",
+        "Top-v02 preserves free-leg fold; top-v01 excluded because the free foot unfolded.",
+        "Hardware and framing remain substantially consistent across individually generated images."
+      ],
+      "reservations": [
+        "Six distinct levels and eleven displayed steps, not twelve unique poses.",
+        "Slight hand-grip/face/clothing differences remain; global visual review still required.",
+        "Upper-mid-v02 and near-top-v02 are near duplicates, excluded rather than padding count."
+      ],
+      "nextAction": "Independent visual review and user check; consider another genuine early/intermediate pose only if cadence warrants it."
+    },
+    {
+      "movementId": "easy_rower_intervals",
+      "statusProposal": "visual_candidate",
+      "visualVerdict": "PASS PROTOTYPE WITH RESERVATIONS",
+      "densityVerdict": "TARGET_NOT_MET",
+      "directory": "easy_rower_intervals/review-density-v01",
+      "video": "easy_rower_intervals/review-density-v01/easy_rower_intervals_review_density_v01.mp4",
+      "sourceFrames": 4,
+      "visiblyDistinctPoses": 4,
+      "displayedSteps": 4,
+      "durationSeconds": 4,
+      "repairEvidence": [
+        "Entire rowing machine visible, correcting previous clipped flywheel.",
+        "Rigid rail, flywheel and footplate remain fixed while padded seat and pelvis travel along rail.",
+        "Natural catch, leg drive, finish and recovery; no time reversal."
+      ],
+      "reservations": [
+        "Four poses only; one-second holds are a storyboard-like preview, not the requested dense stop-motion result.",
+        "Arms-away and body-over recovery transitions are not individually shown. They need separate new intermediates before claiming full instructional continuity.",
+        "Small heel-angle and strap differences remain; footplates themselves no longer visibly migrate."
+      ],
+      "nextAction": "Validate these four key poses before generating missing drive and arms-first recovery intermediates in a future bounded round."
+    }
+  ]
+}

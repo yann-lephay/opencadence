@@ -1,0 +1,68 @@
+{
+  "date": "2026-09-05",
+  "reviewer": "Yann",
+  "scope": "Visual acceptance of exact ten preview versions displayed in this conversation, not professional movement validation or release authorization.",
+  "userFeedback": "Marche sur place chargée est étrange pour moi faudrait refaire sinon le reste je valide",
+  "reviews": [
+    {
+      "movementId": "band_assisted_pull_up",
+      "title": "Tractions assistées par élastique",
+      "video": "band_assisted_pull_up/review-density-v01/band_assisted_pull_up_review_density_v01.mp4",
+      "status": "accepted_visual_by_user"
+    },
+    {
+      "movementId": "dumbbell_floor_press",
+      "title": "Développé au sol avec haltères",
+      "video": "dumbbell_floor_press/review-v04/dumbbell_floor_press_review_v04.mp4",
+      "status": "accepted_visual_by_user"
+    },
+    {
+      "movementId": "dumbbell_romanian_deadlift",
+      "title": "Soulevé de terre roumain avec haltères",
+      "video": "dumbbell_romanian_deadlift/review-v03/dumbbell_romanian_deadlift_review_v03.mp4",
+      "status": "accepted_visual_by_user"
+    },
+    {
+      "movementId": "easy_rower_intervals",
+      "title": "Intervalles faciles au rameur",
+      "video": "easy_rower_intervals/review-density-v02/easy_rower_intervals_review_density_v02.mp4",
+      "status": "accepted_visual_by_user"
+    },
+    {
+      "movementId": "farmer_carry",
+      "title": "Marche du fermier",
+      "video": "farmer_carry/review-density-v01/farmer_carry_review_density_v01.mp4",
+      "status": "accepted_visual_by_user"
+    },
+    {
+      "movementId": "goblet_squat",
+      "title": "Goblet squat",
+      "video": "goblet_squat/review-v03/goblet_squat_review_v03.mp4",
+      "status": "accepted_visual_by_user"
+    },
+    {
+      "movementId": "low_step_up",
+      "title": "Montée sur banc bas",
+      "video": "low_step_up/review-density-v02/low_step_up_review_density_v02.mp4",
+      "status": "accepted_visual_by_user"
+    },
+    {
+      "movementId": "reverse_lunge",
+      "title": "Fente arrière",
+      "video": "reverse_lunge/review-density-v02/reverse_lunge_review_density_v02.mp4",
+      "status": "accepted_visual_by_user"
+    },
+    {
+      "movementId": "seated_band_row",
+      "title": "Tirage assis à l’élastique",
+      "video": "seated_band_row/review-density-v02/seated_band_row_review_density_v02.mp4",
+      "status": "accepted_visual_by_user"
+    },
+    {
+      "movementId": "suitcase_march",
+      "title": "Marche sur place chargée",
+      "video": "suitcase_march/review-density-v02/suitcase_march_review_density_v02.mp4",
+      "status": "rejected_visual_by_user"
+    }
+  ]
+}

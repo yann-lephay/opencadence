@@ -1,0 +1,202 @@
+{
+  "version": "0.1",
+  "objective": {
+    "requestedOutcome": "Après Commencer ma séance, arriver directement au premier mouvement prêt, sans page Composer ni autre préparation obligatoire. Régler localement puis démarrer explicitement la série.",
+    "nonGoals": [
+      "Refonte visuelle",
+      "Publication",
+      "Réécriture du travail confirmé",
+      "Déduction de capacité depuis le matériel"
+    ],
+    "changeType": "surface"
+  },
+  "surface": {
+    "id": "ios:personalized-first-sessions",
+    "mode": "guided",
+    "scope": {
+      "kind": "page",
+      "parentId": "ios:onboarding"
+    },
+    "episode": {
+      "trigger": "La personne prépare sa séance ou ajuste un mouvement avant une série ou pendant le repos.",
+      "end": "Une proposition faisable est prête et la série démarre explicitement.",
+      "userJob": "Bouger maintenant avec une séance déjà prête et pouvoir corriger une proposition sans questionnaire.",
+      "completionEvidence": "La proposition corrigée est utilisée au démarrage explicite, les confirmations et le repos sont conservés."
+    },
+    "invariants": [
+      "Les déclarations durables sont dans le profil, les choix du jour dans la séance.",
+      "Les contrôles locaux ne changent ni le repos ni les confirmations.",
+      "Une donnée corrompue ne devient pas un profil vierge.",
+      "La préparation automatique ne démarre aucune série, aucun repos et aucune confirmation.",
+      "Les réglages de séance ne peuvent régénérer après une série commencée ou confirmée.",
+      "La première séance gratuite et la continuation payante sont expliquées à accueil.",
+      "Un recalcul conserve le dernier choix explicite compatible de chaque champ et signale les incompatibilités.",
+      "Une limite de couverture est visible avant effort sans écran obligatoire ; seules les possibilités réellement disponibles donnent une action.",
+      "Deux écarts de répétitions comparables déclenchent un réglage facultatif pendant le repos ; la cible de chaque série est figée au démarrage.",
+      "Les nouvelles séances alternent les séries de blocs haut/bas compatibles ; un même résolveur pilote le prochain mouvement et son aperçu pendant le repos.",
+      "Le calendrier seul ne fait pas avancer la variété : il faut une séance distincte avec au moins un mouvement entièrement confirmé sur deux séries ou plus. Les préparations et restaurations ne changent pas les blocs.",
+      "Deux séances distinctes avec au moins deux séries complètes sollicitant principalement un même muscle dans les 48 heures permettent une réduction locale de une série, sans hausse simultanée de difficulté ; le choix explicite reste prioritaire.",
+      "Les anciennes séances sans blocs conservent leur déroulé groupé. Aucun repos ni démarrage manuel ne disparaît."
+    ],
+    "canonicalTerms": [
+      {
+        "canonical": "strengthPractice",
+        "userFacing": "Ta pratique du renforcement",
+        "precisionMoment": "À la préparation, réponse facultative.",
+        "source": "docs/80-20-FIRST-SESSIONS.md"
+      },
+      {
+        "canonical": "choiceScope",
+        "userFacing": "Aujourd’hui / Habituellement",
+        "precisionMoment": "Lors du réglage du volume ou de la déclaration locale.",
+        "source": "docs/80-20-FIRST-SESSIONS.md"
+      }
+    ]
+  },
+  "truth": {
+    "mustBeTrue": [
+      "Haut et bas du corps restent deux décisions indépendantes.",
+      "Une valeur technique par défaut n’est jamais présentée comme un choix effectué par la personne.",
+      "Un choix explicite modifie réellement la sélection du moteur lorsqu’une variante compatible existe.",
+      "L’absence de variante calibrée conserve la variante compatible standard sans inventer une différence.",
+      "La calibration ne change ni le sexe, ni la santé, ni un niveau global et reste modifiable.",
+      "Les performances enregistrées et les limitations déclarées restent prioritaires lorsqu’elles rendent une variante inadaptée."
+    ],
+    "canonicalTerms": [
+      {
+        "canonical": "Foundation",
+        "userFacing": "Reprendre progressivement",
+        "precisionMoment": "Lors du choix du repère haut ou bas avant la première séance concernée.",
+        "source": "docs/IOS-ENGINE-BEHAVIOR-CONTRACT.md#eng-calibration-001--calibration-locale-et-limitations"
+      },
+      {
+        "canonical": "Established",
+        "userFacing": "Mouvements déjà familiers",
+        "precisionMoment": "Lorsqu’une pratique régulière rend la variante standard immédiatement compréhensible.",
+        "source": "docs/IOS-ENGINE-BEHAVIOR-CONTRACT.md#eng-calibration-001--calibration-locale-et-limitations"
+      }
+    ]
+  },
+  "decision": {
+    "currentState": "Pratique déclarée ou inconnue, variante proposée, travail confirmé et repos courant.",
+    "dominantAction": {
+      "id": "save-calibration",
+      "label": "Commencer la série",
+      "expectedResult": "La série commence explicitement avec la proposition corrigée si nécessaire.",
+      "reversibility": "reversible",
+      "guard": "review"
+    },
+    "constraints": [
+      {
+        "id": "confirmed-immutable",
+        "mustBeTrue": "Une correction ne modifie aucune confirmation ni échéance de repos.",
+        "detectability": "immediate",
+        "consequence": "Perte des faits et de confiance.",
+        "recovery": "Conserver le snapshot précédent si le calcul ou le stockage échoue."
+      },
+      {
+        "id": "scope-separated",
+        "mustBeTrue": "Seuls les repères explicitement durables sont ajoutés au profil.",
+        "detectability": "delayed",
+        "consequence": "Une difficulté ponctuelle deviendrait un niveau permanent.",
+        "recovery": "Conserver les choix du jour dans le contexte actif."
+      },
+      {
+        "id": "catalog-preserved",
+        "mustBeTrue": "La configuration de catalogue initiale reste la même pendant les ajustements.",
+        "detectability": "immediate",
+        "consequence": "Une variante non autorisée pourrait être introduite.",
+        "recovery": "Refuser la correction et conserver la séance."
+      },
+      {
+        "id": "repetition-gap",
+        "mustBeTrue": "Aucun effort ni cause ne sont déduits des répétitions seules. Une préférence explicite de répétitions reste attachée à sa charge.",
+        "detectability": "delayed",
+        "consequence": "Questions répétées ou difficulté mal ajustée.",
+        "recovery": "Maintenir les répétitions réalisées et proposer un réglage local facultatif."
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "practice",
+      "purpose": "decision",
+      "visibility": "persistent",
+      "hierarchy": 2,
+      "verdict": "keep",
+      "reason": "Repère facultatif pour le volume initial, sans certification locale."
+    },
+    {
+      "id": "local-adjustment",
+      "purpose": "decision",
+      "visibility": "on_demand",
+      "hierarchy": 1,
+      "verdict": "keep",
+      "reason": "Corriger le mouvement concerné avant effort ou pendant repos."
+    },
+    {
+      "id": "whole-session",
+      "purpose": "orientation",
+      "visibility": "on_demand",
+      "hierarchy": 3,
+      "verdict": "keep",
+      "reason": "Programme consultable sans montagne imposée."
+    }
+  ],
+  "states": [
+    {
+      "id": "ready",
+      "kind": "partial_success",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Commencer la série.",
+      "recovery": "Adapter la proposition."
+    },
+    {
+      "id": "capacity-unknown",
+      "kind": "empty",
+      "blocking": false,
+      "preserveInput": true,
+      "nextStep": "Préciser uniquement le mouvement concerné ; les autres restent disponibles.",
+      "recovery": "Choisir une variante compatible."
+    },
+    {
+      "id": "save-failed",
+      "kind": "error",
+      "blocking": true,
+      "preserveInput": true,
+      "nextStep": "Réessayer.",
+      "recovery": "Le snapshot et les repères précédents restent conservés."
+    }
+  ],
+  "languageAndTrust": {
+    "complexityAbsorbed": [
+      "Résolution des charges réellement montables.",
+      "Séparation des performances confirmées et des déclarations.",
+      "Estimation de durée après préparation."
+    ],
+    "consequencesNeverHidden": [
+      "La couverture musculaire peut être partielle.",
+      "Une variante impossible nécessite un autre choix."
+    ],
+    "reassurance": [
+      {
+        "claim": "Le repos et les confirmations restent conservés.",
+        "evidence": "PersonalizationNativeTests.restAndConfirmedWork et replacementProvenance.",
+        "placement": "Comportement réel des réglages."
+      }
+    ]
+  },
+  "motion": [],
+  "review": {
+    "risk": "R1",
+    "domains": [
+      "saas"
+    ],
+    "requiredJudges": [
+      "product",
+      "experience"
+    ],
+    "humanGate": []
+  }
+}

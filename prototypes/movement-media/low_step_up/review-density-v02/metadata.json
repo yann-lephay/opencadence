@@ -1,0 +1,49 @@
+{
+  "movementId": "low_step_up",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "review-v03/frames/pose_01.png",
+    "density-2026-09-05/between-01-02.png",
+    "density-2026-09-05/between-02-03.png",
+    "density-2026-09-05/top-corrected.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": null,
+  "uniqueSourceFrames": 4,
+  "visiblyDistinctPoses": 4,
+  "displayedSteps": 7,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "low_step_up_review_density_v02.mp4",
+  "poster": "low_step_up_poster_review_density_v02.webp",
+  "fallback": "low_step_up_fallback_review_density_v02.webp",
+  "fallbackSourceIndices": [
+    1,
+    2,
+    4
+  ],
+  "notes": [
+    "Four useful phases, not six. Old top and old middle poses excluded due to heel-edge risk or redundant knee positions.",
+    "Corrected support heel remains fully on step. Main gain is contact quality; density remains seven steps and must not be called complete.",
+    "Whole-frame crop/step perspective differences remain a prototype reservation. No body deformation at assembly.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

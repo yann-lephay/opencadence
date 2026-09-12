@@ -1,0 +1,73 @@
+{
+  "movementId": "suitcase_march",
+  "status": "review_candidate_not_release",
+  "motionKind": "gait",
+  "playback": "loop_review",
+  "sources": [
+    "review-v03/frames/pose_01.png",
+    "density-2026-09-05/intermediates-v01.png",
+    "density-2026-09-05/intermediates-v01.png",
+    "review-v03/frames/pose_02.png",
+    "review-v03/frames/pose_03.png",
+    "density-2026-09-05/intermediates-v02.png",
+    "density-2026-09-05/intermediates-v02.png",
+    "density-2026-09-05/intermediates-v01.png",
+    "review-v03/frames/pose_04.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": [
+    null,
+    "430x430+8+8",
+    "430x430+448+8",
+    null,
+    null,
+    "612x612+8+634",
+    "612x612+634+8",
+    "430x430+448+894",
+    null
+  ],
+  "uniqueSourceFrames": 9,
+  "visiblyDistinctPoses": 8,
+  "displayedSteps": 16,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    8,
+    7,
+    6,
+    5,
+    4,
+    3,
+    2
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "suitcase_march_review_density_v01.mp4",
+  "poster": "suitcase_march_poster_review_density_v01.webp",
+  "fallback": "suitcase_march_fallback_review_density_v01.webp",
+  "fallbackSourceIndices": [
+    1,
+    5,
+    9
+  ],
+  "notes": [
+    "Nine source snapshots, eight clearly distinct static knee-height/ground-contact states, sixteen displayed steps. NOT sixteen unique poses.",
+    "Explicit alternating in-place march: left lowers, neutral, right rises and lowers, neutral, left rises. The same static joint-height snapshots are reused on each leg return. This local static-pose reuse was explicitly accepted for the stop-motion prototype; no spatial mirror and no reversed walking step.",
+    "Right-hand dumbbell remains viewer left. Density target of twelve distinct poses NOT reached.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

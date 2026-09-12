@@ -1,0 +1,17 @@
+{
+  "movementId": "dumbbell_floor_press",
+  "sourceImage": "dumbbell_floor_press_first_frame_bottom_v02.png",
+  "sourceBytes": 3416896,
+  "sourceSha256": "e6dcc4b30e23bc686624524dd4d6e0ea0fc0785640ee7a0bd34333985b86809c",
+  "model": "gen4.5",
+  "ratio": "960:960",
+  "requestedDuration": 4,
+  "seed": 2793775000,
+  "promptText": "Locked-off camera. The man completes one controlled dumbbell floor press repetition: both dumbbells rise together to full arm extension above the chest, then return smoothly to the starting position. Continuous, seamless motion.",
+  "outputFormat": "mp4",
+  "taskId": "9e53413f-624d-4030-bb46-052d8d6abfe4",
+  "taskCreatedAt": "2026-09-04T20:35:26.861Z",
+  "completedAt": "2026-09-04T20:38:49.352Z",
+  "chargedCredits": 48,
+  "outputFile": "dumbbell_floor_press_gen45_v03.mp4"
+}

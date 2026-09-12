@@ -1,0 +1,142 @@
+[
+  {
+    "id": "farmer_carry",
+    "kind": "gait",
+    "outputDirectory": "review-density-v01",
+    "sources": [
+      "density-2026-09-05/intermediates-v01.png",
+      "review-v03/frames/pose_01.png",
+      "density-2026-09-05/intermediates-v01.png",
+      "review-v03/frames/pose_02.png",
+      "review-v03/frames/pose_03.png",
+      "review-v03/frames/pose_04.png"
+    ],
+    "crops": [
+      "430x430+448+8",
+      null,
+      "430x430+8+894",
+      null,
+      null,
+      null
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "visiblyDistinctPoses": 6,
+    "reversePoseReuse": false,
+    "fallbackIndices": [
+      0,
+      3,
+      4
+    ],
+    "notes": [
+      "Six natural gait phases selected from original four keys and two useful new intermediates; target of twelve distinct poses NOT reached.",
+      "Right heel contact precedes right full contact, then left swing approaches passing; left contact then right swing. No mirrored or temporally reversed gait.",
+      "Other generated cells excluded for repeated support leg, duplicated keys, or crossed-foot ambiguity. Small registration changes remain."
+    ]
+  },
+  {
+    "id": "suitcase_carry",
+    "kind": "gait",
+    "outputDirectory": "review-density-v01",
+    "sources": [
+      "density-2026-09-05/intermediates-v01.png",
+      "review-v03/frames/pose_01.png",
+      "review-v03/frames/pose_02.png",
+      "density-2026-09-05/intermediates-v02.png",
+      "review-v03/frames/pose_03.png",
+      "review-v03/frames/pose_04.png"
+    ],
+    "crops": [
+      "430x430+8+8",
+      null,
+      null,
+      "612x612+8+8",
+      null,
+      null
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "visiblyDistinctPoses": 6,
+    "reversePoseReuse": false,
+    "fallbackIndices": [
+      0,
+      2,
+      4
+    ],
+    "notes": [
+      "Six natural gait phases: left heel approach, left contact, right passing, right heel approach, right contact, left passing. Same dumbbell remains anatomical left / viewer right.",
+      "No mirrored or reversed gait. Twelve-pose target NOT reached; only two useful new intermediates added.",
+      "Rejected other generated cells: support-side repetition, near duplicates and crossed-foot geometry."
+    ]
+  },
+  {
+    "id": "suitcase_march",
+    "kind": "gait",
+    "outputDirectory": "review-density-v01",
+    "sources": [
+      "review-v03/frames/pose_01.png",
+      "density-2026-09-05/intermediates-v01.png",
+      "density-2026-09-05/intermediates-v01.png",
+      "review-v03/frames/pose_02.png",
+      "review-v03/frames/pose_03.png",
+      "density-2026-09-05/intermediates-v02.png",
+      "density-2026-09-05/intermediates-v02.png",
+      "density-2026-09-05/intermediates-v01.png",
+      "review-v03/frames/pose_04.png"
+    ],
+    "crops": [
+      null,
+      "430x430+8+8",
+      "430x430+448+8",
+      null,
+      null,
+      "612x612+8+634",
+      "612x612+634+8",
+      "430x430+448+894",
+      null
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      7,
+      6,
+      5,
+      4,
+      3,
+      2,
+      1
+    ],
+    "visiblyDistinctPoses": 8,
+    "reversePoseReuse": true,
+    "fallbackIndices": [
+      0,
+      4,
+      8
+    ],
+    "status": "review_candidate_not_release",
+    "notes": [
+      "Nine source snapshots, eight clearly distinct static knee-height/ground-contact states, sixteen displayed steps. NOT sixteen unique poses.",
+      "Explicit alternating in-place march: left lowers, neutral, right rises and lowers, neutral, left rises. The same static joint-height snapshots are reused on each leg return. This local static-pose reuse was explicitly accepted for the stop-motion prototype; no spatial mirror and no reversed walking step.",
+      "Right-hand dumbbell remains viewer left. Density target of twelve distinct poses NOT reached."
+    ]
+  }
+]

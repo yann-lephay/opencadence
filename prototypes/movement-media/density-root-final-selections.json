@@ -1,0 +1,113 @@
+[
+  {
+    "id": "seated_band_row",
+    "kind": "cycle",
+    "outputDirectory": "review-density-v02",
+    "sources": [
+      "review-v03/frames/pose_01.png",
+      "density-2026-09-05/between-01-02-early.png",
+      "review-v03/frames/pose_02.png",
+      "review-v03/frames/pose_03.png",
+      "review-v03/frames/pose_04.png"
+    ],
+    "visiblyDistinctPoses": 4,
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "fallbackIndices": [
+      0,
+      1,
+      4
+    ],
+    "reversePoseReuse": true,
+    "notes": [
+      "One useful early intermediate retained. Other generated singles and eight-panel board rejected as near duplicates or less stable.",
+      "Five source images but only four certainly distinct states; old middle snapshots are close. Nine displayed steps, target density still unmet."
+    ]
+  },
+  {
+    "id": "reverse_lunge",
+    "kind": "cycle",
+    "outputDirectory": "review-density-v01",
+    "sources": [
+      "review-v04/frames/pose_01.png",
+      "density-2026-09-05/between-01-02.png",
+      "review-v04/frames/pose_02.png",
+      "density-2026-09-05/between-02-04.png",
+      "review-v04/frames/pose_04.png",
+      "density-2026-09-05/between-04-03.png",
+      "review-v04/frames/pose_03.png"
+    ],
+    "visiblyDistinctPoses": 7,
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      5,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "fallbackIndices": [
+      0,
+      3,
+      6
+    ],
+    "reversePoseReuse": true,
+    "notes": [
+      "Three individual transitions inserted: rear foot in transit, early flexion, later flexion. No floor contact by rear knee.",
+      "Diagnostic assembly pending final independent framing and monotonicity check. Static poses reused at return, no reverse video."
+    ]
+  },
+  {
+    "id": "low_step_up",
+    "kind": "cycle",
+    "outputDirectory": "review-density-v01",
+    "sources": [
+      "review-v03/frames/pose_01.png",
+      "density-2026-09-05/between-01-02.png",
+      "review-v03/frames/pose_02.png",
+      "density-2026-09-05/between-02-03.png",
+      "review-v03/frames/pose_03.png",
+      "density-2026-09-05/top-corrected.png"
+    ],
+    "visiblyDistinctPoses": 6,
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "fallbackIndices": [
+      0,
+      2,
+      5
+    ],
+    "reversePoseReuse": true,
+    "notes": [
+      "Corrected top keeps complete support heel on step. Old top with heel over edge excluded.",
+      "Two individual intermediate poses added, final density/camera consistency pending independent QC."
+    ]
+  }
+]

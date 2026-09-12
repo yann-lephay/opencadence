@@ -1,0 +1,44 @@
+{
+  "movementId": "split_squat",
+  "status": "review_candidate_not_release",
+  "motionKind": "cycle",
+  "sources": [
+    "stop-motion-v01-candidates/frames/frame_01.png",
+    "stop-motion-v01-candidates/frames/frame_02.png",
+    "stop-motion-v01-candidates/frames/frame_03.png",
+    "stop-motion-v01-candidates/frames/frame_05.png"
+  ],
+  "uniqueSourceFrames": 4,
+  "visiblyDistinctPoses": 4,
+  "displayedSteps": 7,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    1
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "split_squat_review_v02.mp4",
+  "poster": "split_squat_poster_review_v02.webp",
+  "fallback": "split_squat_fallback_review_v02.webp",
+  "fallbackSourceIndices": [
+    1,
+    2,
+    4
+  ],
+  "notes": [
+    "Excluded frame 04: rear knee appears at mat level. Frame 05 is used after 03; source numbering is not motion order.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "movementId": "dip_bar_inverted_row",
+  "status": "two_cycle_comparison_pending_user_review",
+  "motionKind": "cycle",
+  "playback": "loop_review",
+  "sources": [
+    "real-reference-2026-09-06/loop-work/low.png",
+    "real-reference-2026-09-06/loop-work/high-aligned.png"
+  ],
+  "boardCellIndices": null,
+  "boardCellCrops": [
+    "746x746+52+70",
+    "746x746+52+70"
+  ],
+  "uniqueSourceFrames": 2,
+  "visiblyDistinctPoses": 2,
+  "displayedSteps": 4,
+  "sequenceSourceIndices": [
+    1,
+    2,
+    1,
+    2
+  ],
+  "encodedFrames": 120,
+  "fps": 30,
+  "durationSeconds": 4,
+  "width": 612,
+  "height": 612,
+  "codec": "h264",
+  "reversePoseReuse": true,
+  "interpolatedFrames": 0,
+  "video": "dip_bar_inverted_row_review_reference_two_cycles_v01.mp4",
+  "poster": "dip_bar_inverted_row_poster_review_reference_two_cycles_v01.webp",
+  "fallback": "dip_bar_inverted_row_fallback_review_reference_two_cycles_v01.webp",
+  "fallbackSourceIndices": [
+    1,
+    2
+  ],
+  "notes": [
+    "User requested twice the movement in the same preview. Two endpoint photos alternate twice: low, high, low, high, one second each, four seconds total.",
+    "Same sources, registration and common crop as review-reference-two-poses-v01. No new poses, interpolation, crossfade, camera motion or anatomical deformation.",
+    "Faster two-position alternation, not a continuous trajectory or prescribed exercise tempo. Residual equipment and heel shifts remain. Preview only; no app, catalog or release-manifest change.",
+    "Timing holds repeat encoded pixels, not unique anatomical poses.",
+    "Technical render only. Requires final visual review; not professional validation or product approval."
+  ]
+}

@@ -1,0 +1,351 @@
+[
+  {
+    "id": "band_good_morning",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      7
+    ],
+    "crops": [
+      "304x304+8+7",
+      "304x304+321+7",
+      "304x304+634+7",
+      "304x304+947+7",
+      "304x304+8+320",
+      "304x304+634+320"
+    ],
+    "notes": [
+      "Six selected hinge levels; early two and deepest two levels are close. Explicit controlled return reuses poses; it is not an independently generated return.",
+      "Orange band remains on upper back and under feet. Large initial angular increment remains a cadence reservation."
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "visiblyDistinctPoses": 6,
+    "fallbackIndices": [
+      0,
+      3,
+      5
+    ],
+    "reversePoseReuse": true
+  },
+  {
+    "id": "band_overhead_press",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png"
+    ],
+    "boardCellIndices": [
+      1,
+      3,
+      5,
+      8,
+      9,
+      10
+    ],
+    "crops": [
+      "238x402+11+12",
+      "238x402+507+12",
+      "238x402+1003+12",
+      "238x402+507+427",
+      "238x402+755+427",
+      "238x402+1003+427"
+    ],
+    "notes": [
+      "Actual board is 5 columns by 3 rows, not 4 by 4. Six selected elevation levels; early levels are subtle.",
+      "Full portrait cells fitted in square without anatomy crop. Explicit controlled return; no generated interpolation."
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "visiblyDistinctPoses": 6,
+    "fallbackIndices": [
+      0,
+      3,
+      5
+    ],
+    "reversePoseReuse": true
+  },
+  {
+    "id": "dip_bar_inverted_row",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png",
+      "rework-2026-09-05/cycle-poses-v01.png"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      9,
+      10,
+      11,
+      12
+    ],
+    "crops": [
+      "301x266+9+9",
+      "301x266+322+9",
+      "301x266+635+9",
+      "301x266+948+9",
+      "301x266+9+322",
+      "301x266+322+322",
+      "301x266+9+635",
+      "301x266+322+635",
+      "301x266+635+635",
+      "301x266+948+635"
+    ],
+    "notes": [
+      "Crop removes numeric labels only; bars, heels and head remain in frame. Selected forward and return poses, reusing high positions to bridge a missing return phase.",
+      "Small equipment and foot-position drift remains visible; prototype only."
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      4,
+      3,
+      2,
+      6,
+      7,
+      8,
+      9
+    ],
+    "visiblyDistinctPoses": 8,
+    "fallbackIndices": [
+      0,
+      5,
+      9
+    ],
+    "reversePoseReuse": true
+  },
+  {
+    "id": "seated_band_row",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/key-poses-v02.png",
+      "rework-2026-09-05/key-poses-v02.png",
+      "rework-2026-09-05/key-poses-v02.png",
+      "rework-2026-09-05/key-poses-v02.png"
+    ],
+    "boardCellIndices": [
+      1,
+      3,
+      2,
+      4
+    ],
+    "crops": [
+      "581x581+20+21",
+      "581x581+20+648",
+      "581x581+649+21",
+      "581x581+649+648"
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      2,
+      1,
+      0
+    ],
+    "visiblyDistinctPoses": 4,
+    "fallbackIndices": [
+      0,
+      1,
+      3
+    ],
+    "reversePoseReuse": true,
+    "notes": [
+      "Only four readable arm positions; seven displayed steps is a low-density exception, not twelve distinct poses.",
+      "Reordered cells 1,3,2,4. Orange band stays around feet; small shoe and torso framing drift remains."
+    ]
+  },
+  {
+    "id": "pull_up",
+    "kind": "cycle",
+    "outputDirectory": "review-v04",
+    "sources": [
+      "rework-2026-09-05/assembly/board_1.png",
+      "rework-2026-09-05/assembly/board_2.png",
+      "rework-2026-09-05/assembly/board_3.png",
+      "rework-2026-09-05/assembly/board_4.png",
+      "rework-2026-09-05/assembly/top_aligned.png",
+      "rework-2026-09-05/assembly/board_5.png",
+      "rework-2026-09-05/assembly/board_6.png",
+      "rework-2026-09-05/assembly/board_7.png",
+      "rework-2026-09-05/assembly/board_8.png"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      3,
+      4,
+      null,
+      5,
+      6,
+      7,
+      8
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      3,
+      5,
+      6,
+      7,
+      8
+    ],
+    "visiblyDistinctPoses": 7,
+    "fallbackIndices": [
+      0,
+      4,
+      8
+    ],
+    "reversePoseReuse": true,
+    "notes": [
+      "Board crop uses actual panel coordinates x=14+440*column, y=14 or450, size424 square. This removes gutter-induced drift from the initial equal-grid preview.",
+      "Corrected top proportionally resized to424 square, translated +9px horizontally and -12px vertically on the complete image, without body deformation. All nine images receive identical24px cream border so head and equipment retain margins.",
+      "Chin-above-bar top retained. Slight width of wall brackets and knee arrangement still varies; prototype, not biomechanical or release validation."
+    ]
+  },
+  {
+    "id": "band_assisted_pull_up",
+    "kind": "cycle",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/assembly/board_1.png",
+      "rework-2026-09-05/assembly/board_2.png",
+      "rework-2026-09-05/assembly/board_3.png",
+      "rework-2026-09-05/assembly/board_4.png",
+      "rework-2026-09-05/assembly/top_aligned.png",
+      "rework-2026-09-05/assembly/board_5.png",
+      "rework-2026-09-05/assembly/board_6.png",
+      "rework-2026-09-05/assembly/board_8.png"
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      3,
+      5,
+      6,
+      7
+    ],
+    "visiblyDistinctPoses": 6,
+    "fallbackIndices": [
+      0,
+      4,
+      7
+    ],
+    "reversePoseReuse": true,
+    "notes": [
+      "All original 444-square board crops receive 40 pixels of top canvas. Corrected top is proportionally resized to 444x485 then translated upward 8 pixels by cropping background and adding bottom canvas; no body deformation.",
+      "Band remains under one knee. Corrected top has chin above bar but torso/neck proportions and top-border continuity differ subtly; assembly remains needs_fix pending independent visual arbitration."
+    ]
+  },
+  {
+    "id": "eccentric_pull_up",
+    "kind": "one_way",
+    "playback": "single_pass",
+    "outputDirectory": "review-v03",
+    "sources": [
+      "rework-2026-09-05/descent-poses-v01.png",
+      "rework-2026-09-05/descent-poses-v01.png",
+      "rework-2026-09-05/descent-poses-v01.png",
+      "rework-2026-09-05/descent-poses-v01.png",
+      "rework-2026-09-05/descent-poses-v01.png"
+    ],
+    "boardCellIndices": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "crops": [
+      "305x615+6+5",
+      "305x615+319+5",
+      "305x615+632+5",
+      "305x615+945+5",
+      "305x615+6+629"
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "visiblyDistinctPoses": 5,
+    "fallbackIndices": [
+      0,
+      2,
+      4
+    ],
+    "reversePoseReuse": false,
+    "notes": [
+      "Single four-second descent only. No automatic loop, reversed ascent or concealed teleport to the starting position.",
+      "Small support stool remains visible, but access to starting position is not demonstrated. Replay must be an explicit separate action. Five distinct poses is below normal cycle-density target."
+    ]
+  }
+]

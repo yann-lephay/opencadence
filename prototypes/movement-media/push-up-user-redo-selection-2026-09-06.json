@@ -1,0 +1,42 @@
+[
+  {
+    "id": "push_up",
+    "kind": "cycle",
+    "outputDirectory": "review-user-v01",
+    "sources": [
+      "user-redo-2026-09-06/keyposes-v01.png",
+      "user-redo-2026-09-06/keyposes-v01.png",
+      "user-redo-2026-09-06/keyposes-v01.png",
+      "user-redo-2026-09-06/targeted-edit-v01.png"
+    ],
+    "crops": [
+      "616x616+8+8",
+      "616x616+630+8",
+      "616x616+8+630",
+      null
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      2,
+      1,
+      0
+    ],
+    "visiblyDistinctPoses": 4,
+    "fallbackIndices": [
+      0,
+      2,
+      3
+    ],
+    "reversePoseReuse": true,
+    "status": "diagnostic_pending_user_not_density_complete",
+    "notes": [
+      "Four selected keyposes; low anchor repaired after rejecting grounded pelvis in original board.",
+      "Seven displayed steps across four seconds. Requested 12+ useful images NOT achieved; density-board rejected for recurrent grounded pelvis and variable framing.",
+      "This is a depth/alignment diagnostic preview, not a finished replacement or professional validation. Small source backdrop/registration differences remain.",
+      "Same static poses reused on ascent, no interpolation."
+    ]
+  }
+]

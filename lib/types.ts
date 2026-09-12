@@ -93,6 +93,7 @@ export type ActiveSession = {
   itemIndex: number;
   setIndex: number;
   progress: Record<string, SetResult[]>;
+  skippedItemIds?: string[];
 };
 
 export type CompletedSession = {
@@ -102,6 +103,7 @@ export type CompletedSession = {
   completedAt: string;
   durationMinutes: number;
   progress: Record<string, SetResult[]>;
+  skippedItemIds?: string[];
   effort: number;
   pain: number;
   painLocation: string;
@@ -129,6 +131,7 @@ export type Profile = {
   equipment: string[];
   otherEquipment?: string;
   offerPublicContributions?: boolean;
+  surpriseWorkouts?: boolean;
   pushupLevel?: "none" | "one-to-five" | "six-plus";
   pullupLevel?: "none" | "one-to-three" | "four-plus";
   physiologicalContext?: PhysiologicalContext;
@@ -166,6 +169,7 @@ export type StateAction =
       itemIndex: number;
       setIndex: number;
       progress: Record<string, SetResult[]>;
+      skippedItemIds?: string[];
     }
   | {
       action: "completeSession";
@@ -175,6 +179,7 @@ export type StateAction =
       hardRowingFinisher: boolean;
       note: string;
       progress: Record<string, SetResult[]>;
+      skippedItemIds?: string[];
     }
   | { action: "updateProfile"; profile: Partial<Profile> }
   | { action: "abandonSession" };

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "suitcase_march",
+    "kind": "gait",
+    "outputDirectory": "review-user-v01",
+    "sources": [
+      "user-redo-2026-09-05/selected/cell_01.png",
+      "user-redo-2026-09-05/selected/cell_02.png",
+      "user-redo-2026-09-05/selected/cell_03.png",
+      "user-redo-2026-09-05/selected/cell_04.png",
+      "user-redo-2026-09-05/selected/cell_09.png",
+      "user-redo-2026-09-05/selected/left-low.png"
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      3,
+      2,
+      1,
+      0,
+      5,
+      4,
+      5
+    ],
+    "visiblyDistinctPoses": 5,
+    "fallbackIndices": [
+      0,
+      3,
+      4
+    ],
+    "reversePoseReuse": true,
+    "status": "needs_fix_pending_user_review",
+    "notes": [
+      "New small-lift direction after Yann rejected review-density-v02; no acceptance inherited from the previous agent review.",
+      "Six source images, five conservatively counted distinct states because the left levels are close; ten displayed steps on four seconds.",
+      "Explicit same-leg lowering reuses static poses; actual left-leg images keep the dumbbell in the same hand. No mirror or reversed full gait sequence.",
+      "Independent QC: support and hand consistent, modest bilateral lifts. Slight halo on generated left intermediate and small backdrop drift remain.",
+      "New diagnostic awaiting Yann, not professional validation or release approval."
+    ]
+  }
+]
